@@ -1,0 +1,43 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc",
+    "start-ts": "tsc -w",
+    "start-node": "node dist/Server.js",
+    "start-nodemon": "nodemon --inspect dist/Server.js",
+    "start": "concurrently -k -p \"[{name}]\" -n \"TypeScript, Node\" -c \"yello.bold, cyan.bold\" \"npm run start-ts\" \"npm run start-nodemon\""
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@types/bcrypt": "^3.0.0",
+    "@types/body-parser": "^1.19.0",
+    "@types/connect-redis": "^0.0.14",
+    "@types/express": "^4.17.7",
+    "@types/express-session": "^1.17.0",
+    "@types/helmet": "^0.0.47",
+    "@types/jsonwebtoken": "^8.5.0",
+    "@types/mongoose": "^5.7.32",
+    "@types/morgan": "^1.9.1",
+    "@types/passport": "^1.0.4",
+    "@types/passport-jwt": "^3.0.3",
+    "@types/redis": "^2.8.25",
+    "bcrypt": "^5.0.0",
+    "body-parser": "^1.19.0",
+    "concurrently": "^5.2.0",
+    "connect-redis": "^5.0.0",
+    "express": "^4.17.1",
+    "express-session": "^1.17.1",
+    "helmet": "^3.23.3",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.9.25",
+    "morgan": "^1.10.0",
+    "nodemon": "^2.0.4",
+    "passport": "^0.4.1",
+    "passport-jwt": "^4.0.0",
+    "redis": "^3.0.2"
+  }
+}
