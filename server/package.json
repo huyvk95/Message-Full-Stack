@@ -8,7 +8,8 @@
     "start-ts": "tsc -w",
     "start-node": "node --inspect dist/Server.js",
     "start-nodemon": "nodemon --inspect dist/Server.js",
-    "start": "concurrently -k -p \"[{name}]\" -n \"TypeScript, Node\" -c \"yello.bold, cyan.bold\" \"npm run start-ts\" \"npm run start-node\""
+    "start-w": "concurrently -k -p \"[{name}]\" -n \"TypeScript, Node\" -c \"yello.bold, cyan.bold\" \"npm run start-ts\" \"npm run start-nodemon\"",
+    "start": "npm run build; npm run start-node"
   },
   "author": "",
   "license": "ISC",
