@@ -6,9 +6,9 @@
   "scripts": {
     "build": "tsc",
     "start-ts": "tsc -w",
-    "start-node": "node dist/Server.js",
-    "start-nodemon": "nodemon dist/Server.js",
-    "start": "concurrently -k -p \"[{name}]\" -n \"TypeScript, Node\" -c \"yello.bold, cyan.bold\" \"npm run start-ts\" \"npm run start-nodemon\""
+    "start-node": "node --inspect dist/Server.js",
+    "start-nodemon": "nodemon --inspect dist/Server.js",
+    "start": "concurrently -k -p \"[{name}]\" -n \"TypeScript, Node\" -c \"yello.bold, cyan.bold\" \"npm run start-ts\" \"npm run start-node\""
   },
   "author": "",
   "license": "ISC",
