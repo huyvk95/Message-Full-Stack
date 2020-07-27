@@ -8,6 +8,7 @@ import mongoose from "mongoose";
 import passport from "passport";
 import connectRedis from "connect-redis";
 import expressSession from "express-session";
+import auth from "./Auth";
 import { createClient } from "redis";
 
 /* __INSTANCE__ */
@@ -32,6 +33,7 @@ app.use(expressSession({
 app.use(passport.initialize())
 app.use(passport.session())
 mongoose.connect(process.env.DATABASE as string, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: true });
+auth();
 
 /* __ROUTER__ */
 app.use('/', router)

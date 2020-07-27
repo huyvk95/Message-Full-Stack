@@ -1,5 +1,6 @@
 import { Router } from "express";
 import authRouter from "./AuthRouter";
+import pageRouter from "./PageRouter";
 
 /* INSTANCE */
 let router = Router();
@@ -10,5 +11,6 @@ router.get('/', function (req, res) {
 })
 /* API */
 router.use('/auth', authRouter);
+router.use('/page', pageRouter);
 
 export default router;

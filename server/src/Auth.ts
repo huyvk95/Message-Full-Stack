@@ -1,9 +1,20 @@
-import passport from "passport";
+import passport, { use } from "passport";
 import bcrypt from "bcrypt";
 import { Strategy as JWTStategy, ExtractJwt } from "passport-jwt";
+import { Strategy as LocalStrategy } from "passport-local";
 import { User } from "./database/ModelDatabase";
 
 export default function () {
+    passport.use(new LocalStrategy(
+        function (email, password, done) {
+            User.findOne({ email: email }, function (err, user) {
+                if (err) return done(err);
+                if (!user) return done(null, false);
+                if (user.get('password') != password) return done(null, false);
+                return done(null, user);;
+            })
+        }
+    ))
     passport.use(new JWTStategy(
         {
             jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
