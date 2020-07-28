@@ -1,6 +1,7 @@
 import { Router } from "express";
 import authRouter from "./AuthRouter";
-import { middlewareAuth } from "../middleware/CommonMiddleware";
+import userRouter from "./UserRouter";
+import middleware from "../middleware";
 
 /* INSTANCE */
 let router = Router();
@@ -8,6 +9,8 @@ let router = Router();
 /* API */
 router.use('/auth', authRouter);
 /* HOME */
-router.get('/', middlewareAuth);
+router.use('/', middleware.checkAuth);
+/* USER */
+router.use('/user', userRouter);
 
 export default router;

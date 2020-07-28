@@ -1,11 +1,13 @@
 import { 
     middlewareAuth as checkAuth, 
-    middlewareResponse as response 
+    middlewareResponse as response,
+    middlewareValidator as validator
 } from "./CommonMiddleware";
 
 let middleware = {
     checkAuth,
-    response
+    response,
+    validator,
 }
 
 export default middleware;

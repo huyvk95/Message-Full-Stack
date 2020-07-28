@@ -1,13 +1,40 @@
 import React, { Component } from "react";
+import { logout } from "../action/UserActions";
+import { connect } from "react-redux";
+import * as api from "../Api";
 
-class HomeContainer extends Component {
+interface IProps {
+    logout: Function
+}
+
+class HomeContainer extends Component<IProps> {
+    constructor(props: IProps) {
+        super(props);
+
+        this.onClickLogout = this.onClickLogout.bind(this);
+        this.onClickGetUser = this.onClickGetUser.bind(this);
+    }
+
+    onClickLogout() {
+        this.props.logout();
+    }
+
+    onClickGetUser() {
+        api.getUser().then(data => { console.log(data) });
+    }
+
     render() {
-        return(
+        return (
             <div>
-                Home!
+                <button onClick={this.onClickLogout}>Logout</button>
+                <button onClick={this.onClickGetUser}>Get user</button>
             </div>
         )
     }
 }
 
-export default HomeContainer;
+const mapDispatchToProps = {
+    logout
+}
+
+export default connect(null, mapDispatchToProps)(HomeContainer);

@@ -5,16 +5,14 @@ import HomeContainer from "../container/HomeContainer";
 import LoginContainer from "../container/LoginContainer";
 import { IStoreState, IUserData } from "../interface/DataInterface";
 
-function ContainerRouter(props: { user: IUserData }) {
-    console.log(props.user)
-
+function ContainerRouter({ user }: { user: IUserData }) {
     return (
         <Switch>
-            <Route path="/" exact>
-                <HomeContainer />
-            </Route>
             <Route path="/login">
                 <LoginContainer />
+            </Route>
+            <Route path="/" exact>
+                <HomeContainer />
             </Route>
         </Switch>
     )

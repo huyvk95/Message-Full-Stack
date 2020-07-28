@@ -11,3 +11,8 @@ export async function logout() {
     let response = await axios.post(`${common.config.HOST}/auth/logout`);
     return responseFormat(response);
 }
+
+export async function getUser() {
+    let response = await axios.get(`${common.config.HOST}/user`);
+    return responseFormat(response);
+}

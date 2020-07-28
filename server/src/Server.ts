@@ -5,10 +5,8 @@ import helmet from "helmet";
 import morgan from "morgan";
 import router from "./router";
 import mongoose from "mongoose";
-import passport from "passport";
 import connectRedis from "connect-redis";
 import expressSession from "express-session";
-import auth from "./Auth";
 import cors from "cors";
 import { createClient } from "redis";
 
@@ -32,10 +30,7 @@ app.use(expressSession({
     cookie: { expires: new Date(Date.now() + 60 * 60 * 1000) },
     store: sessionStore,
 }))
-app.use(passport.initialize())
-app.use(passport.session())
 mongoose.connect(process.env.DATABASE as string, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: true });
-auth();
 
 /* __ROUTER__ */
 app.use('/', router)
