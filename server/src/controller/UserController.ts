@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { User } from "../database/ModelDatabase";
 import { Document } from "mongoose";
+import util from "../util";
 
 /* HANDLE */
 async function get(req: Request, res: Response, next: NextFunction) {
@@ -52,4 +53,17 @@ async function put(req: Request, res: Response, next: NextFunction) {
     next()
 }
 
-export default { get, put }
+async function verify(req: Request, res: Response, next: NextFunction) {
+    try {
+        let { uuid } = req.body;
+        // Get user
+        let user = User.findById(req.user._id);
+        // if (!user)
+    } catch (error) {
+        util.common.requestErrorHandle(res, error)
+    } finally {
+        next()
+    }
+}
+
+export default { get, put, verify }

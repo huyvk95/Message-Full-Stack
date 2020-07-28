@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { User } from "../database/ModelDatabase";
+import { v4 as uuidv4 } from "uuid";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import util from "../util";
@@ -61,7 +62,7 @@ async function token(req: Request, res: Response, next: NextFunction) {
         // Get user
         let user = await User.findById(req.user._id);
         // Check user
-        if (!user) throw "Authentication error"
+        if (!user) throw { code: 401, message: "Authentication error" }
         //Update user login time
         user.set('loginTime', new Date());
         await user.save();
@@ -72,8 +73,7 @@ async function token(req: Request, res: Response, next: NextFunction) {
             user: req.user
         }
     } catch (error) {
-        res.statusCode = 401
-        res.message = error
+        util.common.requestErrorHandle(res, error)
     } finally {
         return next()
     }
@@ -86,7 +86,7 @@ async function logout(req: Request, res: Response, next: NextFunction) {
         // Get user
         let user = await User.findById(req.user._id);
         // Check user
-        if (!user) throw "Authentication error"
+        if (!user) throw { code: 401, message: "Authentication error" }
         // Handle user data
         let device = Object.assign({}, user.get('device'));
         delete device[deviceId as string];
@@ -96,8 +96,7 @@ async function logout(req: Request, res: Response, next: NextFunction) {
         res.statusCode = 200
         res.message = 'Logout success'
     } catch (error) {
-        res.statusCode = 401;
-        res.message = error
+        util.common.requestErrorHandle(res, error)
     } finally {
         return next()
     }
@@ -112,9 +111,7 @@ async function register(req: Request, res: Response, next: NextFunction) {
 
         // Check password and confirm password
         if (password !== confirmPassword) {
-            res.statusCode = 400;
-            res.message = "Password not match with confirm password";
-            return next();
+            throw { code: 400, message: "Password not match with confirm password" }
         }
 
         // Filter option
@@ -126,6 +123,10 @@ async function register(req: Request, res: Response, next: NextFunction) {
         // Create document
         const user = new User({
             ...option,
+            emailVerify: {
+                verified: false,
+                uuid: uuidv4()
+            },
             loginTime: new Date(),
             updateTime: new Date(Date.now() - 60000),
             registrationTime: new Date(),
@@ -153,8 +154,7 @@ async function register(req: Request, res: Response, next: NextFunction) {
                 res.message = error;
             })
     } catch (error) {
-        res.statusCode = 500;
-        res.message = error;
+        util.common.requestErrorHandle(res, error)
     } finally {
         next();
     }

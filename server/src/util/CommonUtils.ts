@@ -1,3 +1,10 @@
+import { Response } from "express";
+
+export function requestErrorHandle(res: Response, error: any) {
+    res.statusCode = error.code || 500
+    res.message = error.message || error || "Internal Server Error"
+}
+
 export function emptyKeyFilter(payload: { [key: string]: any }) {
     //Filter
     Object.keys(payload).forEach((key: string) => {

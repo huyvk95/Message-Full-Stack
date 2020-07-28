@@ -10,8 +10,10 @@ const UserSchema = new Schema({
     updateTime: { type: Date, required: true },
     loginTime: { type: Date, required: true },
     registrationTime: { type: Date, required: true },
-    emailVerified: { type: Boolean, required: true, default: false },
-    emailVerificationCode: String,
+    emailVerify: {  
+        verified: {type: Boolean, required: true, default: false},
+        uuid: { type: String, required: true },
+    },
     active: { type: Boolean, required: true, default: true },
 })
 

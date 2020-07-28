@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { validationResult } from "express-validator";
-import jwt from "jsonwebtoken";
 import { User } from "../database/ModelDatabase";
+import jwt from "jsonwebtoken";
 import util from "../util";
 // Check authentication for main router
 export async function middlewareAuth(req: Request, res: Response, next: NextFunction) {
@@ -15,24 +15,23 @@ export async function middlewareAuth(req: Request, res: Response, next: NextFunc
             let token = authorization[1];
             //Get user data
             let userData: any = jwt.verify(token, process.env.SECRET_KEY as string);
-            if (!userData)  throw "Authentication error"
+            if (!userData) throw { code: 401, message: "Authentication error" }
             // Get user
             let user = await User.findById(userData._id);
-            if (!user) throw "Authentication error"
+            if (!user) throw { code: 401, message: "Authentication error" }
             // Check device id
             let device = user.get('device');
-            if(device[deviceId] != token) throw "Authentication error"
+            if(device[deviceId] != token) throw { code: 401, message: "Authentication error" }
             // Return user data
             req.user = util.common.userPrivateInfoFilter(user.toObject());
             return next()
         } else {
-            throw "Authentication error"
+            throw { code: 401, message: "Authentication error" }
         }
     } catch (error) {
-        res.statusCode = 401;
-        res.message = error;
+        util.common.requestErrorHandle(res, error);
         return middlewareResponse(req, res);
-    }
+    } 
 }
 
 // Validator body data
