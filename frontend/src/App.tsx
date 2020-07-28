@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Provider } from "react-redux";
 import { BrowserRouter as Router } from "react-router-dom";
 import store from "./Store";
-import ContainerRouter from "./router/ContainerRouter";
+import * as api from "./Api";
 import AuthRouter from "./router/AuthRouter";
 
 class App extends Component {
@@ -10,6 +10,18 @@ class App extends Component {
         super(props)
     }
 
+    /* Life circle */
+    componentWillMount() {
+        this.initialize();
+    }
+
+    /* Initialize */
+    initialize() {
+        // API
+        api.initialize()
+    }
+
+    /* Render */
     render() {
         return (
             <Provider store={store}>

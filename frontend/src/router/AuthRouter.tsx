@@ -4,10 +4,11 @@ import { connect } from "react-redux";
 import { IStoreState, IUserData } from "../interface/DataInterface";
 import { token } from "../action/UserActions";
 import ContainerRouter from "./ContainerRouter";
+import * as api from "../Api";
 
 function AuthRouter({ user, token }: { user: IUserData, token: Function }) {
     // Check login token
-    if (!user.email && localStorage.getItem('authorization')) {
+    if (!user.email && api.getHeaders().authorization) {
         token()
         return (<div></div>)
     }

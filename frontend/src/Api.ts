@@ -1,12 +1,28 @@
 import axios from "axios";
 import common from "./common";
+import util from "./util";
 import { responseFormat } from "./util/CommonUtils";
 
-let headers = {};
+let headers: { [key in string]: string } = {};
 
+/* __SUPPPORT__ */
+export function initialize() {
+    // Token
+    let token = localStorage.getItem('authorization');
+    if (token) headers = Object.assign(headers, { authorization: `Bearer ${token}` })
+    // Device ID
+    let deviceId = util.common.getDeviceId();
+    if (deviceId) headers = Object.assign(headers, { deviceId: deviceId })
+}
+
+export function getHeaders() {
+    return headers;
+}
+
+/* __API__ */
 export async function login(email: string, password: string) {
     // Request
-    let response = await axios.post(`${common.config.HOST}/auth/login`, { email, password });
+    let response = await axios.post(`${common.config.HOST}/auth/login`, { email, password }, { headers });
     // Format data
     let data = responseFormat(response);
     // Save token
@@ -23,18 +39,13 @@ export async function login(email: string, password: string) {
 }
 
 export async function token() {
-    // Get token
-    let token = localStorage.getItem('authorization');
-    // If token not exits
-    if (!token) return responseFormat()
-    //Set header token
-    headers = Object.assign(headers, { authorization: `Bearer ${token}` })
     // Request
     let response = await axios.post(`${common.config.HOST}/auth/token`, {}, { headers });
     // Format data
     let data = responseFormat(response);
     // Check token exist or expired
-    if (!data.success) {
+    if (!data.success) {    // If success fail remove header authorization and localstorage
+        headers = Object.assign(headers, { authorization: '' })
         localStorage.removeItem('authorization')
     }
 
@@ -43,7 +54,7 @@ export async function token() {
 
 export async function logout() {
     // Request
-    let response = await axios.post(`${common.config.HOST}/auth/logout`);
+    let response = await axios.post(`${common.config.HOST}/auth/logout`, {}, { headers });
     // Format data
     let data = responseFormat(response);
     // Handle
