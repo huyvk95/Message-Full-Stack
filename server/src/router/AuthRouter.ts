@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { check } from "express-validator";
+import { header, body } from "express-validator";
 import controller from "../controller/AuthController";
 import middleware from "../middleware";
 
@@ -9,9 +9,10 @@ let router = Router();
 router.route('/login')
     .post(
         [
-            check('email', 'Wrong email format').isEmail().isLength({ min: 12, max: 50 }),
-            check('password', 'Password must be string').isString(),
-            check('password', 'Password length must be 8 character or more').isLength({ min: 8, max: 32 })
+            header('deviceId', 'Device must be string').isString(),
+            body('email', 'Wrong email format').isEmail().isLength({ min: 12, max: 50 }),
+            body('password', 'Password must be string').isString(),
+            body('password', 'Password length must be 8 character or more').isLength({ min: 8, max: 32 })
         ],
         middleware.validator,
         controller.login,
@@ -20,6 +21,10 @@ router.route('/login')
 
 router.route('/token')
     .post(
+        [
+            header('deviceId', 'Device must be string').isString(),
+        ],
+        middleware.validator,
         middleware.checkAuth,
         controller.token,
         middleware.response
@@ -27,6 +32,11 @@ router.route('/token')
 
 router.route('/logout')
     .post(
+        [
+            header('deviceId', 'Device must be string').isString(),
+        ],
+        middleware.validator,
+        middleware.checkAuth,
         controller.logout,
         middleware.response
     )
@@ -34,12 +44,14 @@ router.route('/logout')
 router.route('/register')
     .post(
         [
-            check('email', "Wrong email format").isEmail().isLength({ min: 12, max: 50 }),
-            check('password', "Password must be string").isString(),
-            check('password', "Password length must be 8 character or more").isLength({ min: 8, max: 32 }),
-            check('confirmPassword', "Password must be string").isString(),
-            check('confirmPassword', "Password length must be 8 character or more").isLength({ min: 8, max: 32 })
+            header('deviceId', 'Device must be string').isString(),
+            body('email', "Wrong email format").isEmail().isLength({ min: 12, max: 50 }),
+            body('password', "Password must be string").isString(),
+            body('password', "Password length must be 8 character or more").isLength({ min: 8, max: 32 }),
+            body('confirmPassword', "Password must be string").isString(),
+            body('confirmPassword', "Password length must be 8 character or more").isLength({ min: 8, max: 32 })
         ],
+        middleware.validator,
         controller.register,
         middleware.response
     )

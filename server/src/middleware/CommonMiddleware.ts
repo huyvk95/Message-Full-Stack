@@ -1,32 +1,36 @@
 import { Request, Response, NextFunction } from "express";
 import { validationResult } from "express-validator";
 import jwt from "jsonwebtoken";
+import { User } from "../database/ModelDatabase";
+import util from "../util";
 // Check authentication for main router
-export function middlewareAuth(req: Request, res: Response, next: NextFunction) {
+export async function middlewareAuth(req: Request, res: Response, next: NextFunction) {
     try {
         // Get authorization header
         let authorization = req.headers.authorization?.split(' ') || []
+        // Get device id
+        let deviceId = req.header("deviceId");
         // Check authorization
-        if (authorization[0] == 'Bearer') {
+        if (authorization[0] == 'Bearer' && deviceId) {
             let token = authorization[1];
-            //Get user
-            let user: any = jwt.verify(token, process.env.SECRET_KEY as string);
-
-            if (user) {
-                // If updateTime greater than token create time throw
-                if ((new Date(user.updateTime)).getTime() > user.iat * 1000) throw "User changed data"
-                // Return user data
-                req.user = user;
-                return next()
-            } else {
-                throw "Authentication error"
-            }
+            //Get user data
+            let userData: any = jwt.verify(token, process.env.SECRET_KEY as string);
+            if (!userData)  throw "Authentication error"
+            // Get user
+            let user = await User.findById(userData._id);
+            if (!user) throw "Authentication error"
+            // Check device id
+            let device = user.get('device');
+            if(device[deviceId] != token) throw "Authentication error"
+            // Return user data
+            req.user = util.common.userPrivateInfoFilter(user.toObject());
+            return next()
         } else {
             throw "Authentication error"
         }
     } catch (error) {
         res.statusCode = 401;
-        res.message = 'Authentication error';
+        res.message = error;
         return middlewareResponse(req, res);
     }
 }

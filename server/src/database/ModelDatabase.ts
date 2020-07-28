@@ -6,6 +6,7 @@ const UserSchema = new Schema({
     firstName: String,
     lastName: String,
     avatar: { type: String },
+    device: { type: Object },
     updateTime: { type: Date, required: true },
     loginTime: { type: Date, required: true },
     registrationTime: { type: Date, required: true },

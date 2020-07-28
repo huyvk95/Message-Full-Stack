@@ -8,10 +8,10 @@ export function emptyKeyFilter(payload: { [key: string]: any }) {
 }
 
 export function userPrivateInfoFilter(info: { [key: string]: any }) {
-    const filter = ['password']
+    const filter = ['_id', 'email', 'firstName', 'lastName', 'avatar', 'updateTime', 'loginTime', 'registrationTime', 'emailVerified']
     //Filter
     Object.keys(info).forEach((key: string) => {
-        if (filter.some(o => o == key)) delete info[key]
+        if (filter.every(o => o != key)) delete info[key]
     });
     //Return payload
     return info;
