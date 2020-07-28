@@ -1,20 +1,24 @@
-import { Request, Response } from "express";
+import { Request, Response, NextFunction } from "express";
 
 /* HANDLE */
-async function login(req: Request, res: Response) {
+async function login(req: Request, res: Response, next: NextFunction) {
     if (req.isAuthenticated()) {
         // res.send()
-        res.send('Login success')
+        res.statusCode = 200
+        res.message = 'Login success'
     } else {
-        res.send('Authenticaion error')
+        res.statusCode = 401
+        res.message = 'Authenticaion error'
     }
+    next();
 }
 
-async function logout(req: Request, res: Response) {
+async function logout(req: Request, res: Response, next: NextFunction) {
     if (req.isAuthenticated()) {
         req.logOut();
     }
-    res.send('Logout success')
+    res.statusCode = 200
+    res.message = 'Logout success'
 }
 
 export default { login, logout }

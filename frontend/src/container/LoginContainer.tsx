@@ -1,7 +1,9 @@
 import React, { Component, ChangeEvent } from "react";
+import { login } from "../action/UserActions";
+import { connect } from "react-redux";
 
 interface IProps {
-
+    login: Function
 }
 
 interface IState {
@@ -36,18 +38,23 @@ class LoginContainer extends Component<IProps, IState> {
     }
 
     onClickLogin() {
-        
+        let { email, password } = this.state;
+        this.props.login(email, password)
     }
 
     render() {
         return (
             <div>
-                <input type="text" value="Email" onChange={this.onChangeEmail} />
-                <input type="text" value="Password" onChange={this.onChangePassword} />
+                <input type="text" placeholder="Email" onChange={this.onChangeEmail} />
+                <input type="text" placeholder="Password" onChange={this.onChangePassword} />
                 <button onClick={this.onClickLogin}>Login</button>
             </div>
         )
     }
 }
 
-export default LoginContainer;
+const mapDispatchToProps = {
+    login
+}
+
+export default connect(null, mapDispatchToProps)(LoginContainer);

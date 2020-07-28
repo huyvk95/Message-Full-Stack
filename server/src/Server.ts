@@ -9,6 +9,7 @@ import passport from "passport";
 import connectRedis from "connect-redis";
 import expressSession from "express-session";
 import auth from "./Auth";
+import cors from "cors";
 import { createClient } from "redis";
 
 /* __INSTANCE__ */
@@ -21,6 +22,7 @@ let sessionStore = new RedisStore({ client: redis })
 /* __MIDDLE_WARE__ */
 app.use(helmet())
 app.use(morgan('dev'))
+app.use(cors())
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(expressSession({
