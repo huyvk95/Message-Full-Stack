@@ -8,7 +8,7 @@ import util from "../util";
 async function login(req: Request, res: Response, next: NextFunction) {
     const { email, password } = req.body;
 
-    User.findOne({ email: email }, async function (err, user) {
+    User.findOne({ email: email, active: true }, async function (err, user) {
         if (err) {
             res.statusCode = 500
             res.message = 'Unknow error'
@@ -25,6 +25,10 @@ async function login(req: Request, res: Response, next: NextFunction) {
             return next()
         }
 
+        // Update user data
+        user.set('loginTime', new Date())
+        await user.save()
+
         // User data
         let data = util.common.userPrivateInfoFilter(user.toObject())
 
@@ -32,11 +36,28 @@ async function login(req: Request, res: Response, next: NextFunction) {
         res.statusCode = 200
         res.message = 'Login success'
         res.data = {
-            authorization: jwt.sign(data, process.env.SECRET_KEY as string),
+            authorization: jwt.sign(data, process.env.SECRET_KEY as string, { expiresIn: '1d' }),
             user: data
         }
         return next()
     })
+}
+
+async function token(req: Request, res: Response, next: NextFunction) {
+    if (req.user) {
+        //Update user login time
+        await User.findByIdAndUpdate(req.user._id, { loginTime: new Date() })
+        //Send data
+        res.statusCode = 200
+        res.message = 'Login success'
+        res.data = {
+            user: req.user
+        }
+    } else {
+        res.statusCode = 401
+        res.message = 'Authorization error'
+    }
+    return next()
 }
 
 async function logout(req: Request, res: Response, next: NextFunction) {
@@ -64,8 +85,8 @@ async function register(req: Request, res: Response, next: NextFunction) {
     //Create table
     const user = new User({
         ...option,
-        loginAt: new Date(),
-        updateAt: new Date(),
+        loginTime: new Date(),
+        updateTime: new Date(Date.now() - 60000),
         registrationTime: new Date(),
         active: true,
     })
@@ -88,4 +109,4 @@ async function register(req: Request, res: Response, next: NextFunction) {
     next();
 }
 
-export default { login, logout, register }
+export default { login, token, logout, register }

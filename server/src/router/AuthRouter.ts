@@ -18,6 +18,13 @@ router.route('/login')
         middleware.response
     )
 
+router.route('/token')
+    .post(
+        middleware.checkAuth,
+        controller.token,
+        middleware.response
+    )
+
 router.route('/logout')
     .post(
         controller.logout,

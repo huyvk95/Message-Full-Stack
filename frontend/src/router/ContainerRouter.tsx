@@ -1,9 +1,10 @@
 import React from "react";
 import { Switch, Route } from "react-router-dom";
 import { connect } from "react-redux";
+import { IStoreState, IUserData } from "../interface/DataInterface";
 import HomeContainer from "../container/HomeContainer";
 import LoginContainer from "../container/LoginContainer";
-import { IStoreState, IUserData } from "../interface/DataInterface";
+import UserContainer from "../container/UserContainer";
 
 function ContainerRouter({ user }: { user: IUserData }) {
     return (
@@ -13,6 +14,9 @@ function ContainerRouter({ user }: { user: IUserData }) {
             </Route>
             <Route path="/" exact>
                 <HomeContainer />
+            </Route>
+            <Route path="/user">
+                <UserContainer />
             </Route>
         </Switch>
     )

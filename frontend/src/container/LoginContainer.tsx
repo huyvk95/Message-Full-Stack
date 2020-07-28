@@ -46,7 +46,7 @@ class LoginContainer extends Component<IProps, IState> {
         return (
             <div>
                 <input type="text" placeholder="Email" onChange={this.onChangeEmail} />
-                <input type="text" placeholder="Password" onChange={this.onChangePassword} />
+                <input type="password" placeholder="Password" onChange={this.onChangePassword} />
                 <button onClick={this.onClickLogin}>Login</button>
             </div>
         )

@@ -2,27 +2,40 @@ import React from "react";
 import { Switch, Route, Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 import { IStoreState, IUserData } from "../interface/DataInterface";
+import { token } from "../action/UserActions";
 import ContainerRouter from "./ContainerRouter";
 
-function AuthRouter({ user }: { user: IUserData }) {
-    return (
-        <Switch>
-            <Route path="/login">
-                {
-                    user.email ? <Redirect to="/" /> : <ContainerRouter />
-                }
-            </Route>
-            <Route path="/">
-                {
-                    !user.email ? <Redirect to="/login" /> : <ContainerRouter />
-                }
-            </Route>
-        </Switch>
-    )
+function AuthRouter({ user, token }: { user: IUserData, token: Function }) {
+    // Check login token
+    if (!user.email && localStorage.getItem('authorization')) {
+        token()
+        return (<div></div>)
+    }
+    // Check login normal
+    else {
+        return (
+            <Switch>
+                <Route path="/login">
+                    {
+                        user.email ? <Redirect to="/" /> : <ContainerRouter />
+                    }
+                </Route>
+                <Route path="/">
+                    {
+                        !user.email ? <Redirect to="/login" /> : <ContainerRouter />
+                    }
+                </Route>
+            </Switch>
+        )
+    }
 }
 
 const mapPropsToState = (state: IStoreState) => ({
     user: state.user
 })
 
-export default connect(mapPropsToState)(AuthRouter)
+const mapDispatchToState = {
+    token
+}
+
+export default connect(mapPropsToState, mapDispatchToState)(AuthRouter)

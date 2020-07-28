@@ -3,23 +3,29 @@ import { validationResult } from "express-validator";
 import jwt from "jsonwebtoken";
 // Check authentication for main router
 export function middlewareAuth(req: Request, res: Response, next: NextFunction) {
-    // Get authorization header
-    let authorization = req.headers.authorization?.split(' ') || []
-    // Check authorization
-    if (authorization[0] == 'Bearer') {
-        let token = authorization[1];
-        let user = jwt.verify(token, process.env.SECRET_KEY as string);
+    try {
+        // Get authorization header
+        let authorization = req.headers.authorization?.split(' ') || []
+        // Check authorization
+        if (authorization[0] == 'Bearer') {
+            let token = authorization[1];
+            //Get user
+            let user: any = jwt.verify(token, process.env.SECRET_KEY as string);
 
-        if (user) {
-            req.user = user;
-            return next()
+            if (user) {
+                // If updateTime greater than token create time throw
+                if ((new Date(user.updateTime)).getTime() > user.iat * 1000) throw "User changed data"
+                // Return user data
+                req.user = user;
+                return next()
+            } else {
+                throw "Authentication error"
+            }
         } else {
-            res.statusCode = 401
-            res.message = 'Authentication error';
-            return middlewareResponse(req, res);
+            throw "Authentication error"
         }
-    } else {
-        res.statusCode = 401
+    } catch (error) {
+        res.statusCode = 401;
         res.message = 'Authentication error';
         return middlewareResponse(req, res);
     }

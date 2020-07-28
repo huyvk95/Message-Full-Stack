@@ -12,7 +12,26 @@ export function login(email: string, password: string) {
             // Dispatch action
             dispatch({
                 type: common.action.LOGIN,
-                payload: data.data
+                payload: data.data.user
+            })
+        }
+    }
+}
+
+export function token() {
+    return async function (dispatch: Function) {
+        // Get data
+        let data = await api.token()
+        // Check data
+        if (!data.success) {
+            dispatch({
+                type: common.action.TOKEN,
+                payload: {}
+            })
+        } else {
+            dispatch({
+                type: common.action.TOKEN,
+                payload: data.data.user
             })
         }
     }

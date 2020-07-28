@@ -10,5 +10,9 @@ router.route('/')
         controller.get,
         middleware.response
     )
+    .put(
+        controller.put,
+        middleware.response
+    )
 
 export default router;
