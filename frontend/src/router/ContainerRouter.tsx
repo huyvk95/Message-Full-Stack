@@ -5,6 +5,7 @@ import { IStoreState, IUserData } from "../interface/DataInterface";
 import HomeContainer from "../container/HomeContainer";
 import LoginContainer from "../container/LoginContainer";
 import UserContainer from "../container/UserContainer";
+import VerificationContainer from "../container/VerificationContainer";
 
 function ContainerRouter({ user }: { user: IUserData }) {
     return (
@@ -17,6 +18,9 @@ function ContainerRouter({ user }: { user: IUserData }) {
             </Route>
             <Route path="/user">
                 <UserContainer />
+            </Route>
+            <Route path="/verify">
+                <VerificationContainer />
             </Route>
         </Switch>
     )

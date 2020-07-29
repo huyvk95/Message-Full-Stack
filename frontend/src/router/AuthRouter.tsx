@@ -21,9 +21,14 @@ function AuthRouter({ user, token }: { user: IUserData, token: Function }) {
                         user.email ? <Redirect to="/" /> : <ContainerRouter />
                     }
                 </Route>
-                <Route path="/">
+                <Route path="/verify">
                     {
                         !user.email ? <Redirect to="/login" /> : <ContainerRouter />
+                    }
+                </Route>
+                <Route path="/">
+                    {
+                        !user.email ? <Redirect to="/login" /> : !user.emailVerify.verified ? <Redirect to="/verify" /> : <ContainerRouter />
                     }
                 </Route>
             </Switch>

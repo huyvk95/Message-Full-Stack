@@ -66,4 +66,11 @@ router.route('/verify')
         middleware.data.formatResponse
     )
 
+router.route('/resendVerify')
+    .post(
+        middleware.auth.checkAuth({ checkVerified: false }),
+        controller.resendVerifyMail,
+        middleware.data.formatResponse
+    )
+
 export default router;

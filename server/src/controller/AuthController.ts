@@ -120,12 +120,15 @@ async function register(req: Request, res: Response, next: NextFunction) {
         // Crypt password
         option.password = bcrypt.hashSync(option.password, 12);
 
+        // Create uuid
+        let uuid = uuidv4();
+
         // Create document
         const user = new User({
             ...option,
             emailVerify: {
                 verified: false,
-                uuid: uuidv4()
+                uuid: uuid
             },
             loginTime: new Date(),
             updateTime: new Date(Date.now() - 60000),
@@ -138,6 +141,8 @@ async function register(req: Request, res: Response, next: NextFunction) {
                 let data = util.common.userPrivateInfoFilter(user.toObject())
                 // Sign token
                 let token = jwt.sign(data, process.env.SECRET_KEY as string)
+                // Send verify mail
+                util.common.sendVerificationMai(email, uuid)
                 // Sign device token
                 user.set('device', { [deviceId as string]: token })
                 await user.save()
@@ -187,8 +192,24 @@ async function verify(req: Request, res: Response, next: NextFunction) {
     }
 }
 
-async function sendVerificaionMail(req: Request, res: Response, next: NextFunction) {
-    
+async function resendVerifyMail(req: Request, res: Response, next: NextFunction) {
+    try {
+        // Get user
+        let user = await User.findById(req.user._id);
+        if (!user) throw { code: 500, message: "Can't find user" }
+        // Check verified
+        let verify = user.get('emailVerify');
+        if (verify.verified) throw { code: 200, message: "User verified" }
+        // Check uuid
+        await util.common.sendVerificationMai(user.get('email'), verify.uuid)
+        // Response
+        res.statusCode = 200;
+        res.message = "Verification email has been sent"
+    } catch (error) {
+        util.common.requestErrorHandle(res, error)
+    } finally {
+        next()
+    }
 }
 
-export default { login, token, logout, register, verify }
+export default { login, token, logout, register, verify, resendVerifyMail }

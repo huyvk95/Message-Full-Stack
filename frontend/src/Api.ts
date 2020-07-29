@@ -20,6 +20,24 @@ export function getHeaders() {
 }
 
 /* __API__ */
+export async function register(email: string, password: string, confirmPassword: string) {
+    // Request
+    let response = await axios.post(`${common.config.HOST}/auth/register`, { email, password, confirmPassword }, { headers });
+    // Format data
+    let data = responseFormat(response);
+    // Save token
+    if (data.success) {
+        // Get token
+        let token = data.data.authorization;
+        // Asign token
+        headers = Object.assign(headers, { authorization: `Bearer ${token}` })
+        // Save token
+        localStorage.setItem('authorization', token);
+    }
+
+    return data;
+}
+
 export async function login(email: string, password: string) {
     // Request
     let response = await axios.post(`${common.config.HOST}/auth/login`, { email, password }, { headers });
@@ -50,6 +68,18 @@ export async function token() {
     }
 
     return data;
+}
+
+export async function verify(uuid: string) {
+    // Request
+    let response = await axios.post(`${common.config.HOST}/auth/verify`, { uuid }, { headers });
+    return responseFormat(response);;
+}
+
+export async function resendVerify() {
+    // Request
+    let response = await axios.post(`${common.config.HOST}/auth/resendVerify`, {}, { headers });
+    return responseFormat(response);;
 }
 
 export async function logout() {

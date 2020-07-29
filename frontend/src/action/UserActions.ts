@@ -18,6 +18,23 @@ export function login(email: string, password: string) {
     }
 }
 
+export function register(email: string, password: string, confirmPassword: string) {
+    return async function (dispatch: Function) {
+        // Get data
+        let data = await api.register(email, password, confirmPassword)
+        // Check data
+        if (!data.success) {
+            console.log(data.message)
+        } else {
+            // Dispatch action
+            dispatch({
+                type: common.action.REGISTER,
+                payload: data.data.user
+            })
+        }
+    }
+}
+
 export function token() {
     return async function (dispatch: Function) {
         // Get data
@@ -32,6 +49,22 @@ export function token() {
             dispatch({
                 type: common.action.TOKEN,
                 payload: data.data.user
+            })
+        }
+    }
+}
+
+export function verify(uuid: string) {
+    return async function (dispatch: Function) {
+        // Get data
+        let data = await api.verify(uuid)
+        // Check data
+        if (!data.success) {
+            console.log(data.message)
+        } else {
+            // Dispatch action
+            dispatch({
+                type: common.action.VERIFY
             })
         }
     }
