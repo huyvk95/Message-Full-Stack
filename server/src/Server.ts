@@ -8,7 +8,10 @@ import mongoose from "mongoose";
 import connectRedis from "connect-redis";
 import expressSession from "express-session";
 import cors from "cors";
+import i18next from "i18next";
 import { createClient } from "redis";
+let i18nextBackend = require('i18next-fs-backend')
+let i18nextMiddleware = require('i18next-http-middleware')
 
 /* __INSTANCE__ */
 let app = express();
@@ -16,6 +19,21 @@ let server = http.createServer(app);
 let redis = createClient()
 let RedisStore = connectRedis(expressSession)
 let sessionStore = new RedisStore({ client: redis })
+
+/* __CONFIG__ */
+i18next
+    .use(i18nextBackend)
+    .use(i18nextMiddleware.LanguageDetector)
+    .init({
+        backend: {
+            loadPath: process.cwd() + '/lang/{{lng}}.json',
+        },
+        fallbackLng: 'en',
+        preload: ["en", "vi"],
+        detection: {
+            lookupHeader: 'accept-language',
+        }
+    })
 
 /* __MIDDLE_WARE__ */
 app.use(helmet())
@@ -30,6 +48,7 @@ app.use(expressSession({
     cookie: { expires: new Date(Date.now() + 60 * 60 * 1000) },
     store: sessionStore,
 }))
+app.use(i18nextMiddleware.handle(i18next))
 mongoose.connect(process.env.DATABASE as string, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: true });
 
 /* __ROUTER__ */

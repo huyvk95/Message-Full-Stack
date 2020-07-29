@@ -1,9 +1,10 @@
 import { Response } from "express";
 import nodemailer from "nodemailer";
+import i18next from "i18next";
 
 export function requestErrorHandle(res: Response, error: any) {
     res.statusCode = error.code || 500
-    res.message = error.message || error || "Internal Server Error"
+    res.message = error.message || error || "unknown_error"
 }
 
 export function emptyKeyFilter(payload: { [key: string]: any }) {
@@ -27,7 +28,7 @@ export function userPrivateInfoFilter(info: { [key: string]: any }) {
     return info;
 }
 
-export async function sendVerificationMai(email: string, uuid: string) {
+export async function sendMail(email: string, title: string, text: string) {
     const transport = nodemailer.createTransport({
         service: 'Gmail',
         auth: {
@@ -39,13 +40,8 @@ export async function sendVerificationMai(email: string, uuid: string) {
     const message = {
         from: 'huyvk3110@gmail.com',
         to: email,
-        subject: "Message email verification",
-        text: `
-        Hello,
-        You requested to use this email address to access your message account.
-        Click the link below to verify this email address.
-        http://localhost:3001/verify/${uuid}
-        `
+        subject: title,
+        text: text
     };
     await new Promise((res, rej) => {
         transport.sendMail(message, (err, info) => {

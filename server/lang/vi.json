@@ -1,0 +1,19 @@
+{
+    "unknown_error": "Lỗi không rõ",
+    "bad_request": "Yêu cầu xấu",
+    "authentication_error": "Lỗi xác thực",
+    "unable_find_user": "Không thể tìm thấy người dùng",
+    "login_success": "Đăng nhập thành công",
+    "logout_success": "Đăng xuất thành công",
+    "create_user_success": "Tạo người dùng thành công",
+    "verification_success": "Xác minh thành công",
+    "resend_verification": "Email xác minh đã được gửi",
+    "title_resend_verification": "Xác minh email tin nhắn",
+    "msg_resend_verification": "Xin chào, \nBạn đã yêu cầu sử dụng địa chỉ email này để truy cập tài khoản tin nhắn của mình. \n Nhấp vào liên kết bên dưới để xác minh địa chỉ email này.",
+    "deviceid_missing": "DeviceId bị thiếu",
+    "wrong_email_format": "Định dạng email sai",
+    "password_must_be_string": "Mật khẩu phải là chuỗi",
+    "password_length_msg": "Độ dài mật khẩu phải từ 8 ký tự trở lên",
+    "confirm_password_must_be_string": "Xác nhận mật khẩu phải là chuỗi",
+    "confirm_password_length_msg": "Xác nhận độ dài mật khẩu phải từ 8 ký tự trở lên"
+}

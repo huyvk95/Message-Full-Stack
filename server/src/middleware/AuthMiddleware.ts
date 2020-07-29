@@ -21,10 +21,10 @@ export function checkAuth(option?: { checkVerified?: boolean }) {
                 let token = authorization[1];
                 //Get user data
                 let userData: any = jwt.verify(token, process.env.SECRET_KEY as string);
-                if (!userData) throw { code: 401, message: "Authentication error" }
+                if (!userData) throw { code: 401, message: "authentication_error" }
                 // Get user
                 let user = await User.findById(userData._id);
-                if (!user) throw { code: 401, message: "Authentication error" }
+                if (!user) throw { code: 401, message: "authentication_error" }
                 // Check verified
                 if(checkVerified) {
                     let verify = user.get('emailVerify');
@@ -32,12 +32,12 @@ export function checkAuth(option?: { checkVerified?: boolean }) {
                 }
                 // Check device id
                 let device = user.get('device');
-                if (device[deviceId] != token) throw { code: 401, message: "Authentication error" }
+                if (device[deviceId] != token) throw { code: 401, message: "authentication_error" }
                 // Return user data
                 req.user = util.common.userPrivateInfoFilter(user.toObject());
                 return next()
             } else {
-                throw { code: 401, message: "Authentication error" }
+                throw { code: 401, message: "authentication_error" }
             }
         } catch (error) {
             util.common.requestErrorHandle(res, error);

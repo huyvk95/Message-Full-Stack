@@ -16,17 +16,17 @@ async function login(req: Request, res: Response, next: NextFunction) {
         User.findOne({ email: email, active: true }, async function (err, user) {
             if (err) {
                 res.statusCode = 500
-                res.message = 'Unknow error'
+                res.message = 'unknown_error'
                 return next()
             }
             if (!user) {
                 res.statusCode = 500
-                res.message = "Can't find user"
+                res.message = "unable_find_user"
                 return next()
             }
             if (!bcrypt.compareSync(password, user.get('password'))) {
                 res.statusCode = 500
-                res.message = "Can't find user"
+                res.message = "unable_find_user"
                 return next()
             }
 
@@ -43,7 +43,7 @@ async function login(req: Request, res: Response, next: NextFunction) {
 
             // Response
             res.statusCode = 200
-            res.message = 'Login success'
+            res.message = 'login_success'
             res.data = {
                 authorization: token,
                 user: data
@@ -62,13 +62,13 @@ async function token(req: Request, res: Response, next: NextFunction) {
         // Get user
         let user = await User.findById(req.user._id);
         // Check user
-        if (!user) throw { code: 401, message: "Authentication error" }
+        if (!user) throw { code: 401, message: "authentication_error" }
         //Update user login time
         user.set('loginTime', new Date());
         await user.save();
         //Send data
         res.statusCode = 200
-        res.message = 'Login success'
+        res.message = 'login_success'
         res.data = {
             user: req.user
         }
@@ -86,7 +86,7 @@ async function logout(req: Request, res: Response, next: NextFunction) {
         // Get user
         let user = await User.findById(req.user._id);
         // Check user
-        if (!user) throw { code: 401, message: "Authentication error" }
+        if (!user) throw { code: 401, message: "authentication_error" }
         // Handle user data
         let device = Object.assign({}, user.get('device'));
         delete device[deviceId as string];
@@ -94,7 +94,7 @@ async function logout(req: Request, res: Response, next: NextFunction) {
         await user.save();
 
         res.statusCode = 200
-        res.message = 'Logout success'
+        res.message = 'logout_success'
     } catch (error) {
         util.common.requestErrorHandle(res, error)
     } finally {
@@ -140,15 +140,15 @@ async function register(req: Request, res: Response, next: NextFunction) {
                 // Data
                 let data = util.common.userPrivateInfoFilter(user.toObject())
                 // Sign token
-                let token = jwt.sign(data, process.env.SECRET_KEY as string)
+                let token = jwt.sign(data, process.env.SECRET_KEY as string, { expiresIn: '1d' })
                 // Send verify mail
-                util.common.sendVerificationMai(email, uuid)
+                util.common.sendMail(email, req.t('title_resend_verification'), `${req.t('msg_resend_verification')}\nhttp://localhost:3001/verify/${uuid}`)
                 // Sign device token
                 user.set('device', { [deviceId as string]: token })
                 await user.save()
                 // Response
                 res.statusCode = 200;
-                res.message = 'Create user success';
+                res.message = 'create_user_success';
                 res.data = {
                     authorization: token,
                     user: data
@@ -170,7 +170,7 @@ async function verify(req: Request, res: Response, next: NextFunction) {
         let { uuid } = req.body;
         // Get user
         let user = await User.findById(req.user._id);
-        if (!user) throw { code: 500, message: "Can't find user" }
+        if (!user) throw { code: 500, message: "unable_find_user" }
         // Check verified
         let verify = user.get('emailVerify');
         if (verify.verified) throw { code: 200, message: "User verified" }
@@ -184,7 +184,7 @@ async function verify(req: Request, res: Response, next: NextFunction) {
         await user.save();
         // Response
         res.statusCode = 200;
-        res.message = "Verification success"
+        res.message = "verification_success"
     } catch (error) {
         util.common.requestErrorHandle(res, error)
     } finally {
@@ -196,15 +196,15 @@ async function resendVerifyMail(req: Request, res: Response, next: NextFunction)
     try {
         // Get user
         let user = await User.findById(req.user._id);
-        if (!user) throw { code: 500, message: "Can't find user" }
+        if (!user) throw { code: 500, message: "unable_find_user" }
         // Check verified
         let verify = user.get('emailVerify');
         if (verify.verified) throw { code: 200, message: "User verified" }
         // Check uuid
-        await util.common.sendVerificationMai(user.get('email'), verify.uuid)
+        await util.common.sendMail(user.get('email'), req.t('title_resend_verification'), `${req.t('msg_resend_verification')}\nhttp://localhost:3001/verify/${verify.uuid}`)
         // Response
         res.statusCode = 200;
-        res.message = "Verification email has been sent"
+        res.message = "resend_verification"
     } catch (error) {
         util.common.requestErrorHandle(res, error)
     } finally {

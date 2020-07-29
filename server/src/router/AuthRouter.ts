@@ -9,10 +9,10 @@ let router = Router();
 router.route('/login')
     .post(
         [
-            header('deviceId', 'Device must be string').isString(),
-            body('email', 'Wrong email format').isEmail().isLength({ min: 12, max: 50 }),
-            body('password', 'Password must be string').isString(),
-            body('password', 'Password length must be 8 character or more').isLength({ min: 8, max: 32 })
+            header('deviceId', 'deviceid_missing').isString(),
+            body('email', 'wrong_email_format').isEmail().isLength({ min: 12, max: 50 }),
+            body('password', 'password_must_be_string').isString(),
+            body('password', 'password_length_msg').isLength({ min: 8, max: 32 })
         ],
         middleware.data.validator,
         controller.login,
@@ -22,7 +22,7 @@ router.route('/login')
 router.route('/token')
     .post(
         [
-            header('deviceId', 'Device must be string').isString(),
+            header('deviceId', 'deviceid_missing').isString(),
         ],
         middleware.data.validator,
         middleware.auth.checkAuth({ checkVerified: false }),
@@ -33,7 +33,7 @@ router.route('/token')
 router.route('/logout')
     .post(
         [
-            header('deviceId', 'Device must be string').isString(),
+            header('deviceId', 'deviceid_missing').isString(),
         ],
         middleware.data.validator,
         middleware.auth.checkAuth({ checkVerified: false }),
@@ -44,12 +44,12 @@ router.route('/logout')
 router.route('/register')
     .post(
         [
-            header('deviceId', 'Device must be string').isString(),
-            body('email', "Wrong email format").isEmail().isLength({ min: 12, max: 50 }),
-            body('password', "Password must be string").isString(),
-            body('password', "Password length must be 8 character or more").isLength({ min: 8, max: 32 }),
-            body('confirmPassword', "Password must be string").isString(),
-            body('confirmPassword', "Password length must be 8 character or more").isLength({ min: 8, max: 32 })
+            header('deviceId', 'deviceid_missing').isString(),
+            body('email', "wrong_email_format").isEmail().isLength({ min: 12, max: 50 }),
+            body('password', "password_must_be_string").isString(),
+            body('password', "password_length_msg").isLength({ min: 8, max: 32 }),
+            body('confirmPassword', "confirm_password_must_be_string").isString(),
+            body('confirmPassword', "confirm_password_length_msg").isLength({ min: 8, max: 32 })
         ],
         middleware.data.validator,
         controller.register,
@@ -59,7 +59,7 @@ router.route('/register')
 router.route('/verify')
     .post(
         [
-            body('uuid', 'Wrong request').isString()
+            body('uuid', 'bad_request').isString()
         ],
         middleware.auth.checkAuth({ checkVerified: false }),
         controller.verify,
