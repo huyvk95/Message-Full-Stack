@@ -1,13 +1,9 @@
-import { 
-    middlewareAuth as checkAuth, 
-    middlewareResponse as response,
-    middlewareValidator as validator
-} from "./CommonMiddleware";
+import * as auth from "./AuthMiddleware";
+import * as data from "./DataMiddleware";
 
 let middleware = {
-    checkAuth,
-    response,
-    validator,
+    auth,
+    data
 }
 
 export default middleware;

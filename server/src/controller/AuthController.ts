@@ -160,4 +160,31 @@ async function register(req: Request, res: Response, next: NextFunction) {
     }
 }
 
-export default { login, token, logout, register }
+async function verify(req: Request, res: Response, next: NextFunction) {
+    try {
+        let { uuid } = req.body;
+        // Get user
+        let user = await User.findById(req.user._id);
+        if (!user) throw { code: 500, message: "Can't find user" }
+        // Check verified
+        let verify = user.get('emailVerify');
+        if (verify.verified) throw { code: 200, message: "User verified" }
+        // Check uuid
+        if (uuid != verify.uuid) throw { code: 500, message: "Verification failed" }
+        // Save user
+        user.set('emailVerify', {
+            verified: true,
+            uuid: verify.uuid
+        })
+        await user.save();
+        // Response
+        res.statusCode = 200;
+        res.message = "Verification success"
+    } catch (error) {
+        util.common.requestErrorHandle(res, error)
+    } finally {
+        next()
+    }
+}
+
+export default { login, token, logout, register, verify }

@@ -9,7 +9,7 @@ let router = Router();
 /* API */
 router.use('/auth', authRouter);
 /* HOME */
-router.use('/', middleware.checkAuth);
+router.use('/', middleware.auth.checkAuth());
 /* USER */
 router.use('/user', userRouter);
 

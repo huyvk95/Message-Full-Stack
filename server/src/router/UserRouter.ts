@@ -9,21 +9,11 @@ let router = Router();
 router.route('/')
     .get(
         controller.get,
-        middleware.response
+        middleware.data.formatResponse
     )
     .put(
         controller.put,
-        middleware.response
-    )
-
-router.route('/verify')
-    .post(
-        [
-            body('uuid', 'Wrong request').isString()
-        ],
-        middleware.validator,
-        controller.verify,
-        middleware.response
+        middleware.data.formatResponse
     )
 
 export default router;

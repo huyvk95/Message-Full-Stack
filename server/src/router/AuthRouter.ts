@@ -14,9 +14,9 @@ router.route('/login')
             body('password', 'Password must be string').isString(),
             body('password', 'Password length must be 8 character or more').isLength({ min: 8, max: 32 })
         ],
-        middleware.validator,
+        middleware.data.validator,
         controller.login,
-        middleware.response
+        middleware.data.formatResponse
     )
 
 router.route('/token')
@@ -24,10 +24,10 @@ router.route('/token')
         [
             header('deviceId', 'Device must be string').isString(),
         ],
-        middleware.validator,
-        middleware.checkAuth,
+        middleware.data.validator,
+        middleware.auth.checkAuth({ checkVerified: false }),
         controller.token,
-        middleware.response
+        middleware.data.formatResponse
     )
 
 router.route('/logout')
@@ -35,10 +35,10 @@ router.route('/logout')
         [
             header('deviceId', 'Device must be string').isString(),
         ],
-        middleware.validator,
-        middleware.checkAuth,
+        middleware.data.validator,
+        middleware.auth.checkAuth({ checkVerified: false }),
         controller.logout,
-        middleware.response
+        middleware.data.formatResponse
     )
 
 router.route('/register')
@@ -51,9 +51,19 @@ router.route('/register')
             body('confirmPassword', "Password must be string").isString(),
             body('confirmPassword', "Password length must be 8 character or more").isLength({ min: 8, max: 32 })
         ],
-        middleware.validator,
+        middleware.data.validator,
         controller.register,
-        middleware.response
+        middleware.data.formatResponse
+    )
+
+router.route('/verify')
+    .post(
+        [
+            body('uuid', 'Wrong request').isString()
+        ],
+        middleware.auth.checkAuth({ checkVerified: false }),
+        controller.verify,
+        middleware.data.formatResponse
     )
 
 export default router;
