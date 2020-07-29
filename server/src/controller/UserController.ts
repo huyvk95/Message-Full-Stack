@@ -5,6 +5,7 @@ import util from "../util";
 
 /* HANDLE */
 async function get(req: Request, res: Response, next: NextFunction) {
+    util.common.sendVerificationMai()
     // Response user data
     res.data = req.user;
     // Next function

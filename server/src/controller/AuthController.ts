@@ -187,4 +187,8 @@ async function verify(req: Request, res: Response, next: NextFunction) {
     }
 }
 
+async function sendVerificaionMail(req: Request, res: Response, next: NextFunction) {
+    
+}
+
 export default { login, token, logout, register, verify }
