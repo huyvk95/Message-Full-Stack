@@ -8,8 +8,14 @@ export interface IUserData {
     updateTime?: Date
 }
 
+export interface IAppData {
+    lang: string,
+    deviceId: string,
+}
+
 /* Store data */
 export interface IStoreState {
+    app: IAppData
     user: IUserData
 }
 

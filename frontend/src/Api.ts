@@ -10,9 +10,10 @@ export function initialize() {
     // Token
     let token = localStorage.getItem('authorization');
     if (token) headers = Object.assign(headers, { authorization: `Bearer ${token}` })
-    // Device ID
-    let deviceId = util.common.getDeviceId();
-    if (deviceId) headers = Object.assign(headers, { deviceId: deviceId })
+}
+
+export function config(option: { [key in string]: string }) {
+    headers = Object.assign(headers, option)
 }
 
 export function getHeaders() {

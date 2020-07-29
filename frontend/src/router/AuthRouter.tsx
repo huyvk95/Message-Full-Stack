@@ -8,7 +8,7 @@ import * as api from "../Api";
 
 function AuthRouter({ user, token }: { user: IUserData, token: Function }) {
     // Check login token
-    if (!user.email && api.getHeaders().authorization) {
+    if (!user.email && api.getHeaders().authorization && api.getHeaders().deviceId) {
         token()
         return (<div></div>)
     }

@@ -34,7 +34,6 @@ class LoginContainer extends Component<IProps, IState> {
         this.onChangePassword = this.onChangePassword.bind(this);
         this.onChangeComfirmPassword = this.onChangeComfirmPassword.bind(this);
         this.onClickSwitch = this.onClickSwitch.bind(this);
-        this.onClickLogin = this.onClickLogin.bind(this);
         this.onLoginSubmit = this.onLoginSubmit.bind(this);
     }
 
@@ -61,11 +60,6 @@ class LoginContainer extends Component<IProps, IState> {
         this.setState({ viewType: viewType == ELoginViewType.SIGNIN ? ELoginViewType.SIGNUP : ELoginViewType.SIGNIN })
     }
 
-    onClickLogin() {
-        let { email, password } = this.state;
-        this.props.login(email, password)
-    }
-
     onLoginSubmit(event: React.FormEvent<HTMLFormElement>) {
         let { email, password, confirmPassword, viewType } = this.state;
         event.preventDefault();
@@ -83,12 +77,12 @@ class LoginContainer extends Component<IProps, IState> {
             <div>
                 <button onClick={this.onClickSwitch}>Switch</button>
                 <form onSubmit={this.onLoginSubmit}>
-                    <input type="text" placeholder="Email" onChange={this.onChangeEmail} />
-                    <input type="password" placeholder="Password" onChange={this.onChangePassword} />
+                    <input type="text" defaultValue="d4rkw0lf1967@gmail.com" placeholder="Email" onChange={this.onChangeEmail} />
+                    <input type="password" defaultValue="12345678" placeholder="Password" onChange={this.onChangePassword} />
                     {
                         viewType == ELoginViewType.SIGNIN ? <></> : <input type="password" placeholder="Confirm password" onChange={this.onChangeComfirmPassword} />
                     }
-                    <button type="submit" onClick={this.onClickLogin}>{viewType == ELoginViewType.SIGNIN ? "Signin" : "Signup"}</button>
+                    <button type="submit">{viewType == ELoginViewType.SIGNIN ? "Signin" : "Signup"}</button>
                 </form>
             </div>
         )
