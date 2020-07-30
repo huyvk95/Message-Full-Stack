@@ -18,7 +18,14 @@
   },
   "homepage": "https://github.com/huyvk3110/Message-App-Fullstack#readme",
   "dependencies": {
+    "@types/i18next": "^13.0.0",
+    "@types/i18next-browser-languagedetector": "^3.0.0",
+    "@types/react-i18next": "^8.1.0",
     "global": "^4.4.0",
-    "jsonwebtoken": "^8.5.1"
+    "i18next": "^19.6.3",
+    "i18next-browser-languagedetector": "^5.0.0",
+    "i18next-http-backend": "^1.0.17",
+    "jsonwebtoken": "^8.5.1",
+    "react-i18next": "^11.7.0"
   }
 }

@@ -1,8 +1,6 @@
-import React, { Component } from "react";
+import React, { Component, Suspense } from "react";
 import { connect } from "react-redux";
-import { BrowserRouter as Router } from "react-router-dom";
 import { initialize } from "./action/AppActions";
-import { IStoreState, IAppData } from "./interface/DataInterface";
 import AuthRouter from "./router/AuthRouter";
 import * as api from "./Api";
 
@@ -25,7 +23,7 @@ class App extends Component<IProps> {
     /* Render */
     render() {
         return (
-            <Router><AuthRouter /></Router>
+            <AuthRouter />
         )
     }
 }
