@@ -4,7 +4,7 @@ import i18next from "i18next";
 
 export function requestErrorHandle(res: Response, error: any) {
     res.statusCode = error.code || 500
-    res.message = error.message || error || "unknown_error"
+    res.message = error.message || error || "error.unknow"
 }
 
 export function emptyKeyFilter(payload: { [key: string]: any }) {

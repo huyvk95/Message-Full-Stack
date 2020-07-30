@@ -1,19 +1,29 @@
 {
-    "unknown_error": "Unknown error",
-    "bad_request": "Bad request",
-    "authentication_error": "Authentication error",
-    "unable_find_user": "Unable to find user",
-    "login_success": "Logged in successfully",
-    "logout_success": "Logged out successfully",
-    "create_user_success": "Create user successfully",
-    "verification_success": "Verification success",
-    "resend_verification": "Verification email has been sent",
-    "title_resend_verification": "Message email verification",
-    "msg_resend_verification": "Hello,\nYou requested to use this email address to access your message account.\nClick the link below to verify this email address.",
-    "deviceid_missing":"DeviceId is missing",
-    "wrong_email_format":"Wrong email format",
-    "password_must_be_string":"Password must be string",
-    "password_length_msg":"Password length must be 8 character or more",
-    "confirm_password_must_be_string":"Confirm password must be string",
-    "confirm_password_length_msg":"Confirm password length must be 8 character or more"
+    "error": {
+        "unknow": "Unknown error",
+        "bad": "Bad request",
+        "auth": "Authentication error",
+        "find_user": "Unable to find user"
+    },
+    "success": {
+        "login": "Logged in successfully",
+        "logout": "Logged out successfully",
+        "create_user": "Create user successfully",
+        "verification": "Verification success",
+        "resend_verification": "Verification email has been sent"
+    },
+    "msg": {
+        "resend_verification": "Hello,\nYou requested to use this email address to access your message account.\nClick the link below to verify this email address."
+    },
+    "validate": {
+        "deviceid":"DeviceId is missing",
+        "email_format":"Wrong email format",
+        "password_format":"Password must be string",
+        "password_length":"Password length must be 8 character or more",
+        "confirm_password_format":"Confirm password must be string",
+        "confirm_password_length":"Confirm password length must be 8 character or more"
+    },
+    "common": {
+        "title_resend_verification": "Message email verification"
+    }
 }
