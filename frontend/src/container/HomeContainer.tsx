@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { logout } from "../action/UserActions";
 import { connect } from "react-redux";
+import socketClusterClient from "socketcluster-client";
 
 interface IProps {
     logout: Function
@@ -11,6 +12,13 @@ class HomeContainer extends Component<IProps> {
         super(props);
 
         this.onClickLogout = this.onClickLogout.bind(this);
+    }
+
+    componentWillMount() {
+        let socket = socketClusterClient.create({
+            hostname: 'localhost',
+            port: 3000
+        });
     }
 
     onClickLogout() {

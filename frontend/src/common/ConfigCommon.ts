@@ -1,1 +1,2 @@
-export const HOST = "http://localhost:3000"
+export const HOST = "localhost"
+export const PORT = "3000"

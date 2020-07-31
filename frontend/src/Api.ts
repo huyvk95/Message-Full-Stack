@@ -1,7 +1,8 @@
 import axios from "axios";
 import common from "./common";
-import util from "./util";
 import { responseFormat } from "./util/CommonUtils";
+
+const HOST = `http://${common.config.HOST}:${common.config.PORT}`
 
 let headers: { [key in string]: string } = {};
 
@@ -23,7 +24,7 @@ export function getHeaders() {
 /* __API__ */
 export async function register(email: string, password: string, confirmPassword: string) {
     // Request
-    let response = await axios.post(`${common.config.HOST}/auth/register`, { email, password, confirmPassword }, { headers });
+    let response = await axios.post(`${HOST}/auth/register`, { email, password, confirmPassword }, { headers });
     // Format data
     let data = responseFormat(response);
     // Save token
@@ -41,7 +42,7 @@ export async function register(email: string, password: string, confirmPassword:
 
 export async function login(email: string, password: string) {
     // Request
-    let response = await axios.post(`${common.config.HOST}/auth/login`, { email, password }, { headers });
+    let response = await axios.post(`${HOST}/auth/login`, { email, password }, { headers });
     // Format data
     let data = responseFormat(response);
     // Save token
@@ -59,7 +60,7 @@ export async function login(email: string, password: string) {
 
 export async function token() {
     // Request
-    let response = await axios.post(`${common.config.HOST}/auth/token`, {}, { headers });
+    let response = await axios.post(`${HOST}/auth/token`, {}, { headers });
     // Format data
     let data = responseFormat(response);
     // Check token exist or expired
@@ -73,19 +74,19 @@ export async function token() {
 
 export async function verify(uuid: string) {
     // Request
-    let response = await axios.post(`${common.config.HOST}/auth/verify`, { uuid }, { headers });
+    let response = await axios.post(`${HOST}/auth/verify`, { uuid }, { headers });
     return responseFormat(response);;
 }
 
 export async function resendVerify() {
     // Request
-    let response = await axios.post(`${common.config.HOST}/auth/resendVerify`, {}, { headers });
+    let response = await axios.post(`${HOST}/auth/resendVerify`, {}, { headers });
     return responseFormat(response);;
 }
 
 export async function logout() {
     // Request
-    let response = await axios.post(`${common.config.HOST}/auth/logout`, {}, { headers });
+    let response = await axios.post(`${HOST}/auth/logout`, {}, { headers });
     // Format data
     let data = responseFormat(response);
     // Handle
@@ -97,6 +98,6 @@ export async function logout() {
 }
 
 export async function getUser() {
-    let response = await axios.get(`${common.config.HOST}/user`, { headers });
+    let response = await axios.get(`${HOST}/user`, { headers });
     return responseFormat(response);
 }
