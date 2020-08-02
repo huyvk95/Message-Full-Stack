@@ -21,35 +21,26 @@ const UserSchema = new Schema({
     lastOnlineTime: { type: Date, required: true },
     registrationTime: { type: Date, required: true },
     active: { type: Boolean, required: true, default: true },
-    // App
-    chatroomData: { type: Schema.Types.ObjectId, ref: 'UserChatRoom', required: true },
-    // Friend
-    friendData: { type: Schema.Types.ObjectId, ref: 'UserFriend', required: true },
-    friendRequestData: { type: Schema.Types.ObjectId, ref: 'UserFriendRequest', required: true },
 })
 
 const UserChatRoomSchema = new Schema({
-    chatrooms: [{
-        notification: { type: Boolean, default: true },
-        archive: { type: Boolean, default: true },
-        block: { type: Boolean, default: false },
-        chatroom: { type: Schema.Types.ObjectId, ref: 'Chatroom', required: true },
-        active: { type: Boolean, default: false },
-    }],
+    user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+    notification: { type: Boolean, default: true },
+    archive: { type: Boolean, default: true },
+    block: { type: Boolean, default: false },
+    chatroom: { type: Schema.Types.ObjectId, ref: 'Chatroom', required: true },
+    active: { type: Boolean, default: false },
 })
 
 const UserFriendSchema = new Schema({
-    friends: [{
-        nickname: { type: String },
-        user: { type: Schema.Types.ObjectId, ref: 'User', required: true }
-    }],
+    user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+    friend: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+    nickname: { type: String },
 })
 
 const UserFriendRequestSchema = new Schema({
-    requests: {
-        queue: [{ type: Schema.Types.ObjectId, ref: 'User', required: true }],
-        request: [{ type: Schema.Types.ObjectId, ref: 'User', required: true }]
-    }
+    from: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+    to: { type: Schema.Types.ObjectId, ref: 'User', required: true },
 })
 
 // Chatroom

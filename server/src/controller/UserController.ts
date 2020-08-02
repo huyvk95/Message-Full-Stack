@@ -5,7 +5,7 @@ import { Document } from "mongoose";
 /* HANDLE */
 async function get(req: Request, res: Response, next: NextFunction) { 
     // Response user data
-    res.data = req.user;
+    // res.data = req.user;
     // Next function
     next()
 }

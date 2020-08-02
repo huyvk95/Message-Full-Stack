@@ -11,10 +11,10 @@ const EVENT = common.event.PROFILE;
 async function get(request: any) {
     // Find data
     let user = await User.findById(request.socket.authToken._id)
+        .select(common.dbselect.profile)
     if (!user) return request.error('error.find_user');
-    let data = util.common.userPrivateInfoFilter(user.toObject())
     // Response
-    request.end(data)
+    request.end(user.toObject())
 }
 
 async function put(request: any) {
@@ -66,7 +66,6 @@ async function remove(request: any) {
     // Response
     request.end({
         message: "success.update_user",
-        data: util.common.userPrivateInfoFilter(user.toObject())
     })
     // Disconnect
     request.socket.deauthenticateSelf()

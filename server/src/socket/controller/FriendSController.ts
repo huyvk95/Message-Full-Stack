@@ -1,113 +1,87 @@
 import { AGServer, AGServerSocket } from "socketcluster-server";
 import { User, UserFriend } from "../../database/ModelDatabase";
 import common from "../../common";
-import util from "../../util";
 
 const PACKET = common.packet.FRIEND;
 const EVENT = common.event.FRIEND;
 
 /* __Handle__ */
 async function get(request: any) {
-    // Find data
-    let user = await User.findById(request.socket.authToken._id)
-    if (!user) return request.error('error.find_user');
-    // Get friend data
-    if (!user.get('friendData')) {
-        let userFriend = new UserFriend({})
-        await userFriend.save()
-        user.set('friendData', userFriend.get('_id'))
-        await user.save()
-    }
-    let friendData = await UserFriend.findById(user.get('friendData'))
-        .populate('friends.user')
-    if (!friendData) return request.error('error.unknow');
-    let friends = friendData.get('friends').toObject();
-    // Response
-    let response = friends.map((o: any) => util.common.dataKeysFilter(o.user, ["_id", "email", "firstName", "firstName", "avatar", "online", "lastOnlineTime"]))
+    let { online, string } = request?.data?.data
+    // Get data
+    let friendData = await UserFriend.find({ user: request.socket.authToken._id })
+        .populate({
+            path: 'friend',
+            select: common.dbselect.user,
+        })
+        .limit(50)
+        .then((data) => {
+            //Get friend
+            data = data.map(o => o.get('friend'))
+            //Filter
+            data = data.filter(o => o.get('active') === true)
+            if (online || string) {
+                if (online) data = data.filter((o: any) => o.get('online') === online);
+                if (string) data = data.filter((o: any) => {
+                    return new RegExp(`.*${string}.`).test(o.get('email')) || new RegExp(`.*${string}.`).test(o.get('firstName')) || new RegExp(`.*${string}.`).test(o.get('lastName'))
+                });
+            }
+            return data.map(o => o.toObject())
+        })
 
-    request.end(response)
+    request.end(friendData)
 }
 
 async function add(request: any) {
     let { userId } = request?.data?.data
     if (!userId) return request.error('validate.missing_input');
-    // Find data
-    let user = await User.findById(request.socket.authToken._id)
-    if (!user) return request.error('error.find_user');
     // Friend data
     let friend = await User.findOne({ _id: userId, active: true })
+        .select(common.dbselect.user)
     if (!friend) return request.error('error.find_user');
-    // Get friend data
-    let friendData = await UserFriend.findById(user.get('friendData'))
-    if (!friendData) {
-        friendData = new UserFriend({})
-        friendData.save()
-        user.set('friendData', friendData.get('_id'))
-        await user.save()
-    }
-    // Set new user friend data
-    let friends = friendData.get('friends').toObject();
-    if (friends.some((o: any) => o.user.toString() === userId)) return request.error('error.been_friend');
-    friends.push({ user: userId })
-    friendData.set('friends', friends);
+    // Check friend data
+    // -Exist
+    let friendData = await UserFriend.findOne({ user: request.socket.authToken._id, friend: userId })
+    if (friendData) return request.error('error.been_friend');
+    // -Create
+    friendData = new UserFriend({
+        user: request.socket.authToken._id,
+        friend: userId
+    })
     await friendData.save();
     // Response
-    request.end(util.common.dataKeysFilter(friend.toObject(), ["_id", "email", "firstName", "firstName", "avatar", "online", "lastOnlineTime"]))
+    request.end(friend.toObject())
 }
 
 async function setNickName(request: any) {
-    let { userId, nickname } = request?.data?.data
-    if (!userId || typeof nickname !== 'string') return request.error('validate.missing_input');
-    // Find data
-    let user = await User.findById(request.socket.authToken._id)
-    if (!user) return request.error('error.find_user');
+    let { dataId, nickname } = request?.data?.data
+    if (!dataId || typeof nickname !== 'string') return request.error('validate.missing_input');
     // Get friend data
-    let friendData = await UserFriend.findById(user.get('friendData'))
-    if (!friendData) {
-        friendData = new UserFriend({})
-        friendData.save()
-        user.set('friendData', friendData.get('_id'))
-        await user.save()
-    }
-    // Set new user friend data
-    let friends = friendData.get('friends').toObject();
-    // Get friend document
-    let friendDoc = friends.find((o: any) => o.user.toString() === userId)
-    if (!friendDoc) return request.error('error.not_friend');
-    // Set nick name and save
-    friendDoc.nickname = nickname;
-    friendData.set('friends', friends);
-    await friendData.save();
+    let friendData = await UserFriend.findById(dataId)
+        .populate({
+            path: 'friend',
+            select: common.dbselect.user,
+        })
+    if (!friendData) return request.error('error.not_friend');
+    // Set nick name
+    friendData.set('nickname', nickname);
+    await friendData.save()
     // Response
     request.end({
         success: true,
-        message: "success"
+        message: "success",
+        data: friendData.toObject()
     })
 }
 
 async function remove(request: any) {
-    let { userId } = request?.data?.data
-    if (!userId) return request.error('validate.missing_input');
-    // Find data
-    let user = await User.findById(request.socket.authToken._id)
-    if (!user) return request.error('error.find_user');
+    let { dataId } = request?.data?.data
+    if (!dataId) return request.error('validate.missing_input');
     // Get friend data
-    let friendData = await UserFriend.findById(user.get('friendData'))
-    if (!friendData) {
-        friendData = new UserFriend({})
-        friendData.save()
-        user.set('friendData', friendData.get('_id'))
-        await user.save()
-    }
-    // Set new user friend data
-    let friends = friendData.get('friends').toObject();
-    // Get friend document
-    let friendDoc = friends.find((o: any) => o.user.toString() === userId)
-    if (!friendDoc) return request.error('error.not_friend');
-    // Set remove friend and save
-    friends.splice(friends.findIndex((o: any) => o.user.toString() === userId), 1)
-    friendData.set('friends', friends);
-    await friendData.save();
+    let friendData = await UserFriend.findById(dataId)
+    if (!friendData) return request.error('error.not_friend');
+    // Remove
+    await friendData.remove();
     // Response
     request.end({
         success: true,
