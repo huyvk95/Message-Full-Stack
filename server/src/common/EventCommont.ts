@@ -5,7 +5,7 @@ const event = {
     PROFILE: {
         GET: "get",
         PUT: "put",
-        DELETE: "delete",
+        REMOVE: "remove",
     },
     CHATROOM: {},
     MESSAGE: {},

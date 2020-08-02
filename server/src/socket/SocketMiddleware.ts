@@ -9,10 +9,8 @@ export default function socketMiddleware(agServer: AGServer) {
                 if (action.type === action.AUTHENTICATE) {
                     let { socket, authToken: userData, signedAuthToken } = action;
                     let { deviceId } = socket;
-
                     // Check input data
                     if (!deviceId) throw 'validate.missing_input'
-
                     // Get user data
                     // -Token
                     if (!userData) throw "error.token_expired"
