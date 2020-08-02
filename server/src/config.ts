@@ -3,7 +3,7 @@ import { SessionOptions, Store, MemoryStore } from "express-session";
 import { AGServerOptions } from "socketcluster-server/server";
 
 export const socketClusterConfig: AGServerOptions = {
-    
+    authKey: process.env.SECRET_KEY,
 }
 
 export const i18nextConfig: InitOptions = {

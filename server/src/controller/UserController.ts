@@ -3,7 +3,7 @@ import { User } from "../database/ModelDatabase";
 import { Document } from "mongoose";
 
 /* HANDLE */
-async function get(req: Request, res: Response, next: NextFunction) {
+async function get(req: Request, res: Response, next: NextFunction) { 
     // Response user data
     res.data = req.user;
     // Next function
@@ -11,7 +11,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
 }
 
 async function put(req: Request, res: Response, next: NextFunction) {
-    const { password, confirmPassword, firstName, lastName, address, avatar } = req.body;
+    const { password, confirmPassword, firstName, lastName, avatar } = req.body;
 
     // //Check
     // //-Password

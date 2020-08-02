@@ -9,7 +9,7 @@ let headers: { [key in string]: string } = {};
 /* __SUPPPORT__ */
 export function initialize() {
     // Token
-    let token = localStorage.getItem('authorization');
+    let token = localStorage.getItem('socketcluster.authToken');
     if (token) headers = Object.assign(headers, { authorization: `Bearer ${token}` })
 }
 
@@ -34,7 +34,7 @@ export async function register(email: string, password: string, confirmPassword:
         // Asign token
         headers = Object.assign(headers, { authorization: `Bearer ${token}` })
         // Save token
-        localStorage.setItem('authorization', token);
+        localStorage.setItem('socketcluster.authToken', token);
     }
 
     return data;
@@ -52,7 +52,7 @@ export async function login(email: string, password: string) {
         // Asign token
         headers = Object.assign(headers, { authorization: `Bearer ${token}` })
         // Save token
-        localStorage.setItem('authorization', token);
+        localStorage.setItem('socketcluster.authToken', token);
     }
 
     return data;
@@ -66,7 +66,7 @@ export async function token() {
     // Check token exist or expired
     if (!data.success) {    // If success fail remove header authorization and localstorage
         headers = Object.assign(headers, { authorization: '' })
-        localStorage.removeItem('authorization')
+        localStorage.removeItem('socketcluster.authToken')
     }
 
     return data;
@@ -92,7 +92,7 @@ export async function logout() {
     // Handle
     if (data.success) {
         headers = Object.assign(headers, { authorization: '' })
-        localStorage.removeItem('authorization')
+        localStorage.removeItem('socketcluster.authToken')
     }
     return data;
 }

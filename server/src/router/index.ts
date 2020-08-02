@@ -1,6 +1,6 @@
 import { Router } from "express";
 import authRouter from "./AuthRouter";
-import userRouter from "./UserRouter";
+import profileRouter from "./ProfileRouter";
 import middleware from "../middleware";
 
 /* INSTANCE */
@@ -11,6 +11,6 @@ router.use('/auth', authRouter);
 /* HOME */
 router.use('/', middleware.auth.checkAuth());
 /* USER */
-router.use('/user', userRouter);
+router.use('/profile', profileRouter);
 
 export default router;

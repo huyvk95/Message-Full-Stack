@@ -25,9 +25,9 @@ class LoginContainer extends Component<IProps, IState> {
 
         this.state = {
             viewType: ELoginViewType.SIGNIN,
-            email: "",
-            password: "",
-            confirmPassword: "",
+            email: "huy00000@gmail.com",
+            password: "12345678",
+            confirmPassword: "12345678",
         }
 
         this.onChangeEmail = this.onChangeEmail.bind(this);
@@ -77,7 +77,7 @@ class LoginContainer extends Component<IProps, IState> {
             <div>
                 <button onClick={this.onClickSwitch}>Switch</button>
                 <form onSubmit={this.onLoginSubmit}>
-                    <input type="text" defaultValue="d4rkw0lf1967@gmail.com" placeholder="Email" onChange={this.onChangeEmail} />
+                    <input type="text" defaultValue="huy00000@gmail.com" placeholder="Email" onChange={this.onChangeEmail} />
                     <input type="password" defaultValue="12345678" placeholder="Password" onChange={this.onChangePassword} />
                     {
                         viewType == ELoginViewType.SIGNIN ? <></> : <input type="password" placeholder="Confirm password" onChange={this.onChangeComfirmPassword} />

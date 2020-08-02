@@ -28,7 +28,7 @@ export function checkAuth(option?: { checkVerified?: boolean }) {
                 // Check verified
                 if(checkVerified) {
                     let verify = user.get('emailVerify');
-                    if (!verify.verified) throw { code: 200, message: "User has not been verified" }
+                    if (!verify.verified) throw { code: 200, message: "error.user_verify" }
                 }
                 // Check device id
                 let device = user.get('device');

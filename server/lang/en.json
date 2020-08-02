@@ -3,12 +3,15 @@
         "unknow": "Unknown error",
         "bad": "Bad request",
         "auth": "Authentication error",
-        "find_user": "Unable to find user"
+        "find_user": "Unable to find user",
+        "token_expired": "Token expired",
+        "user_verify": "User has not been verified"
     },
     "success": {
         "login": "Logged in successfully",
         "logout": "Logged out successfully",
         "create_user": "Create user successfully",
+        "update_user": "Update user data successfully",
         "verification": "Verification success",
         "resend_verification": "Verification email has been sent"
     },
@@ -16,12 +19,14 @@
         "resend_verification": "Hello,\nYou requested to use this email address to access your message account.\nClick the link below to verify this email address."
     },
     "validate": {
-        "deviceid":"DeviceId is missing",
-        "email_format":"Wrong email format",
-        "password_format":"Password must be string",
-        "password_length":"Password length must be 8 character or more",
-        "confirm_password_format":"Confirm password must be string",
-        "confirm_password_length":"Confirm password length must be 8 character or more"
+        "missing_input": "Missing input data",
+        "deviceid": "DeviceId is missing",
+        "email_format": "Wrong email format",
+        "password_format": "Password must be string",
+        "password_length": "Password length must be 8 character or more",
+        "confirm_password_format": "Confirm password must be string",
+        "confirm_password_length": "Confirm password length must be 8 character or more",
+        "invalid_string": "Invalid string"
     },
     "common": {
         "title_resend_verification": "Message email verification"

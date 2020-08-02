@@ -20,6 +20,11 @@ export interface IStoreState {
 }
 
 /* Common */
+export interface IAuthData {
+    deviceId: string,
+    token: string
+}
+
 export interface IResponseData {
     success: boolean,
     status: number,

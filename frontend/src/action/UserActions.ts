@@ -1,5 +1,6 @@
 import common from "../common";
 import * as api from "../Api"
+import socket from "../socket";
 
 export function login(email: string, password: string) {
     return async function (dispatch: Function) {
@@ -78,6 +79,8 @@ export function logout() {
         if (!data.success) {
             console.log(data.message)
         } else {
+            // Socket disconnect
+            socket.socket?.disconnect();
             // Dispatch action
             dispatch({
                 type: common.action.LOGOUT,

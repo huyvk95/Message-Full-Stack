@@ -1,9 +1,11 @@
 import React, { Component } from "react";
 import { logout } from "../action/UserActions";
 import { connect } from "react-redux";
-import socketClusterClient from "socketcluster-client";
+import socket from "../socket";
+import { IStoreState, IAppData } from "../interface/DataInterface";
 
 interface IProps {
+    app: IAppData,
     logout: Function
 }
 
@@ -15,10 +17,8 @@ class HomeContainer extends Component<IProps> {
     }
 
     componentWillMount() {
-        let socket = socketClusterClient.create({
-            hostname: 'localhost',
-            port: 3000
-        });
+        let { app } = this.props;
+        socket.init({ deviceId: app.deviceId });
     }
 
     onClickLogout() {
@@ -34,8 +34,12 @@ class HomeContainer extends Component<IProps> {
     }
 }
 
+const mapStateToProps = ({ app }: IStoreState) => ({
+    app
+})
+
 const mapDispatchToProps = {
     logout
 }
 
-export default connect(null, mapDispatchToProps)(HomeContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(HomeContainer);

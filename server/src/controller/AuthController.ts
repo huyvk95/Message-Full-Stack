@@ -131,6 +131,7 @@ async function register(req: Request, res: Response, next: NextFunction) {
                 uuid: uuid
             },
             loginTime: new Date(),
+            lastOnlineTime: new Date(),
             updateTime: new Date(Date.now() - 60000),
             registrationTime: new Date(),
             active: true,

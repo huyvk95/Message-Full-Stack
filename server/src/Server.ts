@@ -12,6 +12,7 @@ import i18next from "i18next";
 import socketClusterServer from "socketcluster-server";
 import { createClient } from "redis";
 import { i18nextConfig, expressSessionConfig, socketClusterConfig } from "./config";
+import socketInit from "./socket";
 let i18nextBackend = require('i18next-fs-backend')
 let i18nextMiddleware = require('i18next-http-middleware')
 
@@ -48,9 +49,4 @@ let listenner = httpServer.listen(process.env.PORT, () => {
 });
 
 /* __SOCKET_CLUSTER__ */
-(async () => {
-    for await (let { socket } of agServer.listener('connection')) {
-        // Handle socket connection.
-        console.log('Socket on connection')
-    }
-})();    
+socketInit(agServer)
