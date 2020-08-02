@@ -5,9 +5,12 @@
         "auth": "Authentication error",
         "find_user": "Unable to find user",
         "token_expired": "Token expired",
-        "user_verify": "User has not been verified"
+        "user_verify": "User has not been verified",
+        "been_friend": "You have been friends with this user",
+        "not_friend": "You are not friends with this user"
     },
     "success": {
+        "success": "Success",
         "login": "Logged in successfully",
         "logout": "Logged out successfully",
         "create_user": "Create user successfully",

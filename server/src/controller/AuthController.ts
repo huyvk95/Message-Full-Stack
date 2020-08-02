@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { User } from "../database/ModelDatabase";
+import { User, UserChatRoom, UserFriend, UserFriendRequest } from "../database/ModelDatabase";
 import { v4 as uuidv4 } from "uuid";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
@@ -124,12 +124,21 @@ async function register(req: Request, res: Response, next: NextFunction) {
         let uuid = uuidv4();
 
         // Create document
-        const user = new User({
+        let userChatRoom = new UserChatRoom({})
+        await userChatRoom.save()
+        let userFriend = new UserFriend({})
+        await userFriend.save()
+        let userFriendRequest = new UserFriendRequest({})
+        await userFriendRequest.save()
+        let user = new User({
             ...option,
             emailVerify: {
                 verified: false,
                 uuid: uuid
             },
+            chatroomData: userChatRoom.get('_id'),
+            friendData: userFriend.get('_id'),
+            friendRequestData: userFriendRequest.get('_id'),
             loginTime: new Date(),
             lastOnlineTime: new Date(),
             updateTime: new Date(Date.now() - 60000),

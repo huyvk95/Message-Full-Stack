@@ -7,6 +7,12 @@ const event = {
         PUT: "put",
         REMOVE: "remove",
     },
+    FRIEND: {
+        GET: "get",
+        ADD: "add",
+        SETNICKNAME: "setNickName",
+        REMOVE: "remove",
+    },
     CHATROOM: {},
     MESSAGE: {},
 }

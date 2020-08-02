@@ -7,15 +7,6 @@ export function requestErrorHandle(res: Response, error: any) {
     res.message = error.message || error || "error.unknow"
 }
 
-export function emptyKeyFilter(payload: { [key: string]: any }) {
-    //Filter
-    Object.keys(payload).forEach((key: string) => {
-        if (payload[key] === undefined) delete payload[key]
-    });
-    //Return payload
-    return payload;
-}
-
 export function userPrivateInfoFilter(info: { [key: string]: any }) {
     const filter = ['_id', 'email', 'firstName', 'lastName', 'avatar', 'updateTime', 'loginTime', 'registrationTime', 'emailVerify']
     //Filter
@@ -26,6 +17,23 @@ export function userPrivateInfoFilter(info: { [key: string]: any }) {
     });
     //Return payload
     return info;
+}
+
+export function emptyKeyFilter(payload: { [key: string]: any }) {
+    //Filter
+    Object.keys(payload).forEach((key: string) => {
+        if (payload[key] === undefined) delete payload[key]
+    });
+    //Return payload
+    return payload;
+}
+
+export function dataKeysFilter(data: { [key in string]: any }, keys: string[]) {
+    Object.keys(data).forEach((key: string) => {
+        if (keys.every(o => o != key)) delete data[key]
+    });
+    //Return payload
+    return data;
 }
 
 export async function sendMail(email: string, title: string, text: string) {

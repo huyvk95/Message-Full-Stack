@@ -3,7 +3,6 @@ import { User } from "../../database/ModelDatabase";
 import bcrypt from "bcrypt";
 import common from "../../common";
 import util from "../../util";
-import { request } from "express";
 
 const PACKET = common.packet.PROFILE;
 const EVENT = common.event.PROFILE;
