@@ -38,7 +38,7 @@ const UserFriendSchema = new Schema({
     nickname: { type: String },
 })
 
-const UserFriendRequestSchema = new Schema({
+const FriendRequestSchema = new Schema({
     from: { type: Schema.Types.ObjectId, ref: 'User', required: true },
     to: { type: Schema.Types.ObjectId, ref: 'User', required: true },
 })
@@ -66,6 +66,6 @@ const MessageSchema = new Schema({
 export const User = model('User', UserSchema, 'user')
 export const UserChatRoom = model('UserChatRoom', UserChatRoomSchema, 'userChatRoom')
 export const UserFriend = model('UserFriend', UserFriendSchema, 'userFriend')
-export const UserFriendRequest = model('UserFriendRequest', UserFriendRequestSchema, 'userFriendRequest')
+export const FriendRequest = model('FriendRequest', FriendRequestSchema, 'friendRequest')
 export const Chatroom = model('Chatroom', ChatroomSchema, 'chatroom')
 export const Message = model('Message', MessageSchema, 'message')

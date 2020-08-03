@@ -7,7 +7,8 @@
         "token_expired": "Token expired",
         "user_verify": "User has not been verified",
         "been_friend": "You have been friends with this user",
-        "not_friend": "You are not friends with this user"
+        "not_friend": "You are not friends with this user",
+        "have_send_request": "You have sent this friend request"
     },
     "success": {
         "success": "Success",

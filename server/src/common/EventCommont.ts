@@ -9,9 +9,12 @@ const event = {
     },
     FRIEND: {
         GET: "get",
-        ADD: "add",
         SETNICKNAME: "setNickName",
         REMOVE: "remove",
+        SENDFRIENDREQUEST: "sendFriendRequest",
+        ACCEPTFRIENDREQUEST: "acceptFriendRequest",
+        REFUSEFRIENDREQUEST: "refuseFriendRequest",
+        CANCELFRIENDREQUEST: "cancelFriendRequest",
     },
     CHATROOM: {},
     MESSAGE: {},
