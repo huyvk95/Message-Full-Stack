@@ -36,7 +36,7 @@ async function setNickName(request: any) {
     let { dataId, nickname } = request?.data?.data
     if (!dataId || typeof nickname !== 'string') return request.error('validate.missing_input');
     // Get friend data
-    let friendData = await UserFriend.findById(dataId)
+    let friendData = await UserFriend.findOne({ _id: dataId, user: request.socket.authToken._id })
         .populate({
             path: 'friend',
             select: common.dbselect.user,
@@ -57,10 +57,10 @@ async function remove(request: any) {
     let { dataId } = request?.data?.data
     if (!dataId) return request.error('validate.missing_input');
     // Get mine friend data
-    let friendData = await UserFriend.findById(dataId)
+    let friendData = await UserFriend.findOne({ _id: dataId, user: request.socket.authToken._id })
     if (!friendData) return request.error('error.not_friend');
     // Get your friend data
-    let yourFriendData = await UserFriend.findOne({ from: friendData.get('friend'), to: request.socket.authToken._id })
+    let yourFriendData = await UserFriend.findOne({ user: friendData.get('friend'), friend: request.socket.authToken._id })
     // Remove
     await friendData.remove();
     if (yourFriendData) await yourFriendData.remove();
