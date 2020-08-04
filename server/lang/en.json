@@ -1,6 +1,7 @@
 {
     "error": {
         "unknow": "Unknown error",
+        "error_occurred": "An error occurred during processing",
         "bad": "Bad request",
         "auth": "Authentication error",
         "find_user": "Unable to find user",
@@ -8,7 +9,8 @@
         "user_verify": "User has not been verified",
         "been_friend": "You have been friends with this user",
         "not_friend": "You are not friends with this user",
-        "have_send_request": "You have sent this friend request"
+        "have_send_request": "You have sent this friend request",
+        "never_follow_chatroom": "You have never followed this chat room"
     },
     "success": {
         "success": "Success",

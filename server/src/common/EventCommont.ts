@@ -16,7 +16,12 @@ const event = {
         REFUSEFRIENDREQUEST: "refuseFriendRequest",
         CANCELFRIENDREQUEST: "cancelFriendRequest",
     },
-    CHATROOM: {},
+    CHATROOM: {
+        CREATE: "create",
+        UNFOLLOW: "unfollow",
+        INVITE: "invite",
+        GETALLUSERCHATROOMS: "getAllUserChatrooms"
+    },
     MESSAGE: {},
 }
 

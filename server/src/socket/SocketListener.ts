@@ -2,6 +2,7 @@ import { AGServer } from "socketcluster-server";
 import userSController from "./controller/UserSController";
 import profileSController from "./controller/ProfileSController";
 import friendSController from "./controller/FriendSController";
+import chatroomSController from "./controller/ChatroomSController";
 
 export default async function socketListener(agServer: AGServer) {
     for await (let { socket } of agServer.listener('connection')) {
@@ -9,6 +10,7 @@ export default async function socketListener(agServer: AGServer) {
         userSController(agServer, socket, 'connection');
         profileSController(agServer, socket, 'connection');
         friendSController(agServer, socket, 'connection');
+        chatroomSController(agServer, socket, 'connection');
     }
 
     for await (let { socket } of agServer.listener('disconnection')) {

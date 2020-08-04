@@ -3,6 +3,7 @@ import { User } from "../../database/ModelDatabase";
 import bcrypt from "bcrypt";
 import common from "../../common";
 import util from "../../util";
+import _ from "underscore";
 
 const PACKET = common.packet.PROFILE;
 const EVENT = common.event.PROFILE;

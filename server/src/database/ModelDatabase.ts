@@ -1,4 +1,5 @@
 import { Schema, model } from "mongoose";
+import common from "../common";
 
 // User
 const UserSchema = new Schema({
@@ -23,15 +24,6 @@ const UserSchema = new Schema({
     active: { type: Boolean, required: true, default: true },
 })
 
-const UserChatRoomSchema = new Schema({
-    user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-    notification: { type: Boolean, default: true },
-    archive: { type: Boolean, default: true },
-    block: { type: Boolean, default: false },
-    chatroom: { type: Schema.Types.ObjectId, ref: 'Chatroom', required: true },
-    active: { type: Boolean, default: false },
-})
-
 const UserFriendSchema = new Schema({
     user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
     friend: { type: Schema.Types.ObjectId, ref: 'User', required: true },
@@ -44,19 +36,30 @@ const FriendRequestSchema = new Schema({
 })
 
 // Chatroom
+const UserChatRoomSchema = new Schema({
+    user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+    notification: { type: Boolean, default: true },
+    archive: { type: Boolean, default: true },
+    block: { type: Boolean, default: false },
+    chatroom: { type: Schema.Types.ObjectId, ref: 'Chatroom', required: true },
+    active: { type: Boolean, default: true },
+})
+
 const ChatroomSchema = new Schema({
     // Info
     name: { type: String },
-    users: [{ type: Schema.Types.ObjectId, ref: 'User', required: true }],
-    // Chat
-    message: [{ type: Schema.Types.ObjectId, ref: 'Message', required: true }],
+    type: { type: String, enum: Object.values(common.type.CHAT_ROOM), default: common.type.CHAT_ROOM.CONVERSATION },
+    users: [{ type: Schema.Types.ObjectId, ref: 'User', required: true }], //Using to find user in chat conversation
+    lastMessage: { type: Schema.Types.ObjectId, ref: 'Message', required: false },
     // Config
     createdTime: { type: Date, required: true },
+    updateTime: { type: Date, required: true },
     active: { type: Boolean, required: true, default: true },
 })
 
 // Message
 const MessageSchema = new Schema({
+    chatroom: { type: Schema.Types.ObjectId, ref: 'Chatroom', required: true },
     user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
     message: { type: String, required: true },
     createdTime: { type: Date, required: true },
