@@ -127,7 +127,7 @@ async function register(req: Request, res: Response, next: NextFunction) {
         let user = new User({
             ...option,
             emailVerify: {
-                verified: true,
+                verified: false,
                 uuid: uuid
             },
             loginTime: new Date(),

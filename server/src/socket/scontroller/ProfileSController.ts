@@ -37,6 +37,7 @@ async function put(request: any) {
     if (firstName) user.set('firstName', firstName);
     if (lastName) user.set('lastName', lastName);
     if (avatar) user.set('avatar', avatar);
+    user.set('updateTime',new Date())
     await user.save();
     // Response
     request.end({
@@ -62,6 +63,7 @@ async function remove(request: any) {
     if (!compareResult) return request.error('error.bad');
     // Logout from all device
     user.set('device', {});
+    user.set('updateTime',new Date())
     user.set('active', false);
     await user.save();
     // Response

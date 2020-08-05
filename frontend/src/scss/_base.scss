@@ -1,0 +1,42 @@
+@font-face {
+    font-family: 'HelveticaNeue';
+    src: url('./static/fonts/HelveticaNeue.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: "UTMAvoBold";
+    src: url("./static/fonts/UTMAvoBold.eot");
+    src: url("./static/fonts/UTMAvoBold.woff") format("woff"), url("./static/fonts/UTMAvoBold.eot") format("opentype"),
+        url("./static/fonts/UTMAvoBold.svg") format("svg");
+}
+
+$color-semi-dark: #444;
+$color-mid-dark: #292929;
+$color-mid-dark-2: #1e1e1e;
+$color-dark: #131313;
+$color-low-light: #fafafa;
+$color-semi-light: #DADCDE;
+$color-mid-light: #ccc;
+$color-semi-blue: rgb(240, 240, 245);
+$color-orange: #d46549;
+$color-red: #c80204;
+$color-text-primary: var(--blue);
+$color-text-extra: $color-semi-light;
+$color-primary: var(--blue);
+
+$padding-default: 16px;
+
+* {
+    font-family: "HelveticaNeue";
+    font-size: 14px;
+}
+
+a {
+    color: $color-text-primary;
+}
+
+a:hover {
+    color: $color-primary;
+    text-decoration: none;
+    transition: 0.5s;
+}

@@ -34,7 +34,7 @@ async function getAllUserChatrooms(request: any) {
     // Response
     request.end(userChatrooms)
 }
-
+// Cần tích hợp socket channel
 async function create(request: any) {
     let { users, name, type } = request?.data?.data
     // Handle input
@@ -118,7 +118,7 @@ async function create(request: any) {
         }
     })
 }
-
+// Cần tích hợp socket channel
 async function unfollow(request: any) {
     let { chatroomId } = request?.data?.data
     if (!_.isString(chatroomId)) return request.error('error.bad');
@@ -131,6 +131,39 @@ async function unfollow(request: any) {
         success: true,
         message: "success.success",
     })
+}
+// Cần tích hợp socket channel
+async function invite(request: any) {
+    let { chatroomId, userId } = request?.data?.data
+    if (!_.isString(chatroomId) || !_.isString(userId) || userId === request.socket.authToken._id) return request.error('error.bad');
+    // Check chatroom
+    let chatroom = await Chatroom.findById(chatroomId);
+    if (!chatroom || chatroom.get('type') == common.type.CHAT_ROOM.CONVERSATION) return request.error('error.error_occurred');
+    // Check user chatroom exist
+    let userChatroom = await UserChatRoom.findOne({ user: userId, chatroom: chatroom.get('_id') })
+    if (userChatroom) return request.error('error.error_occurred');
+    // Create user chatroom 
+    // -Checkfriend
+    let friendData = await UserFriend.findOne({ user: userId, friend: request.socket.authToken._id })
+    // -Create
+    userChatroom = new UserChatRoom({
+        user: userId,
+        archive: friendData ? false : true,
+        chatroom: chatroomId,
+    })
+    await userChatroom.save()
+    // Add chatroom user
+    chatroom.set('users', [...chatroom.get('users'), userId])
+    await chatroom.save()
+
+    request.end({
+        success: true,
+        message: "success.success",
+    })
+}
+
+async function test(request: any) {
+    request.end('Success')
 }
 
 /* __Distribute socket listener__ */
@@ -147,8 +180,14 @@ function connection(agServer: AGServer, socket: AGServerSocket) {
                     case EVENT.CREATE:
                         await create(request)
                         break
+                    case EVENT.INVITE:
+                        await invite(request)
+                        break
                     case EVENT.UNFOLLOW:
                         await unfollow(request)
+                        break
+                    case "test":
+                        await test(request);
                         break
                     default:
                         break;

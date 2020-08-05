@@ -28,7 +28,13 @@ class Socket {
 
         // Listener
         socket.listener('connect').once().then(({ id, isAuthenticated }) => {
-            console.log('%cSocket', 'color: #2e7d32', 'connect', id, isAuthenticated)
+            console.log('%cSocket', 'color: #2e7d32', 'connect', id, isAuthenticated);
+
+            (async () => {
+                for await (let data of socket.receiver(common.transmit.FRIEND_DATA)) {
+                    console.log(data)
+                }
+            })()
         })
 
         socket.listener('disconnect').once().then(({ reason }) => {

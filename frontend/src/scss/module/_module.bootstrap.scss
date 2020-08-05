@@ -1,0 +1,10 @@
+.btn-link {
+    color: $color-text-primary;
+}
+
+.btn-link:hover,
+.btn-link:active,
+.btn-link:focus {
+    color: $color-primary !important;
+    text-decoration: none !important;
+}

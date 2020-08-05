@@ -1,12 +1,15 @@
 import { AGServer } from "socketcluster-server";
-import userSController from "./controller/UserSController";
-import profileSController from "./controller/ProfileSController";
-import friendSController from "./controller/FriendSController";
-import chatroomSController from "./controller/ChatroomSController";
+import userSController from "./scontroller/UserSController";
+import profileSController from "./scontroller/ProfileSController";
+import friendSController from "./scontroller/FriendSController";
+import chatroomSController from "./scontroller/ChatroomSController";
+import processSController from "./scontroller/ProcessSController";
 
 export default async function socketListener(agServer: AGServer) {
     for await (let { socket } of agServer.listener('connection')) {
         console.log('Socket on connection');
+        // Controller
+        processSController(agServer, socket, 'connection')
         userSController(agServer, socket, 'connection');
         profileSController(agServer, socket, 'connection');
         friendSController(agServer, socket, 'connection');

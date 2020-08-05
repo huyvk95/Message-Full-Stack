@@ -21,6 +21,11 @@ export default function socketMiddleware(agServer: AGServer) {
                     // -Device
                     let device = user.get('device');
                     if (device[deviceId] != signedAuthToken) throw "error.auth"
+                    // Save socket id
+                    user.set('socketId', action.socket.id)
+                    user.set('online', true);
+                    user.set('loginTime', new Date())
+                    await user.save()
 
                     action.allow()
                 } else {
