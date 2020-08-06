@@ -1,9 +1,9 @@
 import React from "react";
 import { IAvatarComponentProps } from "../interface/ComponentInterface";
 
-export default function AvatarComponent({ url, type }: IAvatarComponentProps) {
+export default function AvatarComponent({ url, type, className }: IAvatarComponentProps) {
     return (
-        <div className="avatar">
+        <div className={`avatar ${className}`}>
             <div className={`wrap ${type}`}>
                 {
                     url ?

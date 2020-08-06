@@ -24,5 +24,6 @@ export interface IHomeContainerProps {
 /* _______________COMPONENT_______________ */
 export interface IAvatarComponentProps {
     url?: string,
-    type: "langer" | "normal" | "small" | "tiny"
+    type: "langer" | "medium" | "normal" | "small" | "tiny",
+    className?: string,
 }

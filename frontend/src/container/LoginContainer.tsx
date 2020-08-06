@@ -69,8 +69,8 @@ class LoginContainer extends Component<ILoginContainerProps, ILoginContainerStat
                     <p className="text-16  mb-4"> Đăng nhập bằng Facebook để bắt đầu. </p>
                     <Form className="input" onSubmit={this.onLoginSubmit}>
                         <ButtonGroup aria-label="Basic example">
-                            <Button variant="outline-primary" className="btn-left text-17" block onClick={() => { this.onClickSetViewType(ELoginViewType.SIGNIN) }}>Sign in</Button>
-                            <Button variant="outline-primary" className="btn-right text-17" block onClick={() => { this.onClickSetViewType(ELoginViewType.SIGNUP) }}>Sign up</Button>
+                            <Button variant="outline-primary" className="btn-left text-17 text-lighter" block onClick={() => { this.onClickSetViewType(ELoginViewType.SIGNIN) }}>Sign in</Button>
+                            <Button variant="outline-primary" className="btn-right text-17 text-lighter" block onClick={() => { this.onClickSetViewType(ELoginViewType.SIGNUP) }}>Sign up</Button>
                         </ButtonGroup>
                         <Form.Group controlId="formBasicEmail" className="form-middle">
                             <Form.Control

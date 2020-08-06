@@ -1,6 +1,16 @@
 @font-face {
-    font-family: 'HelveticaNeue';
-    src: url('./static/fonts/HelveticaNeue.ttf') format('truetype');
+    font-family: "HelveticaNeue";
+    src: url("./static/fonts/HelveticaNeue.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: "HelveticaNeue-Normal";
+    src: url("./static/fonts/HelveticaNeue-Normal.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: "HelveticaNeue-Medium";
+    src: url("./static/fonts/HelveticaNeue-Medium.ttf") format("truetype");
 }
 
 @font-face {
@@ -14,17 +24,16 @@ $color-semi-dark: #444;
 $color-mid-dark: #292929;
 $color-mid-dark-2: #1e1e1e;
 $color-dark: #131313;
-$color-low-light: #fafafa;
-$color-semi-light: #DADCDE;
+$color-low-light: #f3f3f3;
+$color-semi-light: #dadcde;
 $color-mid-light: #ccc;
+$color-light: #999;
 $color-semi-blue: rgb(240, 240, 245);
 $color-orange: #d46549;
 $color-red: #c80204;
 $color-text-primary: var(--blue);
 $color-text-extra: $color-semi-light;
 $color-primary: var(--blue);
-
-$padding-default: 16px;
 
 * {
     font-family: "HelveticaNeue";
@@ -39,4 +48,18 @@ a:hover {
     color: $color-primary;
     text-decoration: none;
     transition: 0.5s;
+}
+
+p {
+    margin: 0px;
+}
+
+button {
+    border: none;
+    background-color: transparent;
+}
+
+button:focus {
+    outline: none;
+    box-shadow: none;
 }

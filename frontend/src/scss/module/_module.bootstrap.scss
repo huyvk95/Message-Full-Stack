@@ -1,3 +1,11 @@
+.btn {
+    font-family: "HelveticaNeue-Normal";
+}
+
+.btn:focus {
+    box-shadow: none;
+}
+
 .btn-link {
     color: $color-text-primary;
 }
@@ -7,4 +15,32 @@
 .btn-link:focus {
     color: $color-primary !important;
     text-decoration: none !important;
+}
+
+.form-control {
+    font-family: "HelveticaNeue-Normal";
+}
+.form-control:focus {
+    box-shadow: none !important;
+}
+
+.input-group {
+    $height: 36px;
+    .input-group-text {
+        border: none;
+        font-size: 18px;
+        height: $height;
+        border-radius: $height * 0.5;
+        background-color: $color-low-light;
+        color: $color-mid-light;
+    }
+    .form-control {
+        border: none;
+        height: $height;
+        border-radius: $height * 0.5;
+        background-color: $color-low-light;
+    }
+    .form-control::placeholder {
+        color: $color-light;
+    }
 }

@@ -1,5 +1,6 @@
 .avatar {
     $langer: 100px;
+    $medium: 50px;
     $normal: 40px;
     $small: 28px;
     $tiny: 22px;
@@ -17,6 +18,11 @@
     .langer {
         width: $langer;
         height: $langer;
+    }
+
+    .medium {
+        width: $medium;
+        height: $medium;
     }
 
     .normal {

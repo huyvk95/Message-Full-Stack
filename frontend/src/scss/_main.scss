@@ -35,6 +35,10 @@
     color: $color-mid-light !important;
 }
 
+.text-light {
+    color: $color-light !important;
+}
+
 .text-primary {
     color: $color-primary !important;
 }
@@ -117,4 +121,51 @@
 
 .text-12 {
     font-size: 12px;
+}
+
+.text-bold {
+    font-family: "HelveticaNeue-Medium" !important;
+}
+
+.text-normal {
+    font-family: "HelveticaNeue-Normal" !important;
+}
+
+.text-lighter {
+    font-family: "HelveticaNeue" !important;
+}
+
+.btn-outline-custom {
+    background-color: $color-low-light;
+    border: none;
+    color: black;
+}
+
+.btn-circle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+
+    i {
+        font-size: 20px;
+    }
+}
+
+.auto-hide {
+    opacity: 0.0;
+}
+
+.auto-hide:hover {
+    opacity: 1.0;
+}
+
+.auto-show {
+    opacity: 1.0;
+}
+
+.auto-show:hover {
+    opacity: 0.0;
 }
