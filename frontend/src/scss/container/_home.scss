@@ -16,103 +16,17 @@
         }
 
         .content-body {
-            .content-conversation {
-                display: none;
-                // display: flex;
-                flex-direction: column;
-                height: 100%;
-
-                .list-conversation {
-                    flex: 1;
-                    overflow: auto;
-
-                    .conversation-item {
-                        display: flex;
-                        justify-content: space-between;
-                        width: 100%;
-
-                        .left {
-                            display: inline-flex;
-                            margin-right: 10px;
-                            width: 100%;
-
-                            .info {
-                                display: flex;
-                                flex-direction: column;
-                                justify-content: center;
-                                width: 100%;
-
-                                .last-message {
-                                    display: flex;
-                                    justify-content: space-between;
-                                }
-                            }
-                        }
-
-                        .right {
-                            display: flex;
-                            align-items: center;
-                        }
-                    }
-                }
-            }
-
-            .content-people {
-                display: flex;
-                flex-direction: column;
-                height: 100%;
-
-                .navigation {
-                    $height: 30px;
-
-                    display: flex;
-                    justify-content: space-evenly;
-
-                    .btn {
-                        height: $height;
-                        width: 130px;
-                        border-radius: $height * 0.5;
-                        font-family: "HelveticaNeue-Medium";
-                    }
-                }
-
-                .list-people {
-                    display: none;
-                    // display: inline;
-                    overflow: scroll;
-
-                    .people-item {
-                        display: flex;
-                        align-items: center;
-
-                        .people-item-name {
-                            width: 100%;
-                            padding: 13px 10px;
-                            border-bottom: solid rgba($color: $color-semi-light, $alpha: 0.4) 1px;
-                        }
-                    }
-                }
-
-                .list-request {
-                    overflow: scroll;
-
-                    .request-item {
-                        display: flex;
-                        justify-content: space-between;
-                        align-items: center;
-                        border-bottom: solid rgba($color: $color-semi-light, $alpha: 0.4) 1px;
-                    }
-                }
-            }
+            @import '../home/_contentconversation';
+            @import '../home/contentpeople';
         }
 
         .content-footer {
             display: flex;
-
             .footer-item {
                 display: flex;
                 justify-content: center;
                 align-items: center;
+                opacity: 0.6;
                 width: 100%;
 
                 .item-content {
@@ -126,36 +40,16 @@
                     }
                 }
             }
+
+            .footer-item:hover {
+                cursor: pointer;
+            }
+
+            .active {
+                opacity: 1.0;
+            }
         }
     }
 
-    .content-chat {
-        display: flex;
-        flex-direction: column;
-
-        .info-area {
-            display: flex;
-            justify-content: space-between;
-            border-bottom: solid $color-semi-light 1px;
-
-            .user-info {
-                display: flex;
-                flex-direction: column;
-            }
-
-            .control {
-                i {
-                    font-size: 23px;
-                    color: $color-primary;
-                }
-            }
-        }
-
-        .chat-area {
-        }
-
-        .control-area {
-            display: flex;
-        }
-    }
+    @import '../home/contentchat';
 }

@@ -18,33 +18,44 @@
     .langer {
         width: $langer;
         height: $langer;
+        i {
+            font-size: $langer * 0.5;
+        }
     }
 
     .medium {
         width: $medium;
         height: $medium;
+        i {
+            font-size: $medium * 0.5;
+        }
     }
 
     .normal {
         width: $normal;
         height: $normal;
+        i {
+            font-size: $normal * 0.5;
+        }
     }
 
     .small {
         width: $small;
         height: $small;
+        i {
+            font-size: $small * 0.5;
+        }
     }
 
     .tiny {
         width: $tiny;
         height: $tiny;
+        i {
+            font-size: $tiny * 0.5;
+        }
     }
 
     img {
         border-radius: 50%;
-    }
-
-    i {
-        font-size: $normal * 0.5;
     }
 }

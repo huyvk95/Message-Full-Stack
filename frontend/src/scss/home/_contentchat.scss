@@ -1,0 +1,29 @@
+.content-chat {
+    display: flex;
+    flex-direction: column;
+
+    .info-area {
+        display: flex;
+        justify-content: space-between;
+        border-bottom: solid $color-semi-light 1px;
+
+        .user-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .control {
+            i {
+                font-size: 23px;
+                color: $color-primary;
+            }
+        }
+    }
+
+    .chat-area {
+    }
+
+    .control-area {
+        display: flex;
+    }
+}

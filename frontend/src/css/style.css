@@ -259,7 +259,7 @@ button:focus {
       display: flex;
       align-items: center; }
     .home .content .content-body .content-conversation {
-      display: none;
+      display: flex;
       flex-direction: column;
       height: 100%; }
       .home .content .content-body .content-conversation .list-conversation {
@@ -297,7 +297,6 @@ button:focus {
           border-radius: 15px;
           font-family: "HelveticaNeue-Medium"; }
       .home .content .content-body .content-people .list-people {
-        display: none;
         overflow: scroll; }
         .home .content .content-body .content-people .list-people .people-item {
           display: flex;
@@ -319,6 +318,7 @@ button:focus {
         display: flex;
         justify-content: center;
         align-items: center;
+        opacity: 0.6;
         width: 100%; }
         .home .content .content-footer .footer-item .item-content {
           display: flex;
@@ -327,6 +327,10 @@ button:focus {
           .home .content .content-footer .footer-item .item-content i {
             font-size: 23px;
             margin-bottom: 5px; }
+      .home .content .content-footer .footer-item:hover {
+        cursor: pointer; }
+      .home .content .content-footer .active {
+        opacity: 1.0; }
   .home .content-chat {
     display: flex;
     flex-direction: column; }
@@ -354,19 +358,27 @@ button:focus {
   .avatar .langer {
     width: 100px;
     height: 100px; }
+    .avatar .langer i {
+      font-size: 50px; }
   .avatar .medium {
     width: 50px;
     height: 50px; }
+    .avatar .medium i {
+      font-size: 25px; }
   .avatar .normal {
     width: 40px;
     height: 40px; }
+    .avatar .normal i {
+      font-size: 20px; }
   .avatar .small {
     width: 28px;
     height: 28px; }
+    .avatar .small i {
+      font-size: 14px; }
   .avatar .tiny {
     width: 22px;
     height: 22px; }
+    .avatar .tiny i {
+      font-size: 11px; }
   .avatar img {
     border-radius: 50%; }
-  .avatar i {
-    font-size: 20px; }

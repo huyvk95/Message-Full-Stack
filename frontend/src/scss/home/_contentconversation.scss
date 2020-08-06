@@ -1,0 +1,39 @@
+.content-conversation {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+
+    .list-conversation {
+        flex: 1;
+        overflow: auto;
+
+        .conversation-item {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+
+            .left {
+                display: inline-flex;
+                margin-right: 10px;
+                width: 100%;
+
+                .info {
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    width: 100%;
+
+                    .last-message {
+                        display: flex;
+                        justify-content: space-between;
+                    }
+                }
+            }
+
+            .right {
+                display: flex;
+                align-items: center;
+            }
+        }
+    }
+}

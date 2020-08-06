@@ -1,0 +1,45 @@
+.content-people {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+
+    .navigation {
+        $height: 30px;
+
+        display: flex;
+        justify-content: space-evenly;
+
+        .btn {
+            height: $height;
+            width: 130px;
+            border-radius: $height * 0.5;
+            font-family: "HelveticaNeue-Medium";
+        }
+    }
+
+    .list-people {
+        overflow: scroll;
+
+        .people-item {
+            display: flex;
+            align-items: center;
+
+            .people-item-name {
+                width: 100%;
+                padding: 13px 10px;
+                border-bottom: solid rgba($color: $color-semi-light, $alpha: 0.4) 1px;
+            }
+        }
+    }
+
+    .list-request {
+        overflow: scroll;
+
+        .request-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: solid rgba($color: $color-semi-light, $alpha: 0.4) 1px;
+        }
+    }
+}
