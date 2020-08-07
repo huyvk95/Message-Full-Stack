@@ -33,6 +33,7 @@ export interface IAvatarComponentProps {
 export interface IFooterComponentProps {
     navigation: INavigatorData
     chooseContentTab: Function
+    pushToast: Function
 }
 
 export interface IContentBodyProps {
@@ -53,4 +54,11 @@ export interface IItemConversationProps {
         lastMessageTime: Date,
         avatarRead: string,
     }
+}
+
+export interface IToastItemProps {
+    autohide?: number
+    onClick?: Function
+    content: string | JSX.Element
+    time: Date
 }

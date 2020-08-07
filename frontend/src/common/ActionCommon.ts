@@ -18,6 +18,7 @@ export const FRIEND_UPDATE_DATA = "FRIEND_UPDATE_DATA"
 
 /* __APP_DATA__ */
 export const INITIALIZE = "INITIALIZE"
+export const PUSHTOAST = "PUSHTOAST"
 
 /* __NAVIGATION__ */
 export const CHOOSE_CONTENT_TAB = "CHOOSE_CONTENT_TAB"

@@ -382,3 +382,8 @@ button:focus {
       font-size: 11px; }
   .avatar img {
     border-radius: 50%; }
+
+.toast_contain {
+  position: fixed;
+  right: 5px;
+  bottom: 5px; }

@@ -1,6 +1,7 @@
 import common from "../common";
 import { v4 as uuidv4 } from "uuid";
 import * as api from "../Api";
+import { IToastItemProps } from "../interface/ComponentInterface";
 
 export function initialize() {
     /* __Device Id__ */
@@ -29,5 +30,12 @@ export function initialize() {
             initialized: true,
             deviceId
         },
+    }
+}
+
+export function pushToast(data: IToastItemProps) {
+    return {
+        type: common.action.PUSHTOAST,
+        payload: data
     }
 }

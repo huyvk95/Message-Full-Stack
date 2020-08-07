@@ -2,7 +2,6 @@ import common from "../common";
 import { IFriendData } from "../interface/DataInterface";
 import _ from "underscore";
 
-let action = common.action
 let initializeState: IFriendData[] = []
 
 export default function (state = initializeState, { type, payload }: { type: string, payload: any }) {

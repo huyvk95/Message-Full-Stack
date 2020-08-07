@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { initialize } from "./action/AppActions";
 import AuthRouter from "./router/AuthRouter";
+import ToastsComponent from "./component/ToastsComponent";
 import * as api from "./Api";
 
 interface IProps {
@@ -20,7 +21,10 @@ class App extends Component<IProps> {
     /* Render */
     render() {
         return (
-            <AuthRouter />
+            <>
+                <AuthRouter />
+                <ToastsComponent />
+            </>
         )
     }
 }
