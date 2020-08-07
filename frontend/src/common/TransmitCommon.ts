@@ -1,5 +1,5 @@
 const transmit = {
-    FRIEND_DATA: "FRIEND_DATA",
+    FRIEND_UPDATE_DATA: "FRIEND_UPDATE_DATA",
 }
 
 export default transmit

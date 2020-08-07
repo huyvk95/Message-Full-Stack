@@ -31,7 +31,7 @@ class Socket {
             console.log('%cSocket', 'color: #2e7d32', 'connect', id, isAuthenticated);
 
             (async () => {
-                for await (let data of socket.receiver(common.transmit.FRIEND_DATA)) {
+                for await (let data of socket.receiver(common.transmit.FRIEND_UPDATE_DATA)) {
                     console.log(data)
                 }
             })()

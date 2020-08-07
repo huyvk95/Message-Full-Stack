@@ -10,9 +10,10 @@ async function connection(agServer: AGServer, socket: AGServerSocket) {
             .select(common.dbselect.user)
         if (!user) return;
         // Get all friend
-        let socketIds = await UserFriend.find({ friend: socket.authToken?._id, online: true })
+        let socketIds = await UserFriend.find({ friend: socket.authToken?._id })
             .populate('user')
             .then(data => data.map(o => o.toObject()))
+            .then(data => data.filter(o => o.user.online))
             .then(data => data.map(o => o.user.socketId))
 
         let sockets = socketIds.map(id => agServer.clients[id]);
@@ -31,9 +32,10 @@ async function connection(agServer: AGServer, socket: AGServerSocket) {
                 await user.save();
 
                 // Get all friend
-                let socketIds = await UserFriend.find({ friend: socket.authToken?._id, online: true })
+                let socketIds = await UserFriend.find({ friend: socket.authToken?._id })
                     .populate('user')
                     .then(data => data.map(o => o.toObject()))
+                    .then(data => data.filter(o => o.user.online))
                     .then(data => data.map(o => o.user.socketId))
 
                 let sockets = socketIds.map(id => agServer.clients[id]);
