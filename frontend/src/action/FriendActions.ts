@@ -1,5 +1,5 @@
 import common from "../common";
-import { IPayloadData } from "../interface/DataInterface";
+import { IPayloadData, IFriendData } from "../interface/DataInterface";
 
 export function getFriend({ success, data, message }: IPayloadData) {
     return async function (dispatch: Function) {
@@ -13,5 +13,14 @@ export function getFriend({ success, data, message }: IPayloadData) {
                 payload: data
             })
         }
+    }
+}
+
+export function updateFriendData(data: IFriendData) {
+    return async function (dispatch: Function) {
+        dispatch({
+            type: common.action.FRIEND_UPDATE_DATA,
+            payload: data
+        })
     }
 }

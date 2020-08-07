@@ -20,6 +20,7 @@ export interface IHomeContainerProps {
     app: IAppData,
     cleanUserData: Function
     getFriend: Function
+    updateFriendData: Function
 }
 
 /* _______________COMPONENT_______________ */
