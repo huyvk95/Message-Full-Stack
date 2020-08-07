@@ -3,7 +3,7 @@ import AvatarComponent from "./AvatarComponent";
 import { IItemConversationProps } from "../interface/ComponentInterface";
 
 function ItemConversationComponent({ data }: IItemConversationProps) {
-    let { name, lastMessageTime, lastMessage, avatarRead, avatar } = data;
+    let { name, lastMessage, avatarRead, avatar } = data;
 
     const [hover, setHover] = useState(false);
 

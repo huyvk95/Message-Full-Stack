@@ -55,6 +55,12 @@ export function token() {
     }
 }
 
+export function cleanUserData() {
+    return {
+        type: common.action.CLEAN_USER_DATA,
+    }
+}
+
 export function verify(uuid: string) {
     return async function (dispatch: Function) {
         // Get data

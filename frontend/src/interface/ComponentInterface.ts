@@ -18,7 +18,8 @@ export interface ILoginContainerState {
 /* HOME */
 export interface IHomeContainerProps {
     app: IAppData,
-    logout: Function
+    cleanUserData: Function
+    getFriend: Function
 }
 
 /* _______________COMPONENT_______________ */

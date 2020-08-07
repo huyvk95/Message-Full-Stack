@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Switch, Route, Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 import { IStoreState, IUserData } from "../interface/DataInterface";
@@ -7,9 +7,10 @@ import ContainerRouter from "./ContainerRouter";
 import * as api from "../Api";
 
 function AuthRouter({ user, token }: { user: IUserData, token: Function }) {
+    let [fail, setFail] = useState(false)
     // Check login token
-    if (!user.email && api.getHeaders().authorization && api.getHeaders().deviceId) {
-        token()
+    if (!user.email && api.getHeaders().authorization && api.getHeaders().deviceId && !fail) {
+        token().catch(()=>setFail(true))
         return (<div></div>)
     }
     // Check login normal

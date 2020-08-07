@@ -46,6 +46,8 @@ router.route('/register')
         [
             header('deviceId', 'validate.deviceid').isString(),
             body('email', "validate.email_format").isEmail().isLength({ min: 12, max: 50 }),
+            body('firstName', "validate.first_name_required").isString(),
+            body('lastName', "validate.last_name_required").isString(),
             body('password', "validate.password_format").isString(),
             body('password', "validate.password_length").isLength({ min: 8, max: 32 }),
             body('confirmPassword', "validate.confirm_password_format").isString(),

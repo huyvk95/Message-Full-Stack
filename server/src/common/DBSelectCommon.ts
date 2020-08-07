@@ -1,2 +1,2 @@
 export const profile = ['_id', 'email', 'firstName', 'lastName', 'avatar', 'updateTime', 'loginTime', 'registrationTime', 'emailVerify', 'online']
-export const user = ["_id", "email", "firstName", "lastName", "avatar", "online", "lastOnlineTime", "active", 'online']
+export const user = ["_id", "email", "firstName", "lastName", "avatar", "online", "lastOnlineTime", "active"]

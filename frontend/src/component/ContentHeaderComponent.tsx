@@ -20,6 +20,9 @@ class ContentHeaderComponent extends Component {
                     <Button variant="outline-danger" className="btn-outline-custom btn-circle mr-3">
                         <i className="fa fa-cog" />
                     </Button>
+                    <Button variant="outline-primary" className="btn-outline-custom btn-circle mr-3">
+                        <i className="fa fa-user-plus" style={{fontSize: '18px'}}/>
+                    </Button>
                     <Button variant="outline-primary" className="btn-outline-custom btn-circle">
                         <i className="fa fa-pencil-square-o" />
                     </Button>

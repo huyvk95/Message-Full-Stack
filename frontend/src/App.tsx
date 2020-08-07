@@ -1,4 +1,4 @@
-import React, { Component, Suspense } from "react";
+import React, { Component } from "react";
 import { connect } from "react-redux";
 import { initialize } from "./action/AppActions";
 import AuthRouter from "./router/AuthRouter";
@@ -9,11 +9,8 @@ interface IProps {
 }
 
 class App extends Component<IProps> {
-    constructor(props: IProps) {
-        super(props);
-    }
     /* Life circle */
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         // Api initialize
         api.initialize()
         // App initialize

@@ -28,6 +28,7 @@ async function connection(agServer: AGServer, socket: AGServerSocket) {
         if (socket.authToken?._id) {
             let user = await User.findById(socket.authToken._id)
             if (user) {
+                user.set('lastOnlineTime', new Date())
                 user.set('online', false);
                 await user.save();
 

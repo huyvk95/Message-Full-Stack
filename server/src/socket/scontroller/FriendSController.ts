@@ -8,6 +8,7 @@ const EVENT = common.event.FRIEND;
 /* __Handle__ */
 async function get(socket: AGServerSocket, data: any) {
     try {
+        data = data || {}
         let { online, string } = data
         // Get data
         let friendData = await UserFriend.find({ user: socket.authToken?._id })

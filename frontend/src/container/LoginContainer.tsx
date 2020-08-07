@@ -48,9 +48,9 @@ class LoginContainer extends Component<ILoginContainerProps, ILoginContainerStat
     onLoginSubmit(event: React.FormEvent<HTMLFormElement>) {
         let { email, password, confirmPassword, viewType } = this.state;
         event.preventDefault();
-        if (viewType == ELoginViewType.SIGNIN) {
+        if (viewType === ELoginViewType.SIGNIN) {
             this.props.login(email, password)
-        } else if (viewType == ELoginViewType.SIGNUP) {
+        } else if (viewType === ELoginViewType.SIGNUP) {
             this.props.register(email, password, confirmPassword)
         }
     }

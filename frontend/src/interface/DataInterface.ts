@@ -4,10 +4,25 @@ import { EContentTap, EPeopleTap } from "../common/TypeCommon";
 export interface IUserData {
     _id: string
     email: string
-    emailVerify: { verified: boolean }
+    firstName?: string
+    lastName?: string
+    avatar?: string
+    updateTime?: Date
     loginTime?: Date
     registrationTime?: Date
-    updateTime?: Date
+    emailVerify: { verified: boolean }
+    online?: boolean
+}
+
+export interface IFriendData {
+    _id: string,
+    email: string,
+    firstName: string,
+    lastName: string,
+    avatar?: string,
+    online: boolean,
+    lastOnlineTime: Date,
+    active: string,
 }
 
 export interface IAppData {
@@ -25,6 +40,7 @@ export interface IStoreState {
     app: IAppData
     user: IUserData
     navigation: INavigatorData
+    friend: IFriendData[]
 }
 
 /* Common */
@@ -33,9 +49,17 @@ export interface IAuthData {
     token: string
 }
 
-export interface IResponseData {
+export interface IPayloadData {
     success: boolean,
+    message?: string,
+    data?: any
+}
+
+export interface IResponseData extends IPayloadData {
     status: number,
-    message: string,
-    data: any,
+}
+
+export interface ISocketResponseData {
+    evt: string,
+    payload: IPayloadData
 }

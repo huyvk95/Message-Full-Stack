@@ -24,7 +24,7 @@ class VerificationContainer extends Component<IProps, IState> {
         this.onClickResend = this.onClickResend.bind(this)
     }
 
-    async componentWillMount() {
+    async UNSAFE_componentWillMount() {
         // Check uuid on params for verify
         let uuid = document.location.pathname.split('/').filter(o => o)[1]
         if (uuid) {

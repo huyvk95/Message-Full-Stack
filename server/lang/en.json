@@ -27,6 +27,8 @@
     "validate": {
         "missing_input": "Missing input data",
         "deviceid": "DeviceId is missing",
+        "first_name_required": "First name required",
+        "last_name_required": "Last name required",
         "email_format": "Wrong email format",
         "password_format": "Password must be string",
         "password_length": "Password length must be 8 character or more",

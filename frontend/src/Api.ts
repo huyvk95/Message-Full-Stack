@@ -66,7 +66,7 @@ export async function token() {
     // Check token exist or expired
     if (!data.success) {    // If success fail remove header authorization and localstorage
         headers = Object.assign(headers, { authorization: '' })
-        localStorage.removeItem('socketcluster.authToken')
+        // localStorage.removeItem('socketcluster.authToken')
     }
 
     return data;

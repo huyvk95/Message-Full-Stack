@@ -1,6 +1,5 @@
 import socketClusterClient, { AGClientSocket } from "socketcluster-client";
 import common from "../common";
-import { IAuthData } from "../interface/DataInterface";
 
 class Socket {
     /* __STATIC__ */
@@ -12,6 +11,10 @@ class Socket {
 
     /* __HANDLE__ */
     socket: AGClientSocket | undefined = undefined;
+
+    getSocket() {
+        return this.socket;
+    }
 
     init(config: { deviceId: string }) {
         let { deviceId } = config;
@@ -29,18 +32,6 @@ class Socket {
         // Listener
         socket.listener('connect').once().then(({ id, isAuthenticated }) => {
             console.log('%cSocket', 'color: #2e7d32', 'connect', id, isAuthenticated);
-
-            (async () => {
-                for await (let data of socket.receiver(common.packet.FRIEND_UPDATE_DATA)) {
-                    console.log(data)
-                }
-            })();
-
-            (async () => {
-                for await (let data of socket.receiver(common.packet.FRIEND)) {
-                    console.log(data)
-                }
-            })();
         })
 
         socket.listener('disconnect').once().then(({ reason }) => {

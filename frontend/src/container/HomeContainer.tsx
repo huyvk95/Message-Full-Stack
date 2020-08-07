@@ -1,39 +1,102 @@
+/* LIBRARY */
 import React, { Component } from "react";
-import { logout } from "../action/UserActions";
 import { connect } from "react-redux";
-import { IStoreState } from "../interface/DataInterface";
-import { IHomeContainerProps } from "../interface/ComponentInterface";
+/* SCRIPT */
 import socket from "../socket";
-import AvatarComponent from "../component/AvatarComponent";
+/* ACTION */
+import { cleanUserData } from "../action/UserActions";
+import { getFriend } from "../action/FriendActions";
+/* INTERFACE */
+import { IStoreState, ISocketResponseData } from "../interface/DataInterface";
+import { IHomeContainerProps } from "../interface/ComponentInterface";
+/* COMPONENT */
 import ContentChatComponent from "../component/ContentChatComponent";
 import ContentHeaderComponent from "../component/ContentHeaderComponent";
 import ContentFooterComponent from "../component/ContentFooterComponent";
 import ContentBodyComponent from "../component/ContentBodyComponent";
+import common from "../common";
 
 class HomeContainer extends Component<IHomeContainerProps> {
     constructor(props: IHomeContainerProps) {
         super(props);
-        this.onClickLogout = this.onClickLogout.bind(this);
+
+        this.socketHandle = this.socketHandle.bind(this)
+        this.getSocketData = this.getSocketData.bind(this)
     }
 
-    componentWillMount() {
-        let { app } = this.props;
+    UNSAFE_componentWillMount() {
+        this.socketHandle();
+    }
+
+    componentDidMount() {
+        this.getSocketData();
+    }
+
+    socketHandle() {
+        let { app, cleanUserData } = this.props;
+        let packet = common.packet;
+        let event = common.event;
+
+        // Init socket
         socket.init({ deviceId: app.deviceId });
+        let sc = socket.getSocket();
+        if (!sc) return;
+        // Listener
+        sc.listener('disconnect').once().then(() => {
+            cleanUserData()
+        });
+
+        // Receiver
+        (async () => {
+            for await (let data of sc.receiver(packet.FRIEND_UPDATE_DATA)) {
+                console.log(data)
+            }
+        })();
+
+        // -FRIEND
+        let { getFriend } = this.props;
+        (async () => {
+            for await (let data of sc.receiver(packet.FRIEND)) {
+                let { evt, payload } = data as ISocketResponseData
+                console.log(evt, payload)
+
+                if (evt === event.FRIEND.GET) {
+                    getFriend(payload)
+                } else if (evt === event.FRIEND.SETNICKNAME) {
+
+                } else if (evt === event.FRIEND.REMOVE) {
+
+                } else if (evt === event.FRIEND.SENDFRIENDREQUEST) {
+
+                } else if (evt === event.FRIEND.ACCEPTFRIENDREQUEST) {
+
+                } else if (evt === event.FRIEND.REFUSEFRIENDREQUEST) {
+
+                } else if (evt === event.FRIEND.CANCELFRIENDREQUEST) {
+
+                }
+            }
+        })();
     }
 
-    onClickLogout() {
-        this.props.logout();
+    getSocketData() {
+        let packet = common.packet;
+        let event = common.event;
+        let sc = socket.getSocket();
+        if (!sc) return;
+
+        sc.transmit(packet.FRIEND, { evt: event.FRIEND.GET })
     }
 
     render() {
         return (
             <div className="home">
                 <div className="content">
-                    <ContentHeaderComponent/>
-                    <ContentBodyComponent/>
-                    <ContentFooterComponent/>
+                    <ContentHeaderComponent />
+                    <ContentBodyComponent />
+                    <ContentFooterComponent />
                 </div>
-                <ContentChatComponent/>
+                <ContentChatComponent />
             </div>
         )
     }
@@ -44,7 +107,8 @@ const mapStateToProps = ({ app }: IStoreState) => ({
 })
 
 const mapDispatchToProps = {
-    logout
+    cleanUserData,
+    getFriend
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(HomeContainer);
