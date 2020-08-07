@@ -1,0 +1,18 @@
+.popup_search_user {
+    padding: 0.5rem;
+    .popup-content {
+        height: 300px;
+        overflow: scroll;
+    }
+
+    .popup-item {
+        display: flex;
+        align-items: center;
+
+        .popup-item-name {
+            width: 100%;
+            padding: 13px 10px;
+            border-bottom: solid rgba($color: $color-semi-light, $alpha: 0.4) 1px;
+        }
+    }
+}

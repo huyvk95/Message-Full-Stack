@@ -11,6 +11,8 @@ export interface ILoginContainerProps {
 export interface ILoginContainerState {
     viewType: ELoginViewType,
     email: string,
+    firstName: string,
+    lastName: string,
     password: string,
     confirmPassword: string,
 }
@@ -70,4 +72,9 @@ export interface IPopupProps {
         title: string
     }
     body?: JSX.Element | string | undefined
+}
+
+export interface IContentHeaderProps {
+    navigation: INavigatorData
+    openPopup: Function
 }

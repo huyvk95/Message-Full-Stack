@@ -19,10 +19,10 @@ export function login(email: string, password: string) {
     }
 }
 
-export function register(email: string, password: string, confirmPassword: string) {
+export function register(payload: { email: string, password: string, confirmPassword: string, firstName: string, lastName: string }) {
     return async function (dispatch: Function) {
         // Get data
-        let data = await api.register(email, password, confirmPassword)
+        let data = await api.register(payload)
         // Check data
         if (!data.success) {
             console.log(data.message)

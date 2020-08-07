@@ -12,11 +12,15 @@ class LoginContainer extends Component<ILoginContainerProps, ILoginContainerStat
         this.state = {
             viewType: ELoginViewType.SIGNIN,
             email: "huy00000@gmail.com",
+            firstName: "Huy",
+            lastName: "Văn Khắc",
             password: "12345678",
             confirmPassword: "12345678",
         }
 
         this.onChangeEmail = this.onChangeEmail.bind(this);
+        this.onChangeFirstName = this.onChangeFirstName.bind(this);
+        this.onChangeLastName = this.onChangeLastName.bind(this);
         this.onChangePassword = this.onChangePassword.bind(this);
         this.onChangeComfirmPassword = this.onChangeComfirmPassword.bind(this);
         this.onClickSetViewType = this.onClickSetViewType.bind(this);
@@ -26,6 +30,18 @@ class LoginContainer extends Component<ILoginContainerProps, ILoginContainerStat
     onChangeEmail(event: ChangeEvent<HTMLInputElement>) {
         this.setState({
             email: event.target.value
+        })
+    }
+
+    onChangeFirstName(event: ChangeEvent<HTMLInputElement>) {
+        this.setState({
+            firstName: event.target.value
+        })
+    }
+
+    onChangeLastName(event: ChangeEvent<HTMLInputElement>) {
+        this.setState({
+            lastName: event.target.value
         })
     }
 
@@ -46,12 +62,12 @@ class LoginContainer extends Component<ILoginContainerProps, ILoginContainerStat
     }
 
     onLoginSubmit(event: React.FormEvent<HTMLFormElement>) {
-        let { email, password, confirmPassword, viewType } = this.state;
+        let { email, password, confirmPassword, firstName, lastName, viewType } = this.state;
         event.preventDefault();
         if (viewType === ELoginViewType.SIGNIN) {
             this.props.login(email, password)
         } else if (viewType === ELoginViewType.SIGNUP) {
-            this.props.register(email, password, confirmPassword)
+            this.props.register({ email, password, confirmPassword, firstName, lastName })
         }
     }
 
@@ -79,6 +95,22 @@ class LoginContainer extends Component<ILoginContainerProps, ILoginContainerStat
                                 className="text-17"
                                 defaultValue="huy00000@gmail.com"
                                 onChange={this.onChangeEmail}
+                            />
+                        </Form.Group>
+                        <Form.Group controlId="formBasicPassword" className={`${viewType === ELoginViewType.SIGNIN ? "d-none" : ""} form-middle`}>
+                            <Form.Control
+                                type="text"
+                                placeholder="First name"
+                                className="text-17 form-left"
+                                defaultValue="Huy"
+                                onChange={this.onChangeFirstName}
+                            />
+                            <Form.Control
+                                type="text"
+                                placeholder="Last name"
+                                className="text-17 form-right"
+                                defaultValue="Van Khac"
+                                onChange={this.onChangeLastName}
                             />
                         </Form.Group>
                         <Form.Group controlId="formBasicPassword" className={`${viewType === ELoginViewType.SIGNIN ? "form-bottom" : "form-middle"}`}>

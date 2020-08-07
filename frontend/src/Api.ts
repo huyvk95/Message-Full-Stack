@@ -22,9 +22,9 @@ export function getHeaders() {
 }
 
 /* __API__ */
-export async function register(email: string, password: string, confirmPassword: string) {
+export async function register(payload: { email: string, password: string, confirmPassword: string, firstName: string, lastName: string }) {
     // Request
-    let response = await axios.post(`${HOST}/auth/register`, { email, password, confirmPassword }, { headers });
+    let response = await axios.post(`${HOST}/auth/register`, payload, { headers });
     // Format data
     let data = responseFormat(response);
     // Save token

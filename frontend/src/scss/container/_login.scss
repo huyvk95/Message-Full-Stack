@@ -47,6 +47,15 @@
                 width: $width;
                 height: $height;
             }
+
+            .form-left {
+                width: $width * 0.5 !important;
+            }
+
+            .form-right {
+                width: $width * 0.5 !important;
+                border-left: 0px;
+            }
         }
 
         .form-middle input {

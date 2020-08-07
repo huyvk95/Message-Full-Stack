@@ -14,7 +14,7 @@ export function milisecondsToDigital(duration: number, format: string = "hh:mm:s
 }
 
 export function milisecondsToTimeString(duration: number, format: string = "hh:mm:ss:ms") {
-    if(duration < 5) return "Just now"
+    if (duration < 5) return "Just now"
 
     var milliseconds = (duration % 1000) / 100,
         seconds = Math.floor((duration / 1000) % 60),
@@ -28,4 +28,8 @@ export function milisecondsToTimeString(duration: number, format: string = "hh:m
     format = format.replace("ms", `${milliseconds > 0 ? `${milliseconds} ${milliseconds <= 1 ? "millisecond" : "milliseconds"}` : ""}`)
 
     return format.trim()
+}
+
+export function capitalize(text: string, lower: boolean = false) {
+    return text.split(' ').map(string => string.charAt(0).toUpperCase() + string.slice(1).toLowerCase()).join(' ')
 }

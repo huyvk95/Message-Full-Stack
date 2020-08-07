@@ -4,7 +4,7 @@ export enum ELoginViewType {
 }
 
 export enum EContentTap {
-    CONVERSATION = 'CONVERSATION',
+    CONVERSATION = 'CHAT',
     PEOPLE = 'PEOPLE'
 }
 
