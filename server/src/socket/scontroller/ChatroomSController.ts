@@ -200,7 +200,7 @@ function connection(agServer: AGServer, socket: AGServerSocket) {
 }
 
 /* __Distribute server listener__ */
-export default function userSController(agServer: AGServer, socket: AGServerSocket, eventName: string) {
+export default function controller(agServer: AGServer, socket: AGServerSocket, eventName: string) {
     switch (eventName) {
         case 'connection':
             return connection(agServer, socket)
