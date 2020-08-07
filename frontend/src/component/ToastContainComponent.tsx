@@ -13,7 +13,7 @@ interface IState {
     elements: JSX.Element[]
 }
 
-class ToastsComponent extends Component<IProps, IState> {
+class ToastContainComponent extends Component<IProps, IState> {
     constructor(props: any) {
         super(props);
 
@@ -35,7 +35,7 @@ class ToastsComponent extends Component<IProps, IState> {
 
     render() {
         return (
-            <div className="toast_contain" id="toast_contain">
+            <div className="toast_contain">
                 {this.state.elements}
             </div>
         )
@@ -44,4 +44,4 @@ class ToastsComponent extends Component<IProps, IState> {
 
 const mapStateToProps = ({ app }: IStoreState) => ({ app })
 const mapDispatchToProps = { pushToast }
-export default connect(mapStateToProps, mapDispatchToProps)(ToastsComponent)
+export default connect(mapStateToProps, mapDispatchToProps)(ToastContainComponent)

@@ -206,6 +206,11 @@ button:focus {
 .input-group .form-control::placeholder {
   color: #999; }
 
+.modal-content {
+  border: none; }
+  .modal-content .modal-body {
+    padding: 0px; }
+
 .login {
   width: 100vw;
   height: 100vh;
@@ -387,3 +392,16 @@ button:focus {
   position: fixed;
   right: 5px;
   bottom: 5px; }
+
+.popup {
+  font-family: "HelveticaNeue-Normal"; }
+  .popup .popup-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 50px;
+    border-bottom: solid rgba(218, 220, 222, 0.6) 1px; }
+    .popup .popup-header .btn {
+      font-family: "HelveticaNeue-Medium"; }
+    .popup .popup-header .title {
+      font-family: "HelveticaNeue-Medium"; }

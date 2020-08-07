@@ -2,7 +2,8 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { initialize } from "./action/AppActions";
 import AuthRouter from "./router/AuthRouter";
-import ToastsComponent from "./component/ToastsComponent";
+import ToastContainComponent from "./component/ToastContainComponent";
+import PopupContainComponent from "./component/PopupContainComponent";
 import * as api from "./Api";
 
 interface IProps {
@@ -23,7 +24,8 @@ class App extends Component<IProps> {
         return (
             <>
                 <AuthRouter />
-                <ToastsComponent />
+                <ToastContainComponent />
+                <PopupContainComponent />
             </>
         )
     }

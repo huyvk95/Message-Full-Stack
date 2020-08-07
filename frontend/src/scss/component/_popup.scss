@@ -1,0 +1,19 @@
+.popup {
+    font-family: "HelveticaNeue-Normal";
+
+    .popup-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        height: 50px;
+        border-bottom: solid rgba($color: $color-semi-light, $alpha: 0.6) 1px;
+        
+        .btn {
+            font-family: "HelveticaNeue-Medium";
+        }
+
+        .title {
+            font-family: "HelveticaNeue-Medium";
+        }
+    }
+}

@@ -33,7 +33,6 @@ export interface IAvatarComponentProps {
 export interface IFooterComponentProps {
     navigation: INavigatorData
     chooseContentTab: Function
-    pushToast: Function
 }
 
 export interface IContentBodyProps {
@@ -61,4 +60,14 @@ export interface IToastItemProps {
     onClick?: Function
     content: string | JSX.Element
     time: Date
+}
+
+export interface IPopupProps {
+    show?: boolean,
+    header?: {
+        funcDone?: Function,
+        funcCancel?: Function,
+        title: string
+    }
+    body?: JSX.Element | string | undefined
 }

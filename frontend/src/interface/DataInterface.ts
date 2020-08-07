@@ -1,5 +1,5 @@
 import { EContentTap, EPeopleTap } from "../common/TypeCommon";
-import { IToastItemProps } from "./ComponentInterface";
+import { IToastItemProps, IPopupProps } from "./ComponentInterface";
 
 /* Reducer data */
 export interface IUserData {
@@ -29,7 +29,8 @@ export interface IFriendData {
 export interface IAppData {
     lang: string,
     deviceId: string,
-    toast?: IToastItemProps
+    toast?: IToastItemProps,
+    popup: IPopupProps
 }
 
 export interface INavigatorData {

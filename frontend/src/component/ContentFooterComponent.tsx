@@ -2,11 +2,10 @@ import React from "react";
 import { connect } from "react-redux";
 import { IStoreState } from "../interface/DataInterface";
 import { chooseContentTab } from "../action/NavigationActions";
-import { pushToast } from "../action/AppActions";
-import { IFooterComponentProps } from "../interface/ComponentInterface";
+import { IFooterComponentProps, IPopupProps } from "../interface/ComponentInterface";
 import { EContentTap } from "../common/TypeCommon";
 
-function ContentFooterComponent({ navigation, chooseContentTab, pushToast }: IFooterComponentProps) {
+function ContentFooterComponent({ navigation, chooseContentTab }: IFooterComponentProps) {
     let tab = navigation.contentTab;
 
     return (
@@ -22,10 +21,7 @@ function ContentFooterComponent({ navigation, chooseContentTab, pushToast }: IFo
             </div>
             <div
                 className={`footer-item ${tab === EContentTap.PEOPLE ? "active" : ""}`}
-                onClick={() => {
-                    pushToast({ content: "Hello", time: new Date() })
-                }}
-            // onClick={() => { chooseContentTab(EContentTap.PEOPLE) }}
+                onClick={() => { chooseContentTab(EContentTap.PEOPLE) }}
             >
                 <div className="item-content">
                     <i className="fa fa-users" />
@@ -37,6 +33,6 @@ function ContentFooterComponent({ navigation, chooseContentTab, pushToast }: IFo
 }
 
 const mapStateToProps = (state: IStoreState) => ({ navigation: state.navigation })
-const mapDispatchToProps = { chooseContentTab, pushToast }
+const mapDispatchToProps = { chooseContentTab }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ContentFooterComponent)

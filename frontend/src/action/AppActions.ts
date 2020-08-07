@@ -1,7 +1,7 @@
 import common from "../common";
 import { v4 as uuidv4 } from "uuid";
 import * as api from "../Api";
-import { IToastItemProps } from "../interface/ComponentInterface";
+import { IToastItemProps, IPopupProps } from "../interface/ComponentInterface";
 
 export function initialize() {
     /* __Device Id__ */
@@ -35,7 +35,20 @@ export function initialize() {
 
 export function pushToast(data: IToastItemProps) {
     return {
-        type: common.action.PUSHTOAST,
+        type: common.action.PUSH_TOAST,
+        payload: data
+    }
+}
+
+export function closePopup() {
+    return {
+        type: common.action.CLOSE_POPUP,
+    }
+}
+
+export function openPopup(data: IPopupProps) {
+    return {
+        type: common.action.OPEN_POPUP,
         payload: data
     }
 }
