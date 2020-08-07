@@ -31,10 +31,16 @@ class Socket {
             console.log('%cSocket', 'color: #2e7d32', 'connect', id, isAuthenticated);
 
             (async () => {
-                for await (let data of socket.receiver(common.transmit.FRIEND_UPDATE_DATA)) {
+                for await (let data of socket.receiver(common.packet.FRIEND_UPDATE_DATA)) {
                     console.log(data)
                 }
-            })()
+            })();
+
+            (async () => {
+                for await (let data of socket.receiver(common.packet.FRIEND)) {
+                    console.log(data)
+                }
+            })();
         })
 
         socket.listener('disconnect').once().then(({ reason }) => {

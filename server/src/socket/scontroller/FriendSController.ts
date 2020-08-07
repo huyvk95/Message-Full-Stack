@@ -6,184 +6,281 @@ const PACKET = common.packet.FRIEND;
 const EVENT = common.event.FRIEND;
 
 /* __Handle__ */
-async function get(request: any) {
-    let { online, string } = request?.data?.data
-    // Get data
-    let friendData = await UserFriend.find({ user: request.socket.authToken._id })
-        .populate({
-            path: 'friend',
-            select: common.dbselect.user,
-        })
-        .limit(50)
-        .then((data) => {
-            //Get friend
-            data = data.map(o => o.get('friend'))
-            //Filter
-            data = data.filter(o => o.get('active') === true)
-            if (online || string) {
-                if (online) data = data.filter((o: any) => o.get('online') === online);
-                if (string) data = data.filter((o: any) => {
-                    return new RegExp(`.*${string}.`).test(o.get('email')) || new RegExp(`.*${string}.`).test(o.get('firstName')) || new RegExp(`.*${string}.`).test(o.get('lastName'))
-                });
+async function get(socket: AGServerSocket, data: any) {
+    try {
+        let { online, string } = data
+        // Get data
+        let friendData = await UserFriend.find({ user: socket.authToken?._id })
+            .populate({
+                path: 'friend',
+                select: common.dbselect.user,
+            })
+            .limit(50)
+            .then((data) => {
+                //Get friend
+                data = data.map(o => o.get('friend'))
+                //Filter
+                data = data.filter(o => o.get('active') === true)
+                if (online || string) {
+                    if (online) data = data.filter((o: any) => o.get('online') === online);
+                    if (string) data = data.filter((o: any) => {
+                        return new RegExp(`.*${string}.`).test(o.get('email')) || new RegExp(`.*${string}.`).test(o.get('firstName')) || new RegExp(`.*${string}.`).test(o.get('lastName'))
+                    });
+                }
+                return data.map(o => o.toObject())
+            })
+
+        send(socket, {
+            evt: EVENT.GET,
+            payload: {
+                success: true,
+                data: friendData,
             }
-            return data.map(o => o.toObject())
         })
-
-    request.end(friendData)
-}
-
-async function setNickName(request: any) {
-    let { dataId, nickname } = request?.data?.data
-    if (!dataId || typeof nickname !== 'string') return request.error('validate.missing_input');
-    // Get friend data
-    let friendData = await UserFriend.findOne({ _id: dataId, user: request.socket.authToken._id })
-        .populate({
-            path: 'friend',
-            select: common.dbselect.user,
+    } catch (error) {
+        send(socket, {
+            evt: EVENT.GET,
+            payload: {
+                success: false,
+                message: error
+            }
         })
-    if (!friendData) return request.error('error.not_friend');
-    // Set nick name
-    friendData.set('nickname', nickname);
-    await friendData.save()
-    // Response
-    request.end({
-        success: true,
-        message: "success.success",
-        data: friendData.toObject()
-    })
+    }
+
 }
 
-async function remove(request: any) {
-    let { dataId } = request?.data?.data
-    if (!dataId) return request.error('validate.missing_input');
-    // Get mine friend data
-    let friendData = await UserFriend.findOne({ _id: dataId, user: request.socket.authToken._id })
-    if (!friendData) return request.error('error.not_friend');
-    // Get your friend data
-    let yourFriendData = await UserFriend.findOne({ user: friendData.get('friend'), friend: request.socket.authToken._id })
-    // Remove
-    await friendData.remove();
-    if (yourFriendData) await yourFriendData.remove();
-    // Response
-    request.end({
-        success: true,
-        message: "success.success"
-    })
+async function setNickName(socket: AGServerSocket, data: any) {
+    try {
+        let { dataId, nickname } = data
+        if (!dataId || typeof nickname !== 'string') throw "validate.missing_input";
+        // Get friend data
+        let friendData = await UserFriend.findOne({ _id: dataId, user: socket.authToken?._id })
+            .populate({
+                path: 'friend',
+                select: common.dbselect.user,
+            })
+        if (!friendData) throw "error.not_friend";
+        // Set nick name
+        friendData.set('nickname', nickname);
+        await friendData.save()
+        // Response
+        send(socket, {
+            evt: EVENT.SETNICKNAME,
+            payload: {
+                success: true,
+                message: "success.success",
+                data: friendData.toObject(),
+            }
+        })
+    } catch (error) {
+        send(socket, {
+            evt: EVENT.SETNICKNAME,
+            payload: {
+                success: false,
+                message: error
+            }
+        })
+    }
 }
 
-async function sendFriendRequest(request: any) {
-    let { userId } = request?.data?.data
-    if (!userId) return request.error('validate.missing_input');
-    if (userId === request.socket.authToken._id) return request.error('error.bad');
-    // Check request
-    let friendRequest = await FriendRequest.findOne({ from: request.socket.authToken._id, to: userId })
-    if (friendRequest) return request.error('error.have_send_request');
-    // Check user exist
-    let friend = await User.findOne({ _id: userId, active: true });
-    if (!friend) return request.error('error.find_user');
-    // Check friend exist
-    let friendData = await UserFriend.findOne({ user: request.socket.authToken._id, friend: userId })
-    if (friendData) return request.error('error.been_friend');
-    // Create friend request
-    friendRequest = new FriendRequest({ from: request.socket.authToken._id, to: userId })
-    await friendRequest.save()
-    // Response
-    request.end({
-        success: true,
-        message: "success.success",
-        data: friendRequest.toObject()
-    })
+async function remove(socket: AGServerSocket, data: any) {
+    try {
+        let { dataId } = data
+        if (!dataId) throw 'validate.missing_input';
+        // Get mine friend data
+        let friendData = await UserFriend.findOne({ _id: dataId, user: socket.authToken?._id })
+        if (!friendData) throw 'error.not_friend';
+        // Get your friend data
+        let yourFriendData = await UserFriend.findOne({ user: friendData.get('friend'), friend: socket.authToken?._id })
+        // Remove
+        await friendData.remove();
+        if (yourFriendData) await yourFriendData.remove();
+        // Response
+
+        send(socket, {
+            evt: EVENT.REMOVE,
+            payload: {
+                success: true,
+                message: "success.success",
+            }
+        })
+    } catch (error) {
+        send(socket, {
+            evt: EVENT.REMOVE,
+            payload: {
+                success: false,
+                message: error
+            }
+        })
+    }
 }
 
-async function acceptFriendRequest(request: any) {
-    let { requestId } = request?.data?.data
-    if (!requestId) return request.error('validate.missing_input');
-    // Get request
-    let requestData = await FriendRequest.findOne({ _id: requestId, to: request.socket.authToken._id });
-    if (!requestData) return request.error('error.bad');
-    // Check user exist
-    let friend = await User.findOne({ _id: requestData.get('from'), active: true })
-        .select(common.dbselect.user)
-    if (!friend) return request.error('error.find_user');
-    // Create friend 2 side
-    // -Mine
-    let friendMine = await UserFriend.findOne({ user: request.socket.authToken._id, friend: requestData.get('from') })
-    if (friendMine) return request.error('error.been_friend');
-    friendMine = new UserFriend({ user: request.socket.authToken._id, friend: requestData.get('from') })
-    await friendMine.save()
-    // -You
-    let friendYour = await UserFriend.findOne({ user: requestData.get('from'), friend: request.socket.authToken._id })
-    if (friendYour) return request.error('error.been_friend');
-    friendYour = new UserFriend({ user: requestData.get('from'), friend: request.socket.authToken._id })
-    await friendYour.save()
-    // Remove request
-    await requestData.remove();
-    // Response
-    request.end({
-        success: true,
-        message: "success.success",
-        data: friend.toObject(),
-    })
+async function sendFriendRequest(socket: AGServerSocket, data: any) {
+    try {
+        let { userId } = data
+        if (!userId) throw 'validate.missing_input';
+        if (userId === socket.authToken?._id) throw 'error.bad';
+        // Check request
+        let friendRequest = await FriendRequest.findOne({ from: socket.authToken?._id, to: userId })
+        if (friendRequest) throw 'error.have_send_request';
+        // Check user exist
+        let friend = await User.findOne({ _id: userId, active: true });
+        if (!friend) throw 'error.find_user';
+        // Check friend exist
+        let friendData = await UserFriend.findOne({ user: socket.authToken?._id, friend: userId })
+        if (friendData) throw 'error.been_friend';
+        // Create friend request
+        friendRequest = new FriendRequest({ from: socket.authToken?._id, to: userId })
+        await friendRequest.save()
+        // Response
+
+        send(socket, {
+            evt: EVENT.SENDFRIENDREQUEST,
+            payload: {
+                success: true,
+                message: "success.success",
+                data: friendRequest.toObject()
+            }
+        })
+    } catch (error) {
+        send(socket, {
+            evt: EVENT.SENDFRIENDREQUEST,
+            payload: {
+                success: false,
+                message: error
+            }
+        })
+    }
 }
 
-async function refuseFriendRequest(request: any) {
-    let { requestId } = request?.data?.data
-    if (!requestId) return request.error('validate.missing_input');
-    // Get request
-    let requestData = await FriendRequest.findOne({ _id: requestId, to: request.socket.authToken._id });
-    if (!requestData) return request.error('error.bad');
-    // Remove request
-    await requestData.remove();
-    // Response
-    request.end({
-        success: true,
-        message: "success.success",
-    })
+async function acceptFriendRequest(socket: AGServerSocket, data: any) {
+    try {
+        let { requestId } = data
+        if (!requestId) throw 'validate.missing_input';
+        // Get request
+        let requestData = await FriendRequest.findOne({ _id: requestId, to: socket.authToken?._id });
+        if (!requestData) throw 'error.bad';
+        // Check user exist
+        let friend = await User.findOne({ _id: requestData.get('from'), active: true })
+            .select(common.dbselect.user)
+        if (!friend) throw 'error.find_user';
+        // Create friend 2 side
+        // -Mine
+        let friendMine = await UserFriend.findOne({ user: socket.authToken?._id, friend: requestData.get('from') })
+        if (friendMine) throw 'error.been_friend';
+        friendMine = new UserFriend({ user: socket.authToken?._id, friend: requestData.get('from') })
+        await friendMine.save()
+        // -You
+        let friendYour = await UserFriend.findOne({ user: requestData.get('from'), friend: socket.authToken?._id })
+        if (friendYour) throw 'error.been_friend';
+        friendYour = new UserFriend({ user: requestData.get('from'), friend: socket.authToken?._id })
+        await friendYour.save()
+        // Remove request
+        await requestData.remove();
+        // Response
+        send(socket, {
+            evt: EVENT.ACCEPTFRIENDREQUEST,
+            payload: {
+                success: true,
+                message: "success.success",
+                data: friend.toObject(),
+            }
+        })
+    } catch (error) {
+        send(socket, {
+            evt: EVENT.ACCEPTFRIENDREQUEST,
+            payload: {
+                success: false,
+                message: error
+            }
+        })
+    }
 }
 
-async function cancelFriendRequest(request: any) {
-    let { requestId } = request?.data?.data
-    if (!requestId) return request.error('validate.missing_input');
-    // Get request
-    let requestData = await FriendRequest.findOne({ _id: requestId, from: request.socket.authToken._id });
-    if (!requestData) return request.error('error.bad');
-    // Remove request
-    await requestData.remove();
-    // Response
-    request.end({
-        success: true,
-        message: "success.success",
-    })
+async function refuseFriendRequest(socket: AGServerSocket, data: any) {
+    try {
+        let { requestId } = data
+        if (!requestId) throw 'validate.missing_input';
+        // Get request
+        let requestData = await FriendRequest.findOne({ _id: requestId, to: socket.authToken?._id });
+        if (!requestData) throw 'error.bad';
+        // Remove request
+        await requestData.remove();
+        // Response
+        send(socket, {
+            evt: EVENT.REFUSEFRIENDREQUEST,
+            payload: {
+                success: true,
+                message: "success.success",
+            }
+        })
+    } catch (error) {
+        send(socket, {
+            evt: EVENT.REFUSEFRIENDREQUEST,
+            payload: {
+                success: false,
+                message: error
+            }
+        })
+    }
+}
+
+async function cancelFriendRequest(socket: AGServerSocket, data: any) {
+    try {
+        let { requestId } = data
+        if (!requestId) throw 'validate.missing_input';
+        // Get request
+        let requestData = await FriendRequest.findOne({ _id: requestId, from: socket.authToken?._id });
+        if (!requestData) throw 'error.bad';
+        // Remove request
+        await requestData.remove();
+        // Response
+        send(socket, {
+            evt: EVENT.CANCELFRIENDREQUEST,
+            payload: {
+                success: true,
+                message: "success.success",
+            }
+        })
+    } catch (error) {
+        send(socket, {
+            evt: EVENT.CANCELFRIENDREQUEST,
+            payload: {
+                success: false,
+                message: error
+            }
+        })
+    }
 }
 
 /* __Distribute socket listener__ */
 function connection(agServer: AGServer, socket: AGServerSocket) {
     (async () => {
-        for await (let request of socket.procedure(PACKET)) {
+        for await (let request of socket.receiver(PACKET)) {
             try {
-                let { evt } = request.data;
+                let { evt, data } = request;
 
                 switch (evt) {
                     case EVENT.GET:
-                        await get(request)
+                        get(socket, data)
                         break
                     case EVENT.SETNICKNAME:
-                        await setNickName(request)
+                        setNickName(socket, data)
                         break
                     case EVENT.REMOVE:
-                        await remove(request)
+                        remove(socket, data)
                         break
                     case EVENT.SENDFRIENDREQUEST:
-                        await sendFriendRequest(request)
+                        sendFriendRequest(socket, data)
                         break
                     case EVENT.ACCEPTFRIENDREQUEST:
-                        await acceptFriendRequest(request)
+                        acceptFriendRequest(socket, data)
                         break
                     case EVENT.REFUSEFRIENDREQUEST:
-                        await refuseFriendRequest(request)
+                        refuseFriendRequest(socket, data)
                         break
                     case EVENT.CANCELFRIENDREQUEST:
-                        await cancelFriendRequest(request)
+                        cancelFriendRequest(socket, data)
                         break
                     default:
                         break;
@@ -193,6 +290,11 @@ function connection(agServer: AGServer, socket: AGServerSocket) {
             }
         }
     })();
+}
+
+/*__Send__*/
+function send(socket: AGServerSocket, payload: { evt: string, payload: { success: boolean, message?: string, data?: any } }) {
+    socket.transmit(PACKET, payload, {});
 }
 
 /* __Distribute server listener__ */
