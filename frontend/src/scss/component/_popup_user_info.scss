@@ -8,9 +8,20 @@
         .btn {
             margin-left: 0.5rem;
             margin-right: 0.5rem;
+            width: 40px;
         }
         i {
             font-size: 17px;
+        }
+    }
+
+    .nickname {
+        button {
+            width: 25px;
+            height: 25px;
+            i {
+                font-size: 16px;
+            }
         }
     }
 }

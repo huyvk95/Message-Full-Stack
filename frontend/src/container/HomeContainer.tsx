@@ -5,7 +5,7 @@ import { connect } from "react-redux";
 import socket from "../socket";
 /* ACTION */
 import { cleanUserData } from "../action/UserActions";
-import { getFriend, updateFriendData } from "../action/FriendActions";
+import { getFriend, setFriendNickName, updateFriendData } from "../action/FriendActions";
 /* INTERFACE */
 import { IStoreState, ISocketResponseData } from "../interface/DataInterface";
 import { IHomeContainerProps } from "../interface/ComponentInterface";
@@ -56,7 +56,7 @@ class HomeContainer extends Component<IHomeContainerProps> {
         })();
 
         // -FRIEND
-        let { getFriend } = this.props;
+        let { getFriend, setFriendNickName } = this.props;
         (async () => {
             for await (let data of sc.receiver(packet.FRIEND)) {
                 let { evt, payload } = data as ISocketResponseData
@@ -65,7 +65,7 @@ class HomeContainer extends Component<IHomeContainerProps> {
                 if (evt === event.FRIEND.GET) {
                     getFriend(payload)
                 } else if (evt === event.FRIEND.SETNICKNAME) {
-
+                    setFriendNickName(payload)
                 } else if (evt === event.FRIEND.REMOVE) {
 
                 } else if (evt === event.FRIEND.SENDFRIENDREQUEST) {
@@ -111,6 +111,7 @@ const mapStateToProps = ({ app }: IStoreState) => ({
 const mapDispatchToProps = {
     cleanUserData,
     getFriend,
+    setFriendNickName,
     updateFriendData
 }
 

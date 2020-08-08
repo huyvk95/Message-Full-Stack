@@ -435,6 +435,12 @@ button:focus {
   padding: 1.5rem 1rem; }
   .popup_user_info .control-area .btn {
     margin-left: 0.5rem;
-    margin-right: 0.5rem; }
+    margin-right: 0.5rem;
+    width: 40px; }
   .popup_user_info .control-area i {
     font-size: 17px; }
+  .popup_user_info .nickname button {
+    width: 25px;
+    height: 25px; }
+    .popup_user_info .nickname button i {
+      font-size: 16px; }

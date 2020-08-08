@@ -16,21 +16,6 @@ export function getFriend({ success, data, message }: IPayloadData) {
     }
 }
 
-export function setFriendNickName({ success, data, message }: IPayloadData) {
-    return async function (dispatch: Function) {
-        // Check data
-        if (!success) {
-            console.log(message)
-        } else {
-            // Dispatch action
-            dispatch({
-                type: common.action.FRIEND_SETNICKNAME,
-                payload: data
-            })
-        }
-    }
-}
-
 export function updateFriendData(data: IFriendData) {
     return async function (dispatch: Function) {
         dispatch({

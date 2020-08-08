@@ -19,16 +19,16 @@ async function get(socket: AGServerSocket, data: any) {
             .limit(50)
             .then((data) => {
                 //Get friend
-                data = data.map(o => o.get('friend'))
+                data = data.map(o => Object.assign({}, o.get('friend').toObject(), { nickname: o.get('nickname') }))
                 //Filter
-                data = data.filter(o => o.get('active') === true)
+                data = data.filter((o: any) => o['active'] === true)
                 if (online || string) {
-                    if (online) data = data.filter((o: any) => o.get('online') === online);
+                    if (online) data = data.filter((o: any) => o['online'] === online);
                     if (string) data = data.filter((o: any) => {
-                        return new RegExp(`.*${string}.`).test(o.get('email')) || new RegExp(`.*${string}.`).test(o.get('firstName')) || new RegExp(`.*${string}.`).test(o.get('lastName'))
+                        return new RegExp(`.*${string}.`).test(o['email']) || new RegExp(`.*${string}.`).test(o['firstName']) || new RegExp(`.*${string}.`).test(o['lastName'])
                     });
                 }
-                return data.map(o => o.toObject())
+                return data
             })
 
         send(socket, {
@@ -52,10 +52,10 @@ async function get(socket: AGServerSocket, data: any) {
 
 async function setNickName(socket: AGServerSocket, data: any) {
     try {
-        let { dataId, nickname } = data
-        if (!dataId || typeof nickname !== 'string') throw "validate.missing_input";
+        let { friendId, nickname } = data
+        if (!friendId || typeof nickname !== 'string') throw "validate.missing_input";
         // Get friend data
-        let friendData = await UserFriend.findOne({ _id: dataId, user: socket.authToken?._id })
+        let friendData = await UserFriend.findOne({ friend: friendId, user: socket.authToken?._id })
             .populate({
                 path: 'friend',
                 select: common.dbselect.user,
@@ -70,7 +70,10 @@ async function setNickName(socket: AGServerSocket, data: any) {
             payload: {
                 success: true,
                 message: "success.success",
-                data: friendData.toObject(),
+                data: {
+                    friendId,
+                    nickname
+                },
             }
         })
     } catch (error) {

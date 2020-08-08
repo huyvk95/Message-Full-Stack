@@ -20,7 +20,7 @@ function ContentPeopleComponent({ navigation, choosePeopleTab }: IContentPeopleP
                     Friends
                 </Button>
                 <Button
-                    variant="outline-success"
+                    variant="outline-primary"
                     className="btn-outline-custom"
                     onClick={() => { choosePeopleTab(EPeopleTap.REQUEST) }}
                 >

@@ -23,6 +23,7 @@ export interface IFriendData {
     avatar?: string,
     online: boolean,
     lastOnlineTime: Date,
+    nickname?: string,
     active: boolean,
 }
 
