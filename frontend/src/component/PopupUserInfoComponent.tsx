@@ -8,7 +8,7 @@ import common from "../common";
 import { IPopupUserInfoProps } from "../interface/ComponentInterface";
 
 let timeOut: NodeJS.Timeout | undefined = undefined;
-function PopupUserInfoComponent({ data, friend, friendRequest, user }: IPopupUserInfoProps) {
+function PopupUserInfoComponent({ data, friend, friendRequest, user, form }: IPopupUserInfoProps) {
     let { lastName, email, firstName, avatar, _id, nickname } = data
 
     // Get request if i sent
@@ -52,7 +52,7 @@ function PopupUserInfoComponent({ data, friend, friendRequest, user }: IPopupUse
             <div className="text-normal text-13">{email}</div>
             <div className="d-flex align-items-center flex-column mb-4">
                 <div className="text-normal text-30">{`${lastName} ${firstName}`}</div>
-                <div className={`nickname align-items-center ${friend.every(o => o._id !== _id) ? 'd-none' : 'd-flex'}`}>
+                <div className={`nickname align-items-center ${form !== "friend" || friend.every(o => o._id !== _id) ? 'd-none' : 'd-flex'}`}>
                     <InputGroup className="mb-3">
                         <FormControl
                             placeholder="Nickname"

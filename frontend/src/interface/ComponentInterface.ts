@@ -99,5 +99,6 @@ export interface IPopupUserInfoProps {
     data: IFriendData,
     friend: IFriendData[], 
     friendRequest: IFriendRequestReducer
-    user: IUserData
+    user: IUserData,
+    form?: "view" | "friend"
 }

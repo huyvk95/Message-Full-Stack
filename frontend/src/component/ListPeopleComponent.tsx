@@ -51,7 +51,7 @@ function PeopleItemComponent({ data, openPopup }: { data: IFriendData, openPopup
     let { avatar, firstName, lastName, nickname } = data;
 
     const onClickItem = () => {
-        openPopup({ body: <PopupUserInfoComponent data={data} /> })
+        openPopup({ body: <PopupUserInfoComponent data={data} form="friend" /> })
     }
 
     return (
