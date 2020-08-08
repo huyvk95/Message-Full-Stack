@@ -17,7 +17,7 @@ const UserSchema = new Schema({
         verified: { type: Boolean, required: true, default: false },
         uuid: { type: String, required: true },
     },
-    socketId: { type: String },
+    socketId: [{ type: String }],
     updateTime: { type: Date, required: true },
     loginTime: { type: Date, required: true },
     lastOnlineTime: { type: Date, required: true },

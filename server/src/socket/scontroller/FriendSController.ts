@@ -1,6 +1,7 @@
 import { AGServer, AGServerSocket } from "socketcluster-server";
 import { User, UserFriend, FriendRequest } from "../../database/ModelDatabase";
 import common from "../../common";
+import _ from "underscore";
 
 const PACKET = common.packet.FRIEND;
 const EVENT = common.event.FRIEND;
@@ -115,17 +116,19 @@ async function remove(agServer: AGServer, socket: AGServerSocket, data: any) {
             }
         })
         // Transmit
-        let fsocketId = await User.findById(friend.get('_id')).select('socketId').then((data) => data?.get('socketId'))
-        let fsocket = agServer.clients[fsocketId]
+        let isockets: AGServerSocket[] = _.compact(user.get("socketId").map((o: string) => agServer.clients[o]))
+        let fsockets: AGServerSocket[] = _.compact(friend.get("socketId").map((o: string) => agServer.clients[o]))
         // -New friend data
-        socket.transmit(PACKET, {
+        if (isockets) isockets.forEach(o => o.transmit(PACKET, {
             evt: EVENT.ONREMOVEFRIEND,
-            payload: friend.toObject()
-        }, {})
-        if (fsocket) fsocket.transmit(PACKET, {
-            evt: EVENT.ONREMOVEFRIEND,
-            payload: user.toObject()
-        }, {})
+            payload: _.omit(friend?.toObject(), "socketId")
+        }, {}))
+        if (fsockets) fsockets.forEach(o => {
+            o.transmit(PACKET, {
+                evt: EVENT.ONREMOVEFRIEND,
+                payload: _.omit(user?.toObject(), "socketId")
+            }, {})
+        })
     } catch (error) {
         send(socket, {
             evt: EVENT.REMOVE,
@@ -200,6 +203,8 @@ async function sendFriendRequest(agServer: AGServer, socket: AGServerSocket, dat
         // Check user exist
         let friend = await User.findOne({ _id: userId, active: true });
         if (!friend) throw 'error.find_user';
+        let user = await User.findById(socket.authToken?._id);
+        if (!user) throw 'error.find_user';
         // Check friend exist
         let friendData = await UserFriend.findOne({ user: socket.authToken?._id, friend: userId })
         if (friendData) throw 'error.been_friend';
@@ -226,16 +231,16 @@ async function sendFriendRequest(agServer: AGServer, socket: AGServerSocket, dat
             }
         })
         // Transmit
-        let fsocketId = await User.findById(friend.get('_id')).select('socketId').then((data) => data?.get('socketId'))
         let transData = {
             evt: EVENT.RECEIVEFRIENDREQUEST,
-            payload: friendRequest.toObject()
+            payload: _.omit(friendRequest.toObject(), "socketId")
         }
         // -Mine
-        socket.transmit(PACKET, transData, {})
+        let isockets: AGServerSocket[] = _.compact(user.get("socketId").map((o: string) => agServer.clients[o]))
+        if (isockets) isockets.forEach(o => o.transmit(PACKET, transData, {}))
         // -Friend
-        let fsocket = agServer.clients[fsocketId]
-        if (fsocket) fsocket.transmit(PACKET, transData, {})
+        let fsockets: AGServerSocket[] = _.compact(friend.get("socketId").map((o: string) => agServer.clients[o]))
+        if (fsockets) fsockets.forEach(o => o.transmit(PACKET, transData, {}))
     } catch (error) {
         send(socket, {
             evt: EVENT.SENDFRIENDREQUEST,
@@ -293,27 +298,27 @@ async function acceptFriendRequest(agServer: AGServer, socket: AGServerSocket, d
             }
         })
         // Transmit
-        let fsocketId = await User.findById(friend.get('_id')).select('socketId').then((data) => data?.get('socketId'))
-        let fsocket = agServer.clients[fsocketId]
+        let isockets: AGServerSocket[] = _.compact(user.get("socketId").map((o: string) => agServer.clients[o]))
+        let fsockets: AGServerSocket[] = _.compact(friend.get("socketId").map((o: string) => agServer.clients[o]))
         // -New friend data
-        socket.transmit(PACKET, {
+        if (isockets) isockets.forEach(o => o.transmit(PACKET, {
             evt: EVENT.ONACCEPTFRIENDREQUEST,
-            payload: friend.toObject()
-        }, {})
-        if (fsocket) fsocket.transmit(PACKET, {
+            payload: _.omit(friend?.toObject(), "socketId")
+        }, {}))
+        if (fsockets) fsockets.forEach(o => o.transmit(PACKET, {
             evt: EVENT.ONACCEPTFRIENDREQUEST,
-            payload: user.toObject()
-        }, {})
+            payload: _.omit(user?.toObject(), "socketId")
+        }, {}))
 
         // -Remove old request
         let transData = {
             evt: EVENT.REMOVEFRIENDREQUEST,
-            payload: requestData.toObject()
+            payload: _.omit(requestData.toObject(), "socketId")
         }
         // -Mine
-        socket.transmit(PACKET, transData, {})
+        if (isockets) isockets.forEach(o => o.transmit(PACKET, transData, {}))
         // -Friend
-        if (fsocket) fsocket.transmit(PACKET, transData, {})
+        if (fsockets) fsockets.forEach(o => o.transmit(PACKET, transData, {}))
     } catch (error) {
         send(socket, {
             evt: EVENT.ACCEPTFRIENDREQUEST,
@@ -344,6 +349,9 @@ async function refuseFriendRequest(agServer: AGServer, socket: AGServerSocket, d
         let friend = await User.findOne({ _id: requestData.get('from').get('_id'), active: true })
             .select(common.dbselect.user)
         if (!friend) throw 'error.find_user';
+        let user = await User.findById(socket.authToken?._id)
+            .select(common.dbselect.user)
+        if (!user) throw 'error.find_user';
         // Remove request
         await requestData.remove();
         // Response
@@ -357,14 +365,14 @@ async function refuseFriendRequest(agServer: AGServer, socket: AGServerSocket, d
         // Transmit
         let transData = {
             evt: EVENT.REMOVEFRIENDREQUEST,
-            payload: requestData.toObject()
+            payload: _.omit(requestData.toObject(), "socketId")
         }
         // -Mine
-        socket.transmit(PACKET, transData, {})
+        let isockets: AGServerSocket[] = _.compact(user.get("socketId").map((o: string) => agServer.clients[o]))
+        isockets.forEach(o => o.transmit(PACKET, transData, {}))
         // -Friend
-        let fsocketId = await User.findById(friend.get('_id')).select('socketId').then((data) => data?.get('socketId'))
-        let fsocket = agServer.clients[fsocketId]
-        if (fsocket) fsocket.transmit(PACKET, transData, {})
+        let fsockets: AGServerSocket[] = _.compact(friend.get("socketId").map((o: string) => agServer.clients[o]))
+        if (fsockets) fsockets.forEach(o => o.transmit(PACKET, transData, {}))
     } catch (error) {
         send(socket, {
             evt: EVENT.REFUSEFRIENDREQUEST,
@@ -395,6 +403,9 @@ async function cancelFriendRequest(agServer: AGServer, socket: AGServerSocket, d
         let friend = await User.findOne({ _id: requestData.get('to').get('_id'), active: true })
             .select(common.dbselect.user)
         if (!friend) throw 'error.find_user';
+        let user = await User.findById(socket.authToken?._id)
+            .select(common.dbselect.user)
+        if (!user) throw 'error.find_user';
         // Remove request
         await requestData.remove();
         // Response
@@ -408,14 +419,14 @@ async function cancelFriendRequest(agServer: AGServer, socket: AGServerSocket, d
         // Transmit
         let transData = {
             evt: EVENT.REMOVEFRIENDREQUEST,
-            payload: requestData.toObject()
+            payload: _.omit(requestData.toObject())
         }
         // -Mine
-        socket.transmit(PACKET, transData, {})
+        let isockets: AGServerSocket[] = _.compact(user.get("socketId").map((o: string) => agServer.clients[o]))
+        isockets.forEach(o => o.transmit(PACKET, transData, {}))
         // -Friend
-        let fsocketId = await User.findById(friend.get('_id')).select('socketId').then((data) => data?.get('socketId'))
-        let fsocket = agServer.clients[fsocketId]
-        if (fsocket) fsocket.transmit(PACKET, transData, {})
+        let fsockets: AGServerSocket[] = _.compact(friend.get("socketId").map((o: string) => agServer.clients[o]))
+        if (fsockets) fsockets.forEach(o => o.transmit(PACKET, transData, {}))
     } catch (error) {
         send(socket, {
             evt: EVENT.CANCELFRIENDREQUEST,
