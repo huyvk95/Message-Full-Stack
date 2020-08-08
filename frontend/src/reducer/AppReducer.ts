@@ -4,6 +4,8 @@ import { IAppData } from "../interface/DataInterface";
 let initializeState: IAppData = {
     lang: 'en',
     deviceId: '',
+    notification: true,
+    sound: true,
     toast: undefined,
     popup: {}
 }
@@ -14,6 +16,10 @@ export default function (state = initializeState, action: { type: string, payloa
             return Object.assign({}, state, action.payload);
         case common.action.PUSH_TOAST:
             return Object.assign({}, state, { toast: action.payload });
+        case common.action.TOGGLE_SOUND:
+            return Object.assign({}, state, { sound: action.payload });
+        case common.action.TOGGLE_NOTIFICATION:
+            return Object.assign({}, state, { notification: action.payload });
         case common.action.CLOSE_POPUP:
             return Object.assign({}, state, {
                 popup: action.payload && state.popupBackup ? Object.assign({}, state.popupBackup) : Object.assign({}, state.popup, { show: false })

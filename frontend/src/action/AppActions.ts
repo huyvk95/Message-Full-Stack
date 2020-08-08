@@ -20,6 +20,24 @@ export function initialize() {
         localStorage.setItem('lang', lang);
     }
 
+    /* __Sound__ */
+    let soundData = localStorage.getItem('sound');
+    let sound = soundData ? JSON.parse(soundData) : true
+    // Check deviceId exist
+    if (!soundData) {
+        sound = true;
+        localStorage.setItem('sound', JSON.stringify(sound));
+    }
+
+    /* __Notification__ */
+    let notificationData = localStorage.getItem('notification');
+    let notification = notificationData ? JSON.parse(notificationData) : true
+    // Check deviceId exist
+    if (!notificationData) {
+        notification = true;
+        localStorage.setItem('notification', JSON.stringify(notification));
+    }
+
     /* __API_CONFIG__ */
     api.config({ "deviceId": deviceId })
     api.config({ "accept-language": lang })
@@ -28,8 +46,27 @@ export function initialize() {
         type: common.action.INITIALIZE,
         payload: {
             initialized: true,
-            deviceId
+            deviceId,
+            lang,
+            sound,
+            notification
         },
+    }
+}
+
+export function toggleSound(state: boolean) {
+    localStorage.setItem('sound', JSON.stringify(state));
+    return {
+        type: common.action.TOGGLE_SOUND,
+        payload: state
+    }
+}
+
+export function toggleNotification(state: boolean) {
+    localStorage.setItem('notification', JSON.stringify(state));
+    return {
+        type: common.action.TOGGLE_NOTIFICATION,
+        payload: state
     }
 }
 

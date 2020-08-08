@@ -539,3 +539,20 @@ button:focus {
       border: none; }
     .popup_confirm .popup_control .btn-light:hover {
       background-color: #f3f3f3; }
+
+.popup_setting {
+  padding: 0.0rem 1.4rem; }
+  .popup_setting div, .popup_setting p, .popup_setting label {
+    font-family: "HelveticaNeue-Medium" !important; }
+  .popup_setting .popup_item {
+    display: flex;
+    padding: 1.1rem 0.0rem;
+    border-bottom: solid rgba(204, 204, 204, 0.4) 1px; }
+    .popup_setting .popup_item .popup_item_title {
+      display: flex;
+      align-items: center;
+      width: 162px;
+      color: #999; }
+    .popup_setting .popup_item .popup_item_content {
+      display: flex;
+      align-items: center; }

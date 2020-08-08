@@ -119,3 +119,10 @@ export interface IPopupConfirmProps {
         func?: Function
     }[]
 }
+
+export interface IPopupSettingProps {
+    app: IAppData,
+    user: IUserData
+    toggleNotification: Function
+    toggleSound: Function
+}

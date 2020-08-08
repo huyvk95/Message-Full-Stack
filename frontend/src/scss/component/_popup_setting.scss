@@ -1,0 +1,25 @@
+.popup_setting {
+    padding: 0.0rem 1.4rem;
+
+    div, p, label {
+        font-family: "HelveticaNeue-Medium" !important;
+    }
+
+    .popup_item {
+        display: flex;
+        padding: 1.1rem 0.0rem;
+        border-bottom: solid rgba($color: $color-mid-light, $alpha: 0.4) 1px;
+
+        .popup_item_title {
+            display: flex;
+            align-items: center;
+            width: 162px;
+            color: $color-light;
+        }
+
+        .popup_item_content {
+            display: flex;
+            align-items: center;
+        }
+    }
+}

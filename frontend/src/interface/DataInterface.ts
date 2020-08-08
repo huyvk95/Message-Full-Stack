@@ -42,6 +42,8 @@ export interface IFriendRequestReducer {
 export interface IAppData {
     lang: string,
     deviceId: string,
+    notification: boolean,
+    sound: boolean,
     toast?: IToastItemProps,
     dropdown?: {
         content: JSX.Element,

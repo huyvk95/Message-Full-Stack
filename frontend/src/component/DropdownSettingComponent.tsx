@@ -2,11 +2,28 @@ import React from "react";
 import { Button } from "react-bootstrap";
 import { logout } from "../action/UserActions";
 import { connect } from "react-redux";
+import { openPopup } from "../action/AppActions";
+import PopupSettingComponent from "./PopupSettingComponent";
 
-function ContentSettingDropComponents({ logout }: { logout: Function }) {
+function ContentSettingDropComponents({ logout, openPopup }: { logout: Function, openPopup: Function }) {
     return (
         <div className="setting_drop_content">
-            <Button variant="outline-secondary setting_drop_item">Cài đặt</Button>
+            <Button
+                variant="outline-secondary setting_drop_item"
+                onClick={() => {
+                    openPopup({
+                        header: {
+                            title: "Setting",
+                            btnRight: {
+                                title: "Done"
+                            }
+                        },
+                        body: <PopupSettingComponent />
+                    })
+                }}
+            >
+                Cài đặt
+            </Button>
             <div className="setting_drop_seperate" />
             <Button variant="outline-secondary setting_drop_item">Giới thiệu</Button>
             <Button variant="outline-secondary setting_drop_item">Điều khoản</Button>
@@ -21,4 +38,4 @@ function ContentSettingDropComponents({ logout }: { logout: Function }) {
     )
 }
 
-export default connect(null, { logout })(ContentSettingDropComponents)
+export default connect(null, { logout, openPopup })(ContentSettingDropComponents)

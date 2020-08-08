@@ -8,9 +8,9 @@ import { openPopup, openDialog } from "../action/AppActions";
 import util from "../util";
 import PopupSearchUserComponent from "./PopupSearchUserComponent";
 import DropdownSettingComponent from "./DropdownSettingComponent";
+import PopupSettingComponent from "./PopupSettingComponent";
 
 function ContentHeaderComponent({ openPopup, openDialog, navigation }: IContentHeaderProps) {
-
     return (
         <div className="content-header justify-content-between px-3 py-2 position-relative">
             <div className="d-flex align-items-center">
