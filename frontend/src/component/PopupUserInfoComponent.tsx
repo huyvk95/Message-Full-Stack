@@ -12,7 +12,7 @@ function PopupUserInfoComponent({ data, friend, friendRequest, user }: IPopupUse
     let { lastName, email, firstName, avatar, _id, nickname } = data
 
     // Get request if i sent
-    let requestSent = friendRequest.sent.find(o => o.from === user._id && o.to === data._id)
+    let requestSent = friendRequest.sent.find(o => o.from._id === user._id && o.to._id === data._id)
 
     const onInputChange = (event: ChangeEvent<HTMLInputElement>) => {
         let value = event.target.value;

@@ -61,10 +61,10 @@ class HomeContainer extends Component<IHomeContainerProps> {
                 let { evt, payload } = data as ISocketTransmitData
                 console.log(evt, payload)
                 if (evt === event.FRIEND.RECEIVEFRIENDREQUEST) { //Receive transmit from server
-                    if (payload.from === user._id) pushSentRequest(payload)
+                    if (payload.from._id === user._id) pushSentRequest(payload)
                     else pushReceiveRequest(payload)
                 } else if (evt === event.FRIEND.REMOVEFRIENDREQUEST) { //Receive transmit from server
-                    if (payload.from === user._id) popSentRequest(payload)
+                    if (payload.from._id === user._id) popSentRequest(payload)
                     else popReceiveRequest(payload)
                 }
             }

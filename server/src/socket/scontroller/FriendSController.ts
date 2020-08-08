@@ -123,7 +123,23 @@ async function getFriendRequest(socket: AGServerSocket) {
     try {
         // Check request
         let friendRequestReceive = await FriendRequest.find({ to: socket.authToken?._id })
+            .populate({
+                path: 'from',
+                select: common.dbselect.user,
+            })
+            .populate({
+                path: 'to',
+                select: common.dbselect.user,
+            })
         let friendRequestSent = await FriendRequest.find({ from: socket.authToken?._id })
+            .populate({
+                path: 'from',
+                select: common.dbselect.user,
+            })
+            .populate({
+                path: 'to',
+                select: common.dbselect.user,
+            })
         // Response
         send(socket, {
             evt: EVENT.GETFRIENDREQUEST,
@@ -154,6 +170,14 @@ async function sendFriendRequest(agServer: AGServer, socket: AGServerSocket, dat
         if (userId === socket.authToken?._id) throw 'error.bad';
         // Check request
         let friendRequest = await FriendRequest.findOne({ from: socket.authToken?._id, to: userId })
+            .populate({
+                path: 'from',
+                select: common.dbselect.user,
+            })
+            .populate({
+                path: 'to',
+                select: common.dbselect.user,
+            })
         if (friendRequest) throw 'error.have_send_request';
         // Check user exist
         let friend = await User.findOne({ _id: userId, active: true });
@@ -164,6 +188,16 @@ async function sendFriendRequest(agServer: AGServer, socket: AGServerSocket, dat
         // Create friend request
         friendRequest = new FriendRequest({ from: socket.authToken?._id, to: userId })
         await friendRequest.save()
+        await friendRequest
+            .populate({
+                path: 'from',
+                select: common.dbselect.user,
+            })
+            .populate({
+                path: 'to',
+                select: common.dbselect.user,
+            })
+            .execPopulate()
         // Response
         send(socket, {
             evt: EVENT.SENDFRIENDREQUEST,
@@ -199,22 +233,30 @@ async function acceptFriendRequest(agServer: AGServer, socket: AGServerSocket, d
         let { requestId } = data
         if (!requestId) throw 'validate.missing_input';
         // Get request
-        let requestData = await FriendRequest.findOne({ _id: requestId, to: socket.authToken?._id });
+        let requestData = await FriendRequest.findOne({ _id: requestId, to: socket.authToken?._id })
+            .populate({
+                path: 'from',
+                select: common.dbselect.user,
+            })
+            .populate({
+                path: 'to',
+                select: common.dbselect.user,
+            })
         if (!requestData) throw 'error.bad';
         // Check user exist
-        let friend = await User.findOne({ _id: requestData.get('from'), active: true })
+        let friend = await User.findOne({ _id: requestData.get('from').get('_id'), active: true })
             .select(common.dbselect.user)
         if (!friend) throw 'error.find_user';
         // Create friend 2 side
         // -Mine
-        let friendMine = await UserFriend.findOne({ user: socket.authToken?._id, friend: requestData.get('from') })
+        let friendMine = await UserFriend.findOne({ user: socket.authToken?._id, friend: requestData.get('from').get('_id') })
         if (friendMine) throw 'error.been_friend';
-        friendMine = new UserFriend({ user: socket.authToken?._id, friend: requestData.get('from') })
+        friendMine = new UserFriend({ user: socket.authToken?._id, friend: requestData.get('from').get('_id') })
         await friendMine.save()
         // -You
-        let friendYour = await UserFriend.findOne({ user: requestData.get('from'), friend: socket.authToken?._id })
+        let friendYour = await UserFriend.findOne({ user: requestData.get('from').get('_id'), friend: socket.authToken?._id })
         if (friendYour) throw 'error.been_friend';
-        friendYour = new UserFriend({ user: requestData.get('from'), friend: socket.authToken?._id })
+        friendYour = new UserFriend({ user: requestData.get('from').get('_id'), friend: socket.authToken?._id })
         await friendYour.save()
         // Remove request
         await requestData.remove();
@@ -253,10 +295,18 @@ async function refuseFriendRequest(agServer: AGServer, socket: AGServerSocket, d
         let { requestId } = data
         if (!requestId) throw 'validate.missing_input';
         // Get request
-        let requestData = await FriendRequest.findOne({ _id: requestId, to: socket.authToken?._id });
+        let requestData = await FriendRequest.findOne({ _id: requestId, to: socket.authToken?._id })
+            .populate({
+                path: 'from',
+                select: common.dbselect.user,
+            })
+            .populate({
+                path: 'to',
+                select: common.dbselect.user,
+            })
         if (!requestData) throw 'error.bad';
         // Check user exist
-        let friend = await User.findOne({ _id: requestData.get('from'), active: true })
+        let friend = await User.findOne({ _id: requestData.get('from').get('_id'), active: true })
             .select(common.dbselect.user)
         if (!friend) throw 'error.find_user';
         // Remove request
@@ -290,15 +340,23 @@ async function refuseFriendRequest(agServer: AGServer, socket: AGServerSocket, d
     }
 }
 
-async function cancelFriendRequest(agServer: AGServer,socket: AGServerSocket, data: any) {
+async function cancelFriendRequest(agServer: AGServer, socket: AGServerSocket, data: any) {
     try {
         let { requestId } = data
         if (!requestId) throw 'validate.missing_input';
         // Get request
-        let requestData = await FriendRequest.findOne({ _id: requestId, from: socket.authToken?._id });
+        let requestData = await FriendRequest.findOne({ _id: requestId, from: socket.authToken?._id })
+            .populate({
+                path: 'from',
+                select: common.dbselect.user,
+            })
+            .populate({
+                path: 'to',
+                select: common.dbselect.user,
+            })
         if (!requestData) throw 'error.bad';
         // Check user exist
-        let friend = await User.findOne({ _id: requestData.get('to'), active: true })
+        let friend = await User.findOne({ _id: requestData.get('to').get('_id'), active: true })
             .select(common.dbselect.user)
         if (!friend) throw 'error.find_user';
         // Remove request
@@ -362,7 +420,7 @@ function connection(agServer: AGServer, socket: AGServerSocket) {
                         refuseFriendRequest(agServer, socket, data)
                         break
                     case EVENT.CANCELFRIENDREQUEST:
-                        cancelFriendRequest(agServer,socket, data)
+                        cancelFriendRequest(agServer, socket, data)
                         break
                     default:
                         break;

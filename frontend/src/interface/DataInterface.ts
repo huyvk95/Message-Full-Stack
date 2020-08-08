@@ -29,8 +29,8 @@ export interface IFriendData {
 
 export interface IFriendRequest {
     _id: string,
-    from: string,
-    to: string,
+    from: IFriendData,
+    to: IFriendData,
 }
 
 export interface IFriendRequestReducer {
