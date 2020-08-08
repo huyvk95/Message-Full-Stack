@@ -1,0 +1,16 @@
+.popup_user_info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1.5rem 1rem;
+
+    .control-area {
+        .btn {
+            margin-left: 0.5rem;
+            margin-right: 0.5rem;
+        }
+        i {
+            font-size: 17px;
+        }
+    }
+}

@@ -132,6 +132,9 @@ button:focus {
 .text-12 {
   font-size: 12px; }
 
+.text-11 {
+  font-size: 11px; }
+
 .text-bold {
   font-family: "HelveticaNeue-Medium" !important; }
 
@@ -422,5 +425,16 @@ button:focus {
     align-items: center; }
     .popup_search_user .popup-item .popup-item-name {
       width: 100%;
-      padding: 13px 10px;
+      padding: 10px;
       border-bottom: solid rgba(218, 220, 222, 0.4) 1px; }
+
+.popup_user_info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1.5rem 1rem; }
+  .popup_user_info .control-area .btn {
+    margin-left: 0.5rem;
+    margin-right: 0.5rem; }
+  .popup_user_info .control-area i {
+    font-size: 17px; }

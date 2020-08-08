@@ -3,12 +3,10 @@ import { InputGroup, FormControl } from "react-bootstrap";
 import AvatarComponent from "./AvatarComponent";
 import socket from "../socket";
 import common from "../common";
+import { connect } from "react-redux";
 import { IFriendData } from "../interface/DataInterface";
-
-interface IItemProps {
-    avatar?: string,
-    name: string
-}
+import { openPopup } from "../action/AppActions";
+import PopupUserInfoComponent from "./PopupUserInfoComponent";
 
 let timeOut: NodeJS.Timeout | undefined = undefined;
 export default function PopupSearchUserComponent() {
@@ -24,7 +22,9 @@ export default function PopupSearchUserComponent() {
             if (timeOut) clearTimeout(timeOut)
             if (value && sc) {
                 sc.invoke(common.packet.USER, { evt: common.event.USER.GET, data: { string: value } })
-                    .then(data => { setUsers(data) })
+                    .then(data => {
+                        setUsers(data)
+                    })
             }
         }, 400)
     }
@@ -47,9 +47,8 @@ export default function PopupSearchUserComponent() {
             <div className="popup-content">
                 {
                     users.map((o, i) => (
-                        <SearchUserItemComponent
-                            avatar={o.avatar}
-                            name={`${o.lastName} ${o.firstName}`}
+                        <Item
+                            data={o}
                             key={i}
                         />
                     ))
@@ -59,11 +58,26 @@ export default function PopupSearchUserComponent() {
     )
 }
 
-function SearchUserItemComponent({ name, avatar }: IItemProps) {
+function SearchUserItemComponent({ data, openPopup }: { openPopup: Function, data: IFriendData }) {
+    let { lastName, firstName, avatar, email } = data;
+
+    const onClickItem = () => {
+        openPopup({ body: <PopupUserInfoComponent data={data} />, openRecent: true })
+    }
+
     return (
-        <div className="popup-item px-3 pt-1 pb-2">
+        <div
+            className="popup-item px-3 pb-1"
+            style={{ cursor: "pointer" }}
+            onClick={onClickItem}
+        >
             <AvatarComponent url={avatar} type="normal" />
-            <p className="popup-item-name text-normal text-18">{name}</p>
+            <div className="popup-item-name">
+                <p className="text-normal text-18">{`${lastName} ${firstName}`}</p>
+                <p className="text-normal text-11">{email}</p>
+            </div>
         </div>
     )
 }
+
+const Item = connect(null, { openPopup })(SearchUserItemComponent)

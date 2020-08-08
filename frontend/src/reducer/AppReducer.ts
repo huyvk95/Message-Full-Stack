@@ -15,9 +15,14 @@ export default function (state = initializeState, action: { type: string, payloa
         case common.action.PUSH_TOAST:
             return Object.assign({}, state, { toast: action.payload });
         case common.action.CLOSE_POPUP:
-            return Object.assign({}, state, { popup: Object.assign({}, state.popup, { show: false }) });
+            return Object.assign({}, state, {
+                popup: action.payload && state.popupBackup ? Object.assign({}, state.popupBackup) : Object.assign({}, state.popup, { show: false })
+            });
         case common.action.OPEN_POPUP:
-            return Object.assign({}, state, { popup: Object.assign(action.payload, { show: true }) });
+            return Object.assign({}, state, {
+                popup: Object.assign(action.payload, { show: true }),
+                popupBackup: Object.assign({}, state.popup, { show: true })
+            });
         default:
             return state;
     }

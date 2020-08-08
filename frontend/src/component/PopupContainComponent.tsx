@@ -11,13 +11,13 @@ interface IProps {
 }
 
 function PopupContainComponent({ app, closePopup }: IProps) {
-    let { show, body, header } = app.popup;
+    let { show, body, header, openRecent } = app.popup;
     if (!body) show = false;
 
     return (
         <Modal
             show={show}
-            onHide={closePopup}
+            onHide={() => { closePopup(openRecent) }}
             dialogClassName="popup"
             centered
         >
@@ -28,31 +28,35 @@ function PopupContainComponent({ app, closePopup }: IProps) {
                             <Button
                                 variant="link text-16"
                                 onClick={() => {
-                                    if (header && _.isFunction(header.funcCancel)) {
-                                        header.funcCancel()
-                                        closePopup()
+                                    if (header && typeof header?.btnLeft?.func === 'function') {
+                                        header.btnLeft.func()
                                     }
+                                    closePopup(openRecent)
                                 }}
                                 style={{
-                                    visibility: header?.funcCancel ? "visible" : "hidden"
+                                    visibility: header?.btnLeft ? "visible" : "hidden"
                                 }}
                             >
-                                Cancel
+                                {
+                                    header?.btnLeft?.title ? header?.btnLeft?.title : "Cancel"
+                                }
                             </Button>
                             <div className="title text-16">{header.title}</div>
                             <Button
                                 variant="link text-16"
                                 onClick={() => {
-                                    if (header && _.isFunction(header.funcDone)) {
-                                        header.funcDone()
-                                        closePopup()
+                                    if (header && typeof header?.btnRight?.func === 'function') {
+                                        header.btnRight.func()
                                     }
+                                    closePopup(openRecent)
                                 }}
                                 style={{
-                                    visibility: header?.funcDone ? "visible" : "hidden"
+                                    visibility: header?.btnRight ? "visible" : "hidden"
                                 }}
                             >
-                                Done
+                                {
+                                    header?.btnRight?.title ? header?.btnRight?.title : "Done"
+                                }
                             </Button>
                         </div>
                         :

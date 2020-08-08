@@ -67,11 +67,18 @@ export interface IToastItemProps {
 export interface IPopupProps {
     show?: boolean,
     header?: {
-        funcDone?: Function,
-        funcCancel?: Function,
+        btnLeft?: {
+            title: string,
+            func?: Function,
+        }
+        btnRight?: {
+            title: string,
+            func?: Function,
+        }
         title: string
     }
     body?: JSX.Element | string | undefined
+    openRecent?: boolean
 }
 
 export interface IContentHeaderProps {

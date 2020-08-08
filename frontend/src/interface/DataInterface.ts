@@ -23,7 +23,7 @@ export interface IFriendData {
     avatar?: string,
     online: boolean,
     lastOnlineTime: Date,
-    active: string,
+    active: boolean,
 }
 
 export interface IAppData {
@@ -31,6 +31,7 @@ export interface IAppData {
     deviceId: string,
     toast?: IToastItemProps,
     popup: IPopupProps
+    popupBackup?: IPopupProps
 }
 
 export interface INavigatorData {

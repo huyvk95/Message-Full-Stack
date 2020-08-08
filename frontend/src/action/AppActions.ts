@@ -40,9 +40,10 @@ export function pushToast(data: IToastItemProps) {
     }
 }
 
-export function closePopup() {
+export function closePopup(openRecent: boolean = false) {
     return {
         type: common.action.CLOSE_POPUP,
+        payload: openRecent
     }
 }
 
