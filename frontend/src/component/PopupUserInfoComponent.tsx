@@ -11,7 +11,7 @@ import PopupConfirmComponent from "./PopupConfirmComponent";
 
 let timeOut: NodeJS.Timeout | undefined = undefined;
 function PopupUserInfoComponent({ data, friend, friendRequest, user, form, openPopup }: IPopupUserInfoProps) {
-    let { lastName, email, firstName, avatar, _id, nickname } = data
+    let { lastName, email, firstName, avatar, _id, nickname, online, lastOnlineTime } = data
 
     // Get request if i sent
     let requestSent = friendRequest.sent.find(o => o.from._id === user._id && o.to._id === data._id)
@@ -61,7 +61,7 @@ function PopupUserInfoComponent({ data, friend, friendRequest, user, form, openP
 
     return (
         <div className="popup_user_info">
-            <AvatarComponent url={avatar} type="langer" className="mb-2" />
+            <AvatarComponent url={avatar} size="langer" className="mb-2" online={{status: online, lastOnlineTime}}/>
             <div className="text-normal text-13">{email}</div>
             <div className="d-flex align-items-center flex-column mb-4">
                 <div className="text-normal text-30">{`${lastName} ${firstName}`}</div>

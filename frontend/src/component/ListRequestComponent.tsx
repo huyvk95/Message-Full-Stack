@@ -44,7 +44,7 @@ function ItemRequestComponent({ data }: { data: IFriendRequest }) {
             <div className="d-flex align-items-center">
                 <AvatarComponent
                     url={avatar}
-                    type="normal"
+                    size="normal"
                 />
                 <p className="ml-2 text-normal text-18">{`${lastName} ${firstName}`}</p>
             </div>

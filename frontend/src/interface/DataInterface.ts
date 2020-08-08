@@ -2,15 +2,16 @@ import { EContentTap, EPeopleTap } from "../common/TypeCommon";
 import { IToastItemProps, IPopupProps } from "./ComponentInterface";
 
 /* Reducer data */
-export interface IUserData {
+export interface IUserData{
     _id: string
     email: string
     firstName?: string
     lastName?: string
     avatar?: string
-    updateTime?: Date
-    loginTime?: Date
-    registrationTime?: Date
+    updateTime?: string
+    loginTime?: string
+    registrationTime?: string
+    lastOnlineTime?: string
     emailVerify: { verified: boolean }
     online?: boolean
 }
@@ -20,10 +21,10 @@ export interface IFriendData {
     email: string,
     firstName: string,
     lastName: string,
-    avatar?: string,
+    avatar: string,
     online: boolean,
-    lastOnlineTime: Date,
-    nickname?: string,
+    lastOnlineTime: string,
+    nickname: string,
     active: boolean,
 }
 

@@ -11,6 +11,10 @@
   src: url("./static/fonts/HelveticaNeue-Medium.ttf") format("truetype"); }
 
 @font-face {
+  font-family: "HelveticaNeue-Bold";
+  src: url("./static/fonts/HelveticaNeue-Bold.ttf") format("truetype"); }
+
+@font-face {
   font-family: "UTMAvoBold";
   src: url("./static/fonts/UTMAvoBold.eot");
   src: url("./static/fonts/UTMAvoBold.woff") format("woff"), url("./static/fonts/UTMAvoBold.eot") format("opentype"), url("./static/fonts/UTMAvoBold.svg") format("svg"); }
@@ -134,6 +138,9 @@ button:focus {
 
 .text-11 {
   font-size: 11px; }
+
+.text-bolder {
+  font-family: "HelveticaNeue-Bold" !important; }
 
 .text-bold {
   font-family: "HelveticaNeue-Medium" !important; }
@@ -365,35 +372,71 @@ button:focus {
   display: inline-flex; }
   .avatar .wrap {
     display: flex;
+    position: relative;
     justify-content: center;
     align-items: center;
     background-color: #d3d5da;
     border-radius: 50%; }
+    .avatar .wrap .online-status {
+      position: absolute;
+      bottom: 1px;
+      right: 1px;
+      width: 10px;
+      height: 10px;
+      background-color: #63bf38;
+      border-radius: 50%; }
+    .avatar .wrap .badge {
+      position: absolute;
+      bottom: 0px;
+      right: 0px;
+      color: #63bf38;
+      background-color: #1c2d1e;
+      padding: 0.15rem; }
   .avatar .langer {
     width: 100px;
     height: 100px; }
     .avatar .langer i {
       font-size: 50px; }
+    .avatar .langer .online-status {
+      width: 21px;
+      height: 21px;
+      bottom: 5px;
+      right: 5px; }
+    .avatar .langer .badge {
+      font-size: 15px;
+      min-width: 35px; }
   .avatar .medium {
     width: 50px;
     height: 50px; }
     .avatar .medium i {
       font-size: 25px; }
+    .avatar .medium .badge {
+      font-size: 11px; }
   .avatar .normal {
     width: 40px;
     height: 40px; }
     .avatar .normal i {
       font-size: 20px; }
+    .avatar .normal .badge {
+      font-size: 9px; }
   .avatar .small {
     width: 28px;
     height: 28px; }
     .avatar .small i {
       font-size: 14px; }
+    .avatar .small .online-status {
+      visibility: hidden; }
+    .avatar .small .badge {
+      font-size: 8px; }
   .avatar .tiny {
     width: 22px;
     height: 22px; }
     .avatar .tiny i {
       font-size: 11px; }
+    .avatar .tiny .online-status {
+      visibility: hidden; }
+    .avatar .tiny .badge {
+      visibility: hidden; }
   .avatar img {
     border-radius: 50%; }
 

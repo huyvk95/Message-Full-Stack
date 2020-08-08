@@ -71,7 +71,7 @@ function SearchUserItemComponent({ data, openPopup }: { openPopup: Function, dat
             style={{ cursor: "pointer" }}
             onClick={onClickItem}
         >
-            <AvatarComponent url={avatar} type="normal" />
+            <AvatarComponent url={avatar} size="normal" />
             <div className="popup-item-name">
                 <p className="text-normal text-18">{`${lastName} ${firstName}`}</p>
                 <p className="text-normal text-11">{email}</p>

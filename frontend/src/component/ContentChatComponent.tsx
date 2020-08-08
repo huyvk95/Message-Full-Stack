@@ -8,7 +8,7 @@ class ContentChatComponent extends Component {
             <div className="content-chat">
                 <div className="info-area px-3 py-2">
                     <div className="d-flex">
-                        <AvatarComponent type="normal" />
+                        <AvatarComponent size="normal" />
                         <div className="user-info ml-3">
                             <p className="text-bold text-16">Cún (Mập)</p>
                             <p className="text-normal text-light text-12">Hoạt động 15 phút trước</p>

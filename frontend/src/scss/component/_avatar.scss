@@ -6,13 +6,33 @@
     $tiny: 22px;
 
     display: inline-flex;
-
+    
     .wrap {
         display: flex;
+        position: relative;
         justify-content: center;
         align-items: center;
         background-color: rgb(211, 213, 218);
         border-radius: 50%;
+
+        .online-status {
+            position: absolute;
+            bottom: 1px;
+            right: 1px;
+            width: 10px;
+            height: 10px;
+            background-color: #63bf38;
+            border-radius: 50%;
+        }
+
+        .badge {
+            position: absolute;
+            bottom: 0px;
+            right: 0px;
+            color: #63bf38;
+            background-color: #1c2d1e;
+            padding: 0.15rem;
+        }
     }
 
     .langer {
@@ -20,6 +40,17 @@
         height: $langer;
         i {
             font-size: $langer * 0.5;
+        }
+        .online-status {
+            width: $langer*0.21;
+            height: $langer*0.21;
+            bottom: 5px;
+            right: 5px;
+        }
+
+        .badge {
+            font-size: 15px;
+            min-width: 35px;
         }
     }
 
@@ -29,6 +60,9 @@
         i {
             font-size: $medium * 0.5;
         }
+        .badge {
+            font-size: 11px;
+        }
     }
 
     .normal {
@@ -36,6 +70,9 @@
         height: $normal;
         i {
             font-size: $normal * 0.5;
+        }
+        .badge {
+            font-size: 9px;
         }
     }
 
@@ -45,6 +82,12 @@
         i {
             font-size: $small * 0.5;
         }
+        .online-status {
+            visibility: hidden;
+        }
+        .badge {
+            font-size: 8px;
+        }
     }
 
     .tiny {
@@ -52,6 +95,12 @@
         height: $tiny;
         i {
             font-size: $tiny * 0.5;
+        }
+        .online-status {
+            visibility: hidden;
+        }
+        .badge {
+            visibility: hidden;
         }
     }
 

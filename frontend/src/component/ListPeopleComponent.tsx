@@ -48,7 +48,7 @@ function ListPeopleComponent({ friend }: { friend: IFriendData[] }) {
 }
 
 function PeopleItemComponent({ data, openPopup }: { data: IFriendData, openPopup: Function }) {
-    let { avatar, firstName, lastName, nickname } = data;
+    let { avatar, firstName, lastName, nickname, online, lastOnlineTime } = data;
 
     const onClickItem = () => {
         openPopup({ body: <PopupUserInfoComponent data={data} form="friend" /> })
@@ -60,7 +60,14 @@ function PeopleItemComponent({ data, openPopup }: { data: IFriendData, openPopup
             style={{ cursor: "pointer" }}
             onClick={onClickItem}
         >
-            <AvatarComponent url={avatar} type="normal" />
+            <AvatarComponent
+                url={avatar}
+                size="normal"
+                online={{
+                    status: online,
+                    lastOnlineTime
+                }}
+            />
             <p className="people-item-name text-normal text-18">{
                 nickname ? nickname : `${lastName} ${firstName}`
             }</p>

@@ -16,7 +16,7 @@ function ItemConversationComponent({ data }: IItemConversationProps) {
             <div className="left">
                 <AvatarComponent
                     url={avatar}
-                    type="medium"
+                    size="medium"
                 />
                 <div className="info ml-2">
                     <p className="text-normal">{name}</p>
@@ -35,7 +35,7 @@ function ItemConversationComponent({ data }: IItemConversationProps) {
                         :
                         <AvatarComponent
                             url={avatarRead}
-                            type="tiny"
+                            size="tiny"
                             className="d-inline-flex"
                         />
                 }
