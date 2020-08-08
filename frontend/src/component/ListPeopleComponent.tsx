@@ -5,11 +5,6 @@ import { openPopup } from "../action/AppActions";
 import AvatarComponent from "./AvatarComponent";
 import PopupUserInfoComponent from "./PopupUserInfoComponent";
 
-interface IItemProps {
-    avatar?: string,
-    name: string
-}
-
 function ListPeopleComponent({ friend }: { friend: IFriendData[] }) {
     let friendsOnline = friend.filter(o => o.online)
     let friendsOffline = friend.filter(o => !o.online)
@@ -72,7 +67,5 @@ function PeopleItemComponent({ data, openPopup }: { data: IFriendData, openPopup
         </div>
     )
 }
-const Item = connect(null, { openPopup })(PeopleItemComponent)
-
-const mapStateToProps = ({ friend }: IStoreState) => ({ friend })
-export default connect(mapStateToProps)(ListPeopleComponent)
+const Item = connect(({ friend }: IStoreState) => ({ friend }), { openPopup })(PeopleItemComponent)
+export default connect(({ friend }: IStoreState) => ({ friend }))(ListPeopleComponent)

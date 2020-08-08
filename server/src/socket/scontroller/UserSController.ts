@@ -10,13 +10,13 @@ async function get(request: any) {
     let { string } = request?.data?.data
     let result: any[] = [];
     // Find
-    await User.find({ email: { "$regex": `.*${string}*`, "$options": "i" } }).limit(50)
+    await User.find({ email: { "$regex": `.*${string}*`, "$options": "i" }, active: true }).limit(50)
         .select(common.dbselect.user)
         .then(data => { result = result.concat(data) })
-    await User.find({ firstName: { "$regex": `.*${string}*`, "$options": "i" } }).limit(50)
+    await User.find({ firstName: { "$regex": `.*${string}*`, "$options": "i" }, active: true }).limit(50)
         .select(common.dbselect.user)
         .then(data => { result = result.concat(data) });
-    await User.find({ lastName: { "$regex": `.*${string}*`, "$options": "i" } }).limit(50)
+    await User.find({ lastName: { "$regex": `.*${string}*`, "$options": "i" }, active: true }).limit(50)
         .select(common.dbselect.user)
         .then(data => { result = result.concat(data) });
     // Data handle

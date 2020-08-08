@@ -1,7 +1,7 @@
 import common from "../common";
-import { IPayloadData, IFriendData } from "../interface/DataInterface";
+import { IPayloadData, IFriendRequest } from "../interface/DataInterface";
 
-export function getFriend({ success, data, message }: IPayloadData) {
+export function getFriendRequest({ success, data, message }: IPayloadData) {
     return async function (dispatch: Function) {
         // Check data
         if (!success) {
@@ -9,18 +9,37 @@ export function getFriend({ success, data, message }: IPayloadData) {
         } else {
             // Dispatch action
             dispatch({
-                type: common.action.FRIEND_GET,
+                type: common.action.FRIENDREQUEST_GET,
                 payload: data
             })
         }
     }
 }
 
-export function updateFriendData(data: IFriendData) {
-    return async function (dispatch: Function) {
-        dispatch({
-            type: common.action.FRIEND_UPDATE_DATA,
-            payload: data
-        })
+export function pushReceiveRequest(data: IFriendRequest) {
+    return {
+        type: common.action.FRIENDREQUEST_PUSH_RECEVICE,
+        payload: data
+    }
+}
+
+export function pushSentRequest(data: IFriendRequest) {
+    return {
+        type: common.action.FRIENDREQUEST_PUSH_SENT,
+        payload: data
+    }
+}
+
+export function popReceiveRequest(data: IFriendRequest) {
+    return {
+        type: common.action.FRIENDREQUEST_POP_RECEVICE,
+        payload: data
+    }
+}
+
+export function popSentRequest(data: IFriendRequest) {
+    return {
+        type: common.action.FRIENDREQUEST_POP_SENT,
+        payload: data
     }
 }

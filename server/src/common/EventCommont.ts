@@ -11,10 +11,14 @@ const event = {
         GET: "get",
         SETNICKNAME: "setNickName",
         REMOVE: "remove",
+        GETFRIENDREQUEST: "getFriendRequest",
         SENDFRIENDREQUEST: "sendFriendRequest",
         ACCEPTFRIENDREQUEST: "acceptFriendRequest",
         REFUSEFRIENDREQUEST: "refuseFriendRequest",
         CANCELFRIENDREQUEST: "cancelFriendRequest",
+        // TRAMSMIT EVENT
+        RECEIVEFRIENDREQUEST: "receiveFriendRequest",
+        REMOVEFRIENDREQUEST: "removeFriendRequest",
     },
     CHATROOM: {
         CREATE: "create",

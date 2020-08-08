@@ -27,6 +27,17 @@ export interface IFriendData {
     active: boolean,
 }
 
+export interface IFriendRequest {
+    _id: string,
+    from: string,
+    to: string,
+}
+
+export interface IFriendRequestReducer {
+    receive: IFriendRequest[],
+    sent: IFriendRequest[]
+}
+
 export interface IAppData {
     lang: string,
     deviceId: string,
@@ -46,6 +57,7 @@ export interface IStoreState {
     user: IUserData
     navigation: INavigatorData
     friend: IFriendData[]
+    friendRequest: IFriendRequestReducer
 }
 
 /* Common */
@@ -62,6 +74,11 @@ export interface IPayloadData {
 
 export interface IResponseData extends IPayloadData {
     status: number,
+}
+
+export interface ISocketTransmitData {
+    evt: string,
+    payload: any
 }
 
 export interface ISocketResponseData {

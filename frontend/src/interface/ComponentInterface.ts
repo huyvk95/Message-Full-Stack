@@ -1,5 +1,5 @@
 import { ELoginViewType } from "../common/TypeCommon";
-import { IAppData, INavigatorData } from "./DataInterface";
+import { IAppData, INavigatorData, IUserData, IFriendData, IFriendRequestReducer } from "./DataInterface";
 
 /* _______________CONTAINER_______________ */
 /* LOGIN */
@@ -20,10 +20,16 @@ export interface ILoginContainerState {
 /* HOME */
 export interface IHomeContainerProps {
     app: IAppData,
+    user: IUserData,
     cleanUserData: Function
     getFriend: Function
     setFriendNickName: Function
     updateFriendData: Function
+    getFriendRequest: Function
+    popReceiveRequest: Function
+    popSentRequest: Function
+    pushReceiveRequest: Function
+    pushSentRequest: Function
 }
 
 /* _______________COMPONENT_______________ */
@@ -85,4 +91,11 @@ export interface IPopupProps {
 export interface IContentHeaderProps {
     navigation: INavigatorData
     openPopup: Function
+}
+
+export interface IPopupUserInfoProps {
+    data: IFriendData,
+    friend: IFriendData[], 
+    friendRequest: IFriendRequestReducer
+    user: IUserData
 }

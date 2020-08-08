@@ -6,8 +6,9 @@ import socket from "../socket";
 /* ACTION */
 import { cleanUserData } from "../action/UserActions";
 import { getFriend, setFriendNickName, updateFriendData } from "../action/FriendActions";
+import { getFriendRequest, popReceiveRequest, popSentRequest, pushReceiveRequest, pushSentRequest } from "../action/FriendRequestActions";
 /* INTERFACE */
-import { IStoreState, ISocketResponseData } from "../interface/DataInterface";
+import { IStoreState, ISocketResponseData, ISocketTransmitData } from "../interface/DataInterface";
 import { IHomeContainerProps } from "../interface/ComponentInterface";
 /* COMPONENT */
 import ContentChatComponent from "../component/ContentChatComponent";
@@ -33,7 +34,7 @@ class HomeContainer extends Component<IHomeContainerProps> {
     }
 
     socketHandle() {
-        let { app, cleanUserData } = this.props;
+        let { app, user, cleanUserData } = this.props;
         let packet = common.packet;
         let event = common.event;
 
@@ -54,9 +55,23 @@ class HomeContainer extends Component<IHomeContainerProps> {
                 updateFriendData(data)
             }
         })();
+        let { popReceiveRequest, popSentRequest, pushReceiveRequest, pushSentRequest } = this.props;
+        (async () => {
+            for await (let data of sc.receiver(packet.FRIEND)) {
+                let { evt, payload } = data as ISocketTransmitData
+                console.log(evt, payload)
+                if (evt === event.FRIEND.RECEIVEFRIENDREQUEST) { //Receive transmit from server
+                    if (payload.from === user._id) pushSentRequest(payload)
+                    else pushReceiveRequest(payload)
+                } else if (evt === event.FRIEND.REMOVEFRIENDREQUEST) { //Receive transmit from server
+                    if (payload.from === user._id) popSentRequest(payload)
+                    else popReceiveRequest(payload)
+                }
+            }
+        })();
 
         // -FRIEND
-        let { getFriend, setFriendNickName } = this.props;
+        let { getFriend, setFriendNickName, getFriendRequest } = this.props;
         (async () => {
             for await (let data of sc.receiver(packet.FRIEND)) {
                 let { evt, payload } = data as ISocketResponseData
@@ -68,6 +83,8 @@ class HomeContainer extends Component<IHomeContainerProps> {
                     setFriendNickName(payload)
                 } else if (evt === event.FRIEND.REMOVE) {
 
+                } else if (evt === event.FRIEND.GETFRIENDREQUEST) {
+                    getFriendRequest(payload)
                 } else if (evt === event.FRIEND.SENDFRIENDREQUEST) {
 
                 } else if (evt === event.FRIEND.ACCEPTFRIENDREQUEST) {
@@ -88,6 +105,7 @@ class HomeContainer extends Component<IHomeContainerProps> {
         if (!sc) return;
 
         sc.transmit(packet.FRIEND, { evt: event.FRIEND.GET })
+        sc.transmit(packet.FRIEND, { evt: event.FRIEND.GETFRIENDREQUEST })
     }
 
     render() {
@@ -104,15 +122,21 @@ class HomeContainer extends Component<IHomeContainerProps> {
     }
 }
 
-const mapStateToProps = ({ app }: IStoreState) => ({
-    app
+const mapStateToProps = ({ app, user }: IStoreState) => ({
+    app,
+    user
 })
 
 const mapDispatchToProps = {
     cleanUserData,
     getFriend,
     setFriendNickName,
-    updateFriendData
+    updateFriendData,
+    getFriendRequest,
+    popReceiveRequest,
+    popSentRequest,
+    pushReceiveRequest,
+    pushSentRequest
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(HomeContainer);

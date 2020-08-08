@@ -1,14 +1,18 @@
 import React, { ChangeEvent } from "react";
 import { Button, FormControl, InputGroup } from "react-bootstrap";
 import AvatarComponent from "./AvatarComponent";
-import { IFriendData, IStoreState } from "../interface/DataInterface";
+import { IStoreState } from "../interface/DataInterface";
 import { connect } from "react-redux";
 import socket from "../socket";
 import common from "../common";
+import { IPopupUserInfoProps } from "../interface/ComponentInterface";
 
 let timeOut: NodeJS.Timeout | undefined = undefined;
-function PopupUserInfoComponent({ data, friend }: { data: IFriendData, friend: IFriendData[] }) {
+function PopupUserInfoComponent({ data, friend, friendRequest, user }: IPopupUserInfoProps) {
     let { lastName, email, firstName, avatar, _id, nickname } = data
+
+    // Get request if i sent
+    let requestSent = friendRequest.sent.find(o => o.from === user._id && o.to === data._id)
 
     const onInputChange = (event: ChangeEvent<HTMLInputElement>) => {
         let value = event.target.value;
@@ -22,6 +26,18 @@ function PopupUserInfoComponent({ data, friend }: { data: IFriendData, friend: I
                 sc.transmit(common.packet.FRIEND, { evt: common.event.FRIEND.SETNICKNAME, data: { friendId: _id, nickname: value } })
             }
         }, 400)
+    }
+
+    const onSendFriendRequest = () => {
+        let sc = socket.getSocket()
+        if (!sc) return;
+        sc.transmit(common.packet.FRIEND, { evt: common.event.FRIEND.SENDFRIENDREQUEST, data: { userId: _id } })
+    }
+
+    const onCancelFriendRequest = () => {
+        let sc = socket.getSocket()
+        if (!sc || !requestSent) return;
+        sc.transmit(common.packet.FRIEND, { evt: common.event.FRIEND.CANCELFRIENDREQUEST, data: { requestId: requestSent._id } })
     }
 
     return (
@@ -53,8 +69,13 @@ function PopupUserInfoComponent({ data, friend }: { data: IFriendData, friend: I
                 </Button>
                 {
                     friend.every(o => o._id !== _id) ?
-                        <Button variant="outline-primary" >
-                            <i className="fa fa-user-plus" />
+                        <Button variant={requestSent ? "outline-danger" : "outline-primary"} onClick={requestSent ? onCancelFriendRequest : onSendFriendRequest}>
+                            {
+                                requestSent ?
+                                    <i className="fa fa-user-times" />
+                                    :
+                                    <i className="fa fa-user-plus" />
+                            }
                         </Button>
                         :
                         <Button variant="outline-danger" >
@@ -66,4 +87,4 @@ function PopupUserInfoComponent({ data, friend }: { data: IFriendData, friend: I
     )
 }
 
-export default connect(({ friend }: IStoreState) => ({ friend }))(PopupUserInfoComponent)
+export default connect(({ friend, friendRequest, user }: IStoreState) => ({ user, friend, friendRequest }))(PopupUserInfoComponent)
