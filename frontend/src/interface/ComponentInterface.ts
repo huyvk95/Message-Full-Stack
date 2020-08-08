@@ -1,5 +1,6 @@
 import { ELoginViewType } from "../common/TypeCommon";
 import { IAppData, INavigatorData, IUserData, IFriendData, IFriendRequestReducer } from "./DataInterface";
+import { Variant } from "react-bootstrap/esm/types";
 
 /* _______________CONTAINER_______________ */
 /* LOGIN */
@@ -96,9 +97,20 @@ export interface IContentHeaderProps {
 }
 
 export interface IPopupUserInfoProps {
+    openPopup: Function,
     data: IFriendData,
-    friend: IFriendData[], 
+    friend: IFriendData[],
     friendRequest: IFriendRequestReducer
     user: IUserData,
     form?: "view" | "friend"
+}
+
+export interface IPopupConfirmProps {
+    closePopup: Function
+    content: JSX.Element | string
+    buttons: {
+        title: string,
+        primary?: boolean,
+        func?: Function
+    }[]
 }

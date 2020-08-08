@@ -6,9 +6,11 @@ import { connect } from "react-redux";
 import socket from "../socket";
 import common from "../common";
 import { IPopupUserInfoProps } from "../interface/ComponentInterface";
+import { openPopup } from "../action/AppActions";
+import PopupConfirmComponent from "./PopupConfirmComponent";
 
 let timeOut: NodeJS.Timeout | undefined = undefined;
-function PopupUserInfoComponent({ data, friend, friendRequest, user, form }: IPopupUserInfoProps) {
+function PopupUserInfoComponent({ data, friend, friendRequest, user, form, openPopup }: IPopupUserInfoProps) {
     let { lastName, email, firstName, avatar, _id, nickname } = data
 
     // Get request if i sent
@@ -41,9 +43,20 @@ function PopupUserInfoComponent({ data, friend, friendRequest, user, form }: IPo
     }
 
     const onRemoveFriend = () => {
-        let sc = socket.getSocket()
-        if (!sc) return;
-        sc.transmit(common.packet.FRIEND, { evt: common.event.FRIEND.REMOVE, data: { friendId: _id } })
+        openPopup({
+            body: <PopupConfirmComponent
+                content={`Bạn có chắc chắn muốn xóa ${lastName} ${firstName} khỏi danh sách bạn bè không?`}
+                buttons={[{
+                    title: "Ok",
+                    primary: true,
+                    func: () => {
+                        let sc = socket.getSocket()
+                        if (!sc) return;
+                        sc.transmit(common.packet.FRIEND, { evt: common.event.FRIEND.REMOVE, data: { friendId: _id } })
+                    }
+                }, { title: "Cancel" }]}
+            />
+        })
     }
 
     return (
@@ -93,4 +106,4 @@ function PopupUserInfoComponent({ data, friend, friendRequest, user, form }: IPo
     )
 }
 
-export default connect(({ friend, friendRequest, user }: IStoreState) => ({ user, friend, friendRequest }))(PopupUserInfoComponent)
+export default connect(({ friend, friendRequest, user }: IStoreState) => ({ user, friend, friendRequest }), { openPopup })(PopupUserInfoComponent)

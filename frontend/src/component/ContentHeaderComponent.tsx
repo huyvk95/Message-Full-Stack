@@ -7,6 +7,7 @@ import { IContentHeaderProps } from "../interface/ComponentInterface";
 import { openPopup } from "../action/AppActions";
 import util from "../util";
 import PopupSearchUserComponent from "./PopupSearchUserComponent";
+import PopupConfirmComponent from "./PopupConfirmComponent";
 
 class ContentHeaderComponent extends Component<IContentHeaderProps> {
     componentDidMount() {

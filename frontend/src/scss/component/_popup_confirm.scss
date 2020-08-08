@@ -1,0 +1,23 @@
+.popup_confirm {
+    align-items: center;
+    padding: 1.2rem;
+
+    .popup_control {
+        display: flex;
+        flex-direction: row-reverse;
+
+        .btn {
+            min-width: 80px;
+            margin-left: 5px;
+        }
+
+        .btn-light {
+            background-color: initial;
+            border: none;
+        }
+
+        .btn-light:hover {
+            background-color: $color-low-light;
+        }
+    }
+}

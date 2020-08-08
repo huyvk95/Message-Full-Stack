@@ -444,3 +444,18 @@ button:focus {
     height: 25px; }
     .popup_user_info .nickname button i {
       font-size: 16px; }
+
+.popup_confirm {
+  align-items: center;
+  padding: 1.2rem; }
+  .popup_confirm .popup_control {
+    display: flex;
+    flex-direction: row-reverse; }
+    .popup_confirm .popup_control .btn {
+      min-width: 80px;
+      margin-left: 5px; }
+    .popup_confirm .popup_control .btn-light {
+      background-color: initial;
+      border: none; }
+    .popup_confirm .popup_control .btn-light:hover {
+      background-color: #f3f3f3; }
