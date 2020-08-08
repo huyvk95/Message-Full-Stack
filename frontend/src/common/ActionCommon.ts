@@ -30,6 +30,8 @@ export const INITIALIZE = "INITIALIZE"
 export const PUSH_TOAST = "PUSH_TOAST"
 export const CLOSE_POPUP = "CLOSE_POPUP"
 export const OPEN_POPUP = "OPEN_POPUP"
+export const CLOSE_DIALOG = "CLOSE_DIALOG"
+export const OPEN_DIALOG = "OPEN_DIALOG"
 
 /* __NAVIGATION__ */
 export const CHOOSE_CONTENT_TAB = "CHOOSE_CONTENT_TAB"

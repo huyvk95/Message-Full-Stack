@@ -458,6 +458,43 @@ button:focus {
     .popup .popup-header .title {
       font-family: "HelveticaNeue-Medium"; }
 
+.drop_contain {
+  position: fixed;
+  top: 0px;
+  height: 0px;
+  width: 100vw;
+  height: 100vh; }
+  .drop_contain .drop_content {
+    position: absolute;
+    display: inline-flex;
+    border-radius: 3px;
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.45); }
+  .drop_contain .drop_content > div {
+    border-radius: 3px; }
+
+.drop_content .setting_drop_content {
+  width: 220px; }
+
+.setting_drop_content {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  background-color: #fff; }
+  .setting_drop_content .setting_drop_seperate {
+    height: 1px;
+    background-color: rgba(204, 204, 204, 0.4);
+    margin-top: 3px;
+    margin-bottom: 3px; }
+  .setting_drop_content .setting_drop_item {
+    padding: 5px 25px;
+    text-align: left;
+    color: #000000;
+    border: none;
+    border-radius: 0px; }
+  .setting_drop_content .setting_drop_item:hover {
+    color: #fff; }
+
 .popup_search_user {
   padding: 0.5rem; }
   .popup_search_user .popup-content {

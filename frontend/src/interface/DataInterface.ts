@@ -2,7 +2,7 @@ import { EContentTap, EPeopleTap } from "../common/TypeCommon";
 import { IToastItemProps, IPopupProps } from "./ComponentInterface";
 
 /* Reducer data */
-export interface IUserData{
+export interface IUserData {
     _id: string
     email: string
     firstName?: string
@@ -43,6 +43,10 @@ export interface IAppData {
     lang: string,
     deviceId: string,
     toast?: IToastItemProps,
+    dropdown?: {
+        content: JSX.Element,
+        position: { x: number, y: number }
+    }
     popup: IPopupProps
     popupBackup?: IPopupProps
 }

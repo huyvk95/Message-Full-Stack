@@ -53,3 +53,17 @@ export function openPopup(data: IPopupProps) {
         payload: data
     }
 }
+
+export function openDialog(content: JSX.Element, position: { x: number, y: number }) {
+    return {
+        type: common.action.OPEN_DIALOG,
+        payload: { content, position }
+    }
+}
+
+export function closeDialog() {
+    return {
+        type: common.action.CLOSE_DIALOG,
+        payload: undefined
+    }
+}

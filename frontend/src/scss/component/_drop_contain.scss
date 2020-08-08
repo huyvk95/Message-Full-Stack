@@ -1,0 +1,19 @@
+.drop_contain {
+    position: fixed;
+    top: 0px;
+    height: 0px;
+    width: 100vw;
+    height: 100vh;
+
+    .drop_content {
+        position: absolute;
+        display: inline-flex;
+        border-radius: 3px;
+        border: 1px solid rgba(0, 0, 0, 0.3);
+        box-shadow: 0 3px 8px rgba(0, 0, 0, 0.45);
+    }
+
+    .drop_content > div {
+        border-radius: 3px;
+    }
+}

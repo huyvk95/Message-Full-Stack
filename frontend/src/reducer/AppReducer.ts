@@ -23,6 +23,10 @@ export default function (state = initializeState, action: { type: string, payloa
                 popup: Object.assign(action.payload, { show: true }),
                 popupBackup: Object.assign({}, state.popup, { show: true })
             });
+        case common.action.CLOSE_DIALOG:
+            return Object.assign({}, state, { dropdown: undefined })
+        case common.action.OPEN_DIALOG:
+            return Object.assign({}, state, { dropdown: action.payload })
         default:
             return state;
     }

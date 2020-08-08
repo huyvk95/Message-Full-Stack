@@ -98,6 +98,7 @@ export interface IPopupProps {
 export interface IContentHeaderProps {
     navigation: INavigatorData
     openPopup: Function
+    openDialog: Function
 }
 
 export interface IPopupUserInfoProps {
