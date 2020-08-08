@@ -16,6 +16,20 @@ export function getFriend({ success, data, message }: IPayloadData) {
     }
 }
 
+export function pushFriend(data: IFriendData) {
+    return {
+        type: common.action.FRIEND_PUSH,
+        payload: data
+    }
+}
+
+export function popFriend(data: IFriendData) {
+    return {
+        type: common.action.FRIEND_POP,
+        payload: data
+    }
+}
+
 export function setFriendNickName({ success, data, message }: IPayloadData) {
     return async function (dispatch: Function) {
         // Check data

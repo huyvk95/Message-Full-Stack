@@ -40,6 +40,12 @@ function PopupUserInfoComponent({ data, friend, friendRequest, user }: IPopupUse
         sc.transmit(common.packet.FRIEND, { evt: common.event.FRIEND.CANCELFRIENDREQUEST, data: { requestId: requestSent._id } })
     }
 
+    const onRemoveFriend = () => {
+        let sc = socket.getSocket()
+        if (!sc) return;
+        sc.transmit(common.packet.FRIEND, { evt: common.event.FRIEND.REMOVE, data: { friendId: _id } })
+    }
+
     return (
         <div className="popup_user_info">
             <AvatarComponent url={avatar} type="langer" className="mb-2" />
@@ -78,7 +84,7 @@ function PopupUserInfoComponent({ data, friend, friendRequest, user }: IPopupUse
                             }
                         </Button>
                         :
-                        <Button variant="outline-danger" >
+                        <Button variant="outline-danger" onClick={onRemoveFriend}>
                             <i className="fa fa-trash" />
                         </Button>
                 }

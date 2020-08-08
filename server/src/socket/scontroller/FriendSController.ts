@@ -87,20 +87,26 @@ async function setNickName(socket: AGServerSocket, data: any) {
     }
 }
 
-async function remove(socket: AGServerSocket, data: any) {
+async function remove(agServer: AGServer, socket: AGServerSocket, data: any) {
     try {
-        let { dataId } = data
-        if (!dataId) throw 'validate.missing_input';
+        let { friendId } = data
+        if (!friendId) throw 'validate.missing_input';
         // Get mine friend data
-        let friendData = await UserFriend.findOne({ _id: dataId, user: socket.authToken?._id })
+        let friendData = await UserFriend.findOne({ friend: friendId, user: socket.authToken?._id })
         if (!friendData) throw 'error.not_friend';
+        // Get friend and mine
+        let friend = await User.findOne({ _id: friendData.get('friend'), active: true })
+            .select(common.dbselect.user)
+        if (!friend) throw 'error.find_user';
+        let user = await User.findOne({ _id: socket.authToken?._id, active: true })
+            .select(common.dbselect.user)
+        if (!user) throw 'error.find_user';
         // Get your friend data
         let yourFriendData = await UserFriend.findOne({ user: friendData.get('friend'), friend: socket.authToken?._id })
         // Remove
         await friendData.remove();
         if (yourFriendData) await yourFriendData.remove();
         // Response
-
         send(socket, {
             evt: EVENT.REMOVE,
             payload: {
@@ -108,6 +114,18 @@ async function remove(socket: AGServerSocket, data: any) {
                 message: "success.success",
             }
         })
+        // Transmit
+        let fsocketId = await User.findById(friend.get('_id')).select('socketId').then((data) => data?.get('socketId'))
+        let fsocket = agServer.clients[fsocketId]
+        // -New friend data
+        socket.transmit(PACKET, {
+            evt: EVENT.ONREMOVEFRIEND,
+            payload: friend.toObject()
+        }, {})
+        if (fsocket) fsocket.transmit(PACKET, {
+            evt: EVENT.ONREMOVEFRIEND,
+            payload: user.toObject()
+        }, {})
     } catch (error) {
         send(socket, {
             evt: EVENT.REMOVE,
@@ -208,6 +226,7 @@ async function sendFriendRequest(agServer: AGServer, socket: AGServerSocket, dat
             }
         })
         // Transmit
+        let fsocketId = await User.findById(friend.get('_id')).select('socketId').then((data) => data?.get('socketId'))
         let transData = {
             evt: EVENT.RECEIVEFRIENDREQUEST,
             payload: friendRequest.toObject()
@@ -215,7 +234,7 @@ async function sendFriendRequest(agServer: AGServer, socket: AGServerSocket, dat
         // -Mine
         socket.transmit(PACKET, transData, {})
         // -Friend
-        let fsocket = agServer.clients[friend.get('socketId')]
+        let fsocket = agServer.clients[fsocketId]
         if (fsocket) fsocket.transmit(PACKET, transData, {})
     } catch (error) {
         send(socket, {
@@ -243,10 +262,14 @@ async function acceptFriendRequest(agServer: AGServer, socket: AGServerSocket, d
                 select: common.dbselect.user,
             })
         if (!requestData) throw 'error.bad';
-        // Check user exist
+        // Check friend exist
         let friend = await User.findOne({ _id: requestData.get('from').get('_id'), active: true })
             .select(common.dbselect.user)
         if (!friend) throw 'error.find_user';
+        // Check mine exist
+        let user = await User.findOne({ _id: socket.authToken?._id, active: true })
+            .select(common.dbselect.user)
+        if (!user) throw 'error.find_user';
         // Create friend 2 side
         // -Mine
         let friendMine = await UserFriend.findOne({ user: socket.authToken?._id, friend: requestData.get('from').get('_id') })
@@ -270,6 +293,19 @@ async function acceptFriendRequest(agServer: AGServer, socket: AGServerSocket, d
             }
         })
         // Transmit
+        let fsocketId = await User.findById(friend.get('_id')).select('socketId').then((data) => data?.get('socketId'))
+        let fsocket = agServer.clients[fsocketId]
+        // -New friend data
+        socket.transmit(PACKET, {
+            evt: EVENT.ONACCEPTFRIENDREQUEST,
+            payload: friend.toObject()
+        }, {})
+        if (fsocket) fsocket.transmit(PACKET, {
+            evt: EVENT.ONACCEPTFRIENDREQUEST,
+            payload: user.toObject()
+        }, {})
+
+        // -Remove old request
         let transData = {
             evt: EVENT.REMOVEFRIENDREQUEST,
             payload: requestData.toObject()
@@ -277,7 +313,6 @@ async function acceptFriendRequest(agServer: AGServer, socket: AGServerSocket, d
         // -Mine
         socket.transmit(PACKET, transData, {})
         // -Friend
-        let fsocket = agServer.clients[friend.get('socketId')]
         if (fsocket) fsocket.transmit(PACKET, transData, {})
     } catch (error) {
         send(socket, {
@@ -327,7 +362,8 @@ async function refuseFriendRequest(agServer: AGServer, socket: AGServerSocket, d
         // -Mine
         socket.transmit(PACKET, transData, {})
         // -Friend
-        let fsocket = agServer.clients[friend.get('socketId')]
+        let fsocketId = await User.findById(friend.get('_id')).select('socketId').then((data) => data?.get('socketId'))
+        let fsocket = agServer.clients[fsocketId]
         if (fsocket) fsocket.transmit(PACKET, transData, {})
     } catch (error) {
         send(socket, {
@@ -377,7 +413,8 @@ async function cancelFriendRequest(agServer: AGServer, socket: AGServerSocket, d
         // -Mine
         socket.transmit(PACKET, transData, {})
         // -Friend
-        let fsocket = agServer.clients[friend.get('socketId')]
+        let fsocketId = await User.findById(friend.get('_id')).select('socketId').then((data) => data?.get('socketId'))
+        let fsocket = agServer.clients[fsocketId]
         if (fsocket) fsocket.transmit(PACKET, transData, {})
     } catch (error) {
         send(socket, {
@@ -405,7 +442,7 @@ function connection(agServer: AGServer, socket: AGServerSocket) {
                         setNickName(socket, data)
                         break
                     case EVENT.REMOVE:
-                        remove(socket, data)
+                        remove(agServer, socket, data)
                         break
                     case EVENT.GETFRIENDREQUEST:
                         getFriendRequest(socket)

@@ -1,20 +1,20 @@
 import React from "react";
 import { Button } from "react-bootstrap";
 import AvatarComponent from "./AvatarComponent";
+import { IFriendRequest, IStoreState, IFriendRequestReducer } from "../interface/DataInterface";
+import { connect } from "react-redux";
+import socket from "../socket";
+import common from "../common";
 
-interface IItemProps {
-    avatar?: string,
-    name: string
-}
+function ListRequestComponent({ friendRequest }: { friendRequest: IFriendRequestReducer }) {
+    let { receive } = friendRequest;
 
-export default function ListRequestComponent() {
     return (
         <div className="list-request">
             {
-                Array(5).fill('').map((o, i) => (
+                receive.map((o, i) => (
                     <ItemRequestComponent
-                        avatar="https://scontent.fhan3-3.fna.fbcdn.net/v/t1.0-1/p120x120/80445897_1241804469363361_3410662782775853056_n.jpg?_nc_cat=101&_nc_sid=7206a8&_nc_ohc=YWfOlvmj-fYAX980NL6&_nc_ht=scontent.fhan3-3.fna&_nc_tp=6&oh=6af6992ff4dbd6280429cab0c5057b9f&oe=5F50F074"
-                        name="Văn Khắc Huy"
+                        data={o}
                         key={i}
                     />
                 ))
@@ -23,7 +23,22 @@ export default function ListRequestComponent() {
     )
 }
 
-function ItemRequestComponent({ name, avatar }: IItemProps) {
+function ItemRequestComponent({ data }: { data: IFriendRequest }) {
+    let { from, _id } = data;
+    let { avatar, firstName, lastName } = from
+
+    const onRefuseClick = () => {
+        let sc = socket.getSocket()
+        if (!sc) return;
+        sc.transmit(common.packet.FRIEND, { evt: common.event.FRIEND.REFUSEFRIENDREQUEST, data: { requestId: _id } })
+    }
+
+    const onAccepClick = () => {
+        let sc = socket.getSocket()
+        if (!sc) return;
+        sc.transmit(common.packet.FRIEND, { evt: common.event.FRIEND.ACCEPTFRIENDREQUEST, data: { requestId: _id } })
+    }
+
     return (
         <div className="request-item mx-3 py-3">
             <div className="d-flex align-items-center">
@@ -31,16 +46,26 @@ function ItemRequestComponent({ name, avatar }: IItemProps) {
                     url={avatar}
                     type="normal"
                 />
-                <p className="ml-2 text-normal text-18">{name}</p>
+                <p className="ml-2 text-normal text-18">{`${lastName} ${firstName}`}</p>
             </div>
             <div>
-                <Button variant="outline-danger" className="btn-outline-custom">
+                <Button
+                    variant="outline-danger"
+                    className="btn-outline-custom"
+                    onClick={onRefuseClick}
+                >
                     Refuse
                 </Button>
-                <Button variant="outline-primary" className="btn-outline-custom ml-2">
+                <Button
+                    variant="outline-primary"
+                    className="btn-outline-custom ml-2"
+                    onClick={onAccepClick}
+                >
                     Accept
                 </Button>
             </div>
         </div>
     )
 }
+
+export default connect(({ friendRequest }: IStoreState) => ({ friendRequest }))(ListRequestComponent)

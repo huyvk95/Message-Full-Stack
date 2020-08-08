@@ -19,6 +19,8 @@ const event = {
         // TRAMSMIT EVENT
         RECEIVEFRIENDREQUEST: "receiveFriendRequest",
         REMOVEFRIENDREQUEST: "removeFriendRequest",
+        ONACCEPTFRIENDREQUEST: "onAcceptFriendRequest",
+        ONREMOVEFRIEND: "onRemoveFriend",
     },
     CHATROOM: {
         CREATE: "create",

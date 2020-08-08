@@ -5,7 +5,7 @@ import { connect } from "react-redux";
 import socket from "../socket";
 /* ACTION */
 import { cleanUserData } from "../action/UserActions";
-import { getFriend, setFriendNickName, updateFriendData } from "../action/FriendActions";
+import { getFriend, setFriendNickName, updateFriendData, pushFriend, popFriend } from "../action/FriendActions";
 import { getFriendRequest, popReceiveRequest, popSentRequest, pushReceiveRequest, pushSentRequest } from "../action/FriendRequestActions";
 /* INTERFACE */
 import { IStoreState, ISocketResponseData, ISocketTransmitData } from "../interface/DataInterface";
@@ -55,7 +55,7 @@ class HomeContainer extends Component<IHomeContainerProps> {
                 updateFriendData(data)
             }
         })();
-        let { popReceiveRequest, popSentRequest, pushReceiveRequest, pushSentRequest } = this.props;
+        let { popReceiveRequest, popSentRequest, pushReceiveRequest, pushSentRequest, pushFriend, popFriend } = this.props;
         (async () => {
             for await (let data of sc.receiver(packet.FRIEND)) {
                 let { evt, payload } = data as ISocketTransmitData
@@ -66,6 +66,10 @@ class HomeContainer extends Component<IHomeContainerProps> {
                 } else if (evt === event.FRIEND.REMOVEFRIENDREQUEST) { //Receive transmit from server
                     if (payload.from._id === user._id) popSentRequest(payload)
                     else popReceiveRequest(payload)
+                } else if (evt === event.FRIEND.ONACCEPTFRIENDREQUEST) { //Receive transmit from server
+                    pushFriend(payload)
+                } else if (evt === event.FRIEND.ONREMOVEFRIEND) { //Receive transmit from server
+                    popFriend(payload)
                 }
             }
         })();
@@ -136,7 +140,9 @@ const mapDispatchToProps = {
     popReceiveRequest,
     popSentRequest,
     pushReceiveRequest,
-    pushSentRequest
+    pushSentRequest,
+    pushFriend,
+    popFriend
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(HomeContainer);

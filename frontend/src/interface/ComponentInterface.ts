@@ -23,6 +23,8 @@ export interface IHomeContainerProps {
     user: IUserData,
     cleanUserData: Function
     getFriend: Function
+    pushFriend: Function
+    popFriend: Function
     setFriendNickName: Function
     updateFriendData: Function
     getFriendRequest: Function
