@@ -7,31 +7,10 @@ import { IContentHeaderProps } from "../interface/ComponentInterface";
 import { openPopup } from "../action/AppActions";
 import util from "../util";
 import PopupSearchUserComponent from "./PopupSearchUserComponent";
-import PopupUserInfoComponent from "./PopupUserInfoComponent";
 
 class ContentHeaderComponent extends Component<IContentHeaderProps> {
     componentDidMount() {
         let { openPopup } = this.props
-        // openPopup({
-        //     body: <PopupUserInfoComponent data={{
-        //         _id: "5f26a01223077c2db9b3288f",
-        //         email: "huy00001@gmail.com",
-        //         firstName: "Huy",
-        //         lastName: "Van Khac",
-        //         lastOnlineTime: new Date(),
-        //         online: false,
-        //         active: true,
-        //     }} />
-        // })
-        openPopup({
-            header: {
-                title: "User",
-                btnRight: {
-                    title: "Done"
-                }
-            },
-            body: <PopupSearchUserComponent />
-        })
     }
 
     render() {
