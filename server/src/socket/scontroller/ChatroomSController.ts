@@ -17,7 +17,7 @@ async function getAllUserChatrooms(socket: AGServerSocket, data: any) {
         if (!_.isNumber(page)) page = 1;
         let skip = (page - 1) * limit;
         // Get all user chatroom data
-        let userChatrooms = await UserChatRoom.find({ user: socket.authToken?._id })
+        let userChatrooms = await UserChatRoom.find({ user: socket.authToken?._id, show: true })
             .populate({ path: 'user', select: common.dbselect.user })
             .sort({ updateTime: -1 })
             .skip(skip)
@@ -90,7 +90,7 @@ async function create(socket: AGServerSocket, data: any) {
             let chatroomsId = chatroomsData.map(o => o.get('chatroom'))
             // Find chat room with me
             if (!_.isEmpty(chatroomsId)) {
-                let chatroomWithMe = await Chatroom.findOne({ _id: { $in: chatroomsId }, users: socket.authToken?._id })
+                let chatroomWithMe = await Chatroom.findOne({ _id: { $in: chatroomsId } })
                 if (chatroomWithMe) {
                     chatroom = chatroomWithMe;
                 }
@@ -98,13 +98,14 @@ async function create(socket: AGServerSocket, data: any) {
         }
 
         if (!chatroom) {
-            chatroom = new Chatroom({ name, type, users: usersData.map(o => o.get('_id')), createdTime: new Date(), updateTime: new Date() })
+            chatroom = new Chatroom({ name, type, createdTime: new Date(), updateTime: new Date() })
             await chatroom.save()
         }
 
         // Create chatroom data
-        let usersChatroom = usersData.map(async user => {
+        let usersChatroom = await Promise.all(usersData.map(async user => {
             // If user is not mine and is friend with me, archive is true
+            let show = type === 'conversation' && user.get('_id') != socket.authToken?._id ? false : true;
             let archive = user.get('_id') == socket.authToken?._id ? true : false;
             if (!archive) {
                 let friendData = await UserFriend.findOne({ user: user.get('_id'), friend: socket.authToken?._id })
@@ -116,12 +117,15 @@ async function create(socket: AGServerSocket, data: any) {
                 userChatroom = new UserChatRoom({
                     user: user.get('_id'),
                     archive,
+                    show,
                     chatroom: (chatroom as Document).get('_id')
                 })
                 await userChatroom.save()
             }
-            return userChatroom
-        })
+            return await UserChatRoom.findById(userChatroom.get('_id'))
+                .select(common.dbselect.userChatroom)
+                .populate({ path: 'user', select: common.dbselect.user })
+        }))
 
         // Response
         send(socket, {
@@ -131,7 +135,8 @@ async function create(socket: AGServerSocket, data: any) {
                 message: "success.success",
                 data: {
                     chatroom: chatroom.toObject(),
-                    users: usersData,
+                    myChatroom: usersChatroom.find(o => o?.get('user')?.get('_id') == socket.authToken?._id),
+                    friendsChatroom: usersChatroom.filter(o => o?.get('user')?.get('_id') != socket.authToken?._id)
                 }
             }
         })

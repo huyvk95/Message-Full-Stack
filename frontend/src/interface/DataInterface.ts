@@ -56,6 +56,7 @@ export interface IAppData {
 export interface INavigatorData {
     contentTab: EContentTap,
     peopleTab: EPeopleTap
+    chatroom?: string,
 }
 
 export interface IChatroomReducerData {

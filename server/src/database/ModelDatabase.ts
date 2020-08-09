@@ -44,6 +44,7 @@ const UserChatRoomSchema = new Schema({
     archive: { type: Boolean, default: true },
     block: { type: Boolean, default: false },
     chatroom: { type: Schema.Types.ObjectId, ref: 'Chatroom', required: true },
+    show:  { type: Boolean, default: false },
     active: { type: Boolean, default: true },
 })
 

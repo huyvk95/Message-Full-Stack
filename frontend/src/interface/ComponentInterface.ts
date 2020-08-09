@@ -1,6 +1,5 @@
 import { ELoginViewType } from "../common/TypeCommon";
-import { IAppData, INavigatorData, IUserData, IFriendData, IFriendRequestReducer, IUserChatroomData, IChatroomReducerData } from "./DataInterface";
-import { Variant } from "react-bootstrap/esm/types";
+import { IAppData, INavigatorData, IUserData, IFriendData, IFriendRequestReducer, IChatroomReducerData } from "./DataInterface";
 
 /* _______________CONTAINER_______________ */
 /* LOGIN */
@@ -37,6 +36,7 @@ export interface IHomeContainerProps {
     chooseContentTab: Function
     choosePeopleTab: Function
     getAllChatrooms: Function
+    createChatroom: Function
 }
 
 /* _______________COMPONENT_______________ */
@@ -65,17 +65,6 @@ export interface IContentPeopleProps {
     friend: IFriendData[]
     friendRequest: IFriendRequestReducer
     choosePeopleTab: Function
-}
-
-export interface IItemConversationProps {
-    data: {
-        avatar: string,
-        name: string
-        lastMessageUser: string,
-        lastMessage: string,
-        lastMessageTime: Date,
-        avatarRead: string,
-    }
 }
 
 export interface IToastItemProps {
@@ -111,11 +100,15 @@ export interface IContentHeaderProps {
 
 export interface IPopupUserInfoProps {
     openPopup: Function,
+    closePopup: Function,
+    chooseContentTab: Function,
+    setChatroom: Function,
     data: IFriendData,
     friend: IFriendData[],
     friendRequest: IFriendRequestReducer
     user: IUserData,
-    form?: "view" | "friend"
+    form?: "view" | "friend",
+    chatroom: IChatroomReducerData[]
 }
 
 export interface IPopupConfirmProps {
@@ -142,6 +135,28 @@ export interface IPopupProfileProps {
     closePopup: Function
 }
 
+export interface IItemConversationProps { 
+    data: IChatroomReducerData,
+    user: IUserData, 
+    friend: IFriendData[] 
+    navigation: INavigatorData
+}
+
 export interface IContentConversationProps {
     chatroom: IChatroomReducerData[]
+}
+
+export interface IContentChatProps {
+    navigation: INavigatorData
+    chatroom: IChatroomReducerData[]
+}
+
+export interface IContentChatHeaderProps extends IContentChatProps{
+    friend: IFriendData[]
+}
+
+export interface IContentChatControlProps extends IContentChatProps{
+}
+
+export interface IContentChatMessageProps extends IContentChatProps{
 }

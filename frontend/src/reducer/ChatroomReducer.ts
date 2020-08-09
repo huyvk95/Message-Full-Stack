@@ -5,7 +5,7 @@ let initializeState: IUserChatroomData[] = []
 
 export default function (state = initializeState, { type, payload }: { type: string, payload: any }) {
     if (type === common.action.CHATROOM_CREATE) {
-
+        return [payload, ...state]
     } else if (type === common.action.CHATROOM_UNFOLLOW) {
 
     } else if (type === common.action.CHATROOM_INVITE) {

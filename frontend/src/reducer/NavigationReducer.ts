@@ -13,6 +13,8 @@ export default function (state = initializeState, action: { type: string, payloa
             return Object.values(EContentTap).includes(action.payload) ? Object.assign({}, state, { contentTab: action.payload }) : state;
         case common.action.CHOOSE_PEOPLE_TAB:
             return Object.values(EPeopleTap).includes(action.payload) ? Object.assign({}, state, { peopleTab: action.payload }) : state;
+        case common.action.NAVIGATOR_SET_CHATROOM:
+            return Object.assign({}, state, { chatroom: action.payload })
         default:
             return state;
     }

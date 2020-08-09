@@ -6,11 +6,24 @@ import { connect } from "react-redux";
 import socket from "../socket";
 import common from "../common";
 import { IPopupUserInfoProps } from "../interface/ComponentInterface";
-import { openPopup } from "../action/AppActions";
+import { openPopup, closePopup } from "../action/AppActions";
 import PopupConfirmComponent from "./PopupConfirmComponent";
+import { chooseContentTab, setChatroom } from "../action/NavigationActions";
 
 let timeOut: NodeJS.Timeout | undefined = undefined;
-function PopupUserInfoComponent({ data, friend, friendRequest, user, form, openPopup }: IPopupUserInfoProps) {
+function PopupUserInfoComponent(
+    {
+        data,
+        friend,
+        friendRequest,
+        user,
+        chatroom,
+        form,
+        openPopup,
+        closePopup,
+        chooseContentTab,
+        setChatroom
+    }: IPopupUserInfoProps) {
     let { lastName, email, firstName, avatar, _id, nickname, online, lastOnlineTime } = data
 
     // Get request if i sent
@@ -28,6 +41,28 @@ function PopupUserInfoComponent({ data, friend, friendRequest, user, form, openP
                 sc.transmit(common.packet.FRIEND, { evt: common.event.FRIEND.SETNICKNAME, data: { friendId: _id, nickname: value } })
             }
         }, 400)
+    }
+
+    const onClickChat = () => {
+        // Navigation to conversation content
+        chooseContentTab(common.type.EContentTap.CONVERSATION)
+        closePopup()
+        // Find or create new chatroom
+        let chatroomData = chatroom.find(o => {
+            return o.chatroom.type === 'conversation' && o.friendsChatroom.length === 1 && o.friendsChatroom[0]._id === _id
+        })
+        if (chatroomData) setChatroom(chatroomData.chatroom._id)
+        else {
+            let sc = socket.getSocket();
+            if (sc) sc.transmit(common.packet.CHATROOM,
+                {
+                    evt: common.event.CHATROOM.CREATE,
+                    data: {
+                        users: [_id],
+                        type: 'conversation',
+                    }
+                })
+        }
     }
 
     const onSendFriendRequest = () => {
@@ -61,7 +96,7 @@ function PopupUserInfoComponent({ data, friend, friendRequest, user, form, openP
 
     return (
         <div className="popup_user_info">
-            <AvatarComponent url={avatar} size="langer" className="mb-2" online={{status: online, lastOnlineTime}}/>
+            <AvatarComponent url={avatar} size="langer" className="mb-2" online={{ status: online, lastOnlineTime }} />
             <div className="text-normal text-13">{email}</div>
             <div className="d-flex align-items-center flex-column mb-4">
                 <div className="text-normal text-30">{`${lastName} ${firstName}`}</div>
@@ -83,9 +118,17 @@ function PopupUserInfoComponent({ data, friend, friendRequest, user, form, openP
                 </div>
             </div>
             <div className="control-area">
-                <Button variant="outline-primary">
-                    <i className="fa fa-comment" />
-                </Button>
+                {
+                    friend.every(o => o._id !== _id) ?
+                        <>:</>
+                        :
+                        <Button
+                            variant="outline-primary"
+                            onClick={onClickChat}
+                        >
+                            <i className="fa fa-comment" />
+                        </Button>
+                }
                 {
                     friend.every(o => o._id !== _id) ?
                         <Button variant={requestSent ? "outline-danger" : "outline-primary"} onClick={requestSent ? onCancelFriendRequest : onSendFriendRequest}>
@@ -106,4 +149,17 @@ function PopupUserInfoComponent({ data, friend, friendRequest, user, form, openP
     )
 }
 
-export default connect(({ friend, friendRequest, user }: IStoreState) => ({ user, friend, friendRequest }), { openPopup })(PopupUserInfoComponent)
+export default connect(
+    ({ friend, friendRequest, user, chatroom }: IStoreState) => ({
+        user,
+        friend,
+        friendRequest,
+        chatroom
+    }),
+    {
+        openPopup,
+        closePopup,
+        chooseContentTab,
+        setChatroom
+    }
+)(PopupUserInfoComponent)

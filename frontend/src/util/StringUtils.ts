@@ -30,15 +30,15 @@ export function milisecondsToTimeString(duration: number, format: string = "hh:m
     return format.trim()
 }
 
-export function roundTime(duration: number) {
+export function roundTime(duration: number, unit: boolean = false) {
     let day = Math.floor(duration / (1000 * 60 * 60 * 24));
-    if (day) return `${day}d`
+    if (day) return `${day}${unit ? day > 1 ? " days" : " day" : "d"}`
     let hour = Math.floor(duration / (1000 * 60 * 60));
-    if (hour) return `${hour}h`
+    if (hour) return `${hour}${unit ? day > 1 ? " hours" : " hour" : "h"}`
     let minute = Math.floor(duration / (1000 * 60));
-    if (minute) return `${minute}m`
+    if (minute) return `${minute}${unit ? day > 1 ? " minutes" : " minute" : "m"}`
     let second = Math.floor(duration / (1000));
-    if (second) return `${second}s`
+    if (second) return `${second}${unit ? day > 1 ? " seconds" : " second" : "s"}`
     return `0s`
 }
 

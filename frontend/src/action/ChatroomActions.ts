@@ -1,11 +1,16 @@
 import common from "../common";
-import { IPayloadData } from "../interface/DataInterface";
+import { IPayloadData, IChatroomReducerData, IFriendData } from "../interface/DataInterface";
+import { setChatroom } from "./NavigationActions";
 
 export function createChatroom({ success, data, message }: IPayloadData) {
     return async function (dispatch: Function) {
         if (!success) {
             console.log(message)
-        } else {
+        } else if (data && (data as IChatroomReducerData).chatroom) {
+            let chatroomData: IChatroomReducerData = data;
+            // Set chat room
+            dispatch(setChatroom(chatroomData.chatroom._id))
+            // Create
             dispatch({
                 type: common.action.CHATROOM_CREATE,
                 payload: data
@@ -45,6 +50,8 @@ export function getAllChatrooms({ success, data, message }: IPayloadData) {
         if (!success) {
             console.log(message)
         } else {
+            if (data && data.length) dispatch(setChatroom((data as IChatroomReducerData[])[0].chatroom._id))
+            // Dispatch
             dispatch({
                 type: common.action.CHATROOM_GETALLUSERCHATROOMS,
                 payload: data

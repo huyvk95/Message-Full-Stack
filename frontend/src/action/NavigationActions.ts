@@ -14,3 +14,10 @@ export function choosePeopleTab(tab: EPeopleTap) {
         payload: tab
     }
 }
+
+export function setChatroom(id: string) {
+    return {
+        type: common.action.NAVIGATOR_SET_CHATROOM,
+        payload: id
+    }
+}
