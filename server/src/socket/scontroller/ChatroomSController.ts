@@ -2,7 +2,7 @@ import { AGServer, AGServerSocket } from "socketcluster-server";
 import { Chatroom, User, UserChatRoom, UserFriend } from "../../database/ModelDatabase";
 import { Document } from "mongoose";
 import common from "../../common";
-import _ from "underscore";
+import _, { select } from "underscore";
 
 const PACKET = common.packet.CHATROOM;
 const EVENT = common.event.CHATROOM;
@@ -16,30 +16,27 @@ async function getAllUserChatrooms(socket: AGServerSocket, data: any) {
         const limit = 25;
         if (!_.isNumber(page)) page = 1;
         let skip = (page - 1) * limit;
-        // Get User chatroom data
+        // Get all user chatroom data
         let userChatrooms = await UserChatRoom.find({ user: socket.authToken?._id })
-            .populate('chatroom')
-            .populate('chatroom.lastMessage')
-            .populate({
-                path: 'chatroom.users',
-                select: common.dbselect.user,
-            })
-            .sort({updateTime: -1})
+            .populate({ path: 'user', select: common.dbselect.user })
+            .sort({ updateTime: -1 })
             .skip(skip)
             .limit(limit)
-            .then(data => data.map(o => o.toObject()))
-            .then(async data => {
-                return await Promise.all(data.map(async o => {
-                    o.chatroom.friends = await UserFriend.find({ user: { $in: o.chatroom.users.map((o: any) => o.toString()) }, friend: socket.authToken?._id });
-                    return o;
-                }))
-            })
+
+        let response = await Promise.all(userChatrooms.map(async (myChatroom) => {
+            let chatroom = await Chatroom.findById(myChatroom.get('chatroom'))
+                .populate('lastMessage')
+            let friendsChatroom = await UserChatRoom.find({ chatroom: myChatroom.get('chatroom'), user: { $ne: socket.authToken?._id } })
+                .select(common.dbselect.userChatroom)
+                .populate({ path: 'user', select: common.dbselect.user })
+            return { chatroom, myChatroom, friendsChatroom };
+        }))
         // Response
         send(socket, {
             evt: EVENT.GETALLUSERCHATROOMS,
             payload: {
                 success: true,
-                data: userChatrooms,
+                data: response,
             }
         })
     } catch (error) {

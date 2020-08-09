@@ -6,7 +6,7 @@
     $tiny: 22px;
 
     display: inline-flex;
-    
+
     .wrap {
         display: flex;
         position: relative;
@@ -42,8 +42,8 @@
             font-size: $langer * 0.5;
         }
         .online-status {
-            width: $langer*0.21;
-            height: $langer*0.21;
+            width: $langer * 0.21;
+            height: $langer * 0.21;
             bottom: 5px;
             right: 5px;
         }

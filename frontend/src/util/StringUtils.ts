@@ -45,3 +45,9 @@ export function roundTime(duration: number) {
 export function capitalize(text: string, lower: boolean = false) {
     return text.split(' ').map(string => string.charAt(0).toUpperCase() + string.slice(1).toLowerCase()).join(' ')
 }
+
+export function zeroPad(number: number, width: number, z: string = "") {
+    z = z || '0';
+    let n = number.toString();
+    return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
+}

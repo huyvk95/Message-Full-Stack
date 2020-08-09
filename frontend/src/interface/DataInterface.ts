@@ -58,6 +58,12 @@ export interface INavigatorData {
     peopleTab: EPeopleTap
 }
 
+export interface IChatroomReducerData {
+    chatroom: IChatroomData,
+    myChatroom: IUserChatroomData,
+    friendsChatroom: IUserChatroomData[],
+}
+
 /* Store data */
 export interface IStoreState {
     app: IAppData
@@ -65,7 +71,7 @@ export interface IStoreState {
     navigation: INavigatorData
     friend: IFriendData[]
     friendRequest: IFriendRequestReducer
-    chatroom: IUserChatroomData[]
+    chatroom: IChatroomReducerData[]
 }
 
 /* Common */
@@ -82,11 +88,12 @@ export interface IPayloadData {
 
 export interface IUserChatroomData {
     _id: string,
-    user: string,
+    user: IFriendData,
+    read: boolean,
     notification: boolean,
     archive: boolean,
     block: boolean,
-    chatroom: IChatroomData,
+    chatroom: string,
     active: boolean,
 }
 
@@ -94,7 +101,6 @@ export interface IChatroomData {
     _id: string,
     name: string,
     type: 'conversation' | 'group'
-    users: IUserData[]
     lastMessage?: IMessageData
     createdTime: string
     updateTime: string

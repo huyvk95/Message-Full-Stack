@@ -1,5 +1,5 @@
 import { ELoginViewType } from "../common/TypeCommon";
-import { IAppData, INavigatorData, IUserData, IFriendData, IFriendRequestReducer, IUserChatroomData } from "./DataInterface";
+import { IAppData, INavigatorData, IUserData, IFriendData, IFriendRequestReducer, IUserChatroomData, IChatroomReducerData } from "./DataInterface";
 import { Variant } from "react-bootstrap/esm/types";
 
 /* _______________CONTAINER_______________ */
@@ -143,5 +143,5 @@ export interface IPopupProfileProps {
 }
 
 export interface IContentConversationProps {
-    chatroom: IUserChatroomData[]
+    chatroom: IChatroomReducerData[]
 }
