@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import AvatarComponent from "./AvatarComponent";
-import { IItemConversationProps } from "../interface/ComponentInterface";
+import { IUserChatroomData } from "../interface/DataInterface";
 
-function ItemConversationComponent({ data }: IItemConversationProps) {
-    let { name, lastMessage, avatarRead, avatar } = data;
+function ItemConversationComponent({ data }: { data: IUserChatroomData }) {
+    let { active, archive, block, notification, chatroom, user, _id: dataId } = data;
+    let { _id: chatroomId, name, type, users, lastMessage } = chatroom;
 
     const [hover, setHover] = useState(false);
 
@@ -15,13 +16,13 @@ function ItemConversationComponent({ data }: IItemConversationProps) {
         >
             <div className="left">
                 <AvatarComponent
-                    url={avatar}
+                    // url={avatar}
                     size="medium"
                 />
                 <div className="info ml-2">
                     <p className="text-normal">{name}</p>
-                    <div className="last-message">
-                        <p className="text-normal text-light">{`Bạn: ${lastMessage}`}</p>
+                    <div className="last-message" style={{visibility: lastMessage ? "visible" : "hidden"}}>
+                        <p className="text-normal text-light">{`Bạn: ${lastMessage?.message}`}</p>
                         <p className="text-normal text-light"><span>· </span> 30 Tháng 7</p>
                     </div>
                 </div>
@@ -34,7 +35,7 @@ function ItemConversationComponent({ data }: IItemConversationProps) {
                         </button>
                         :
                         <AvatarComponent
-                            url={avatarRead}
+                            // url={avatarRead}
                             size="tiny"
                             className="d-inline-flex"
                         />

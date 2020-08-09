@@ -4,6 +4,7 @@ import AppReducer from "./AppReducer";
 import NavigationReducer from "./NavigationReducer";
 import FriendReducer from "./FriendReducer";
 import FriendRequestReducer from "./FriendRequestReducer";
+import ChatroomReducer from "./ChatroomReducer";
 
 const reducer = combineReducers({
     user: UserReducer,
@@ -11,6 +12,7 @@ const reducer = combineReducers({
     navigation: NavigationReducer,
     friend: FriendReducer,
     friendRequest: FriendRequestReducer,
+    chatroom: ChatroomReducer
 })
 
 export default reducer;

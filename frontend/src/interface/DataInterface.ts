@@ -65,6 +65,7 @@ export interface IStoreState {
     navigation: INavigatorData
     friend: IFriendData[]
     friendRequest: IFriendRequestReducer
+    chatroom: IUserChatroomData[]
 }
 
 /* Common */
@@ -77,6 +78,36 @@ export interface IPayloadData {
     success: boolean,
     message?: string,
     data?: any
+}
+
+export interface IUserChatroomData {
+    _id: string,
+    user: string,
+    notification: boolean,
+    archive: boolean,
+    block: boolean,
+    chatroom: IChatroomData,
+    active: boolean,
+}
+
+export interface IChatroomData {
+    _id: string,
+    name: string,
+    type: 'conversation' | 'group'
+    users: IUserData[]
+    lastMessage?: IMessageData
+    createdTime: string
+    updateTime: string
+    active: boolean
+}
+
+export interface IMessageData {
+    _id: string,
+    chatroom: string
+    user: string,
+    message: string,
+    createdTime: string,
+    active: boolean,
 }
 
 export interface IResponseData extends IPayloadData {

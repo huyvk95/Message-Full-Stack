@@ -3,7 +3,7 @@ import { INavigatorData } from "../interface/DataInterface";
 import { EPeopleTap, EContentTap } from "../common/TypeCommon";
 
 let initializeState: INavigatorData = {
-    contentTab: EContentTap.PEOPLE,
+    contentTab: EContentTap.CONVERSATION,
     peopleTab: EPeopleTap.PEOPLE,
 }
 

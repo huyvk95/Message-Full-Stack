@@ -39,6 +39,7 @@ const FriendRequestSchema = new Schema({
 // Chatroom
 const UserChatRoomSchema = new Schema({
     user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+    read: { type: Boolean, default: true },
     notification: { type: Boolean, default: true },
     archive: { type: Boolean, default: true },
     block: { type: Boolean, default: false },
@@ -50,7 +51,6 @@ const ChatroomSchema = new Schema({
     // Info
     name: { type: String },
     type: { type: String, enum: Object.values(common.type.CHAT_ROOM), default: common.type.CHAT_ROOM.CONVERSATION },
-    users: [{ type: Schema.Types.ObjectId, ref: 'User', required: true }], //Using to find user in chat conversation
     lastMessage: { type: Schema.Types.ObjectId, ref: 'Message', required: false },
     // Config
     createdTime: { type: Date, required: true },

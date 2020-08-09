@@ -1,5 +1,5 @@
 import { ELoginViewType } from "../common/TypeCommon";
-import { IAppData, INavigatorData, IUserData, IFriendData, IFriendRequestReducer } from "./DataInterface";
+import { IAppData, INavigatorData, IUserData, IFriendData, IFriendRequestReducer, IUserChatroomData } from "./DataInterface";
 import { Variant } from "react-bootstrap/esm/types";
 
 /* _______________CONTAINER_______________ */
@@ -36,6 +36,7 @@ export interface IHomeContainerProps {
     pushToast: Function
     chooseContentTab: Function
     choosePeopleTab: Function
+    getAllChatrooms: Function
 }
 
 /* _______________COMPONENT_______________ */
@@ -139,4 +140,8 @@ export interface IPopupProfileProps {
     updateUserData: Function
     pushToast: Function
     closePopup: Function
+}
+
+export interface IContentConversationProps {
+    chatroom: IUserChatroomData[]
 }

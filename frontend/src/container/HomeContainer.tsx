@@ -6,6 +6,7 @@ import socket from "../socket";
 /* ACTION */
 import { pushToast } from "../action/AppActions";
 import { cleanUserData } from "../action/UserActions";
+import { getAllChatrooms } from "../action/ChatroomActions";
 import { chooseContentTab, choosePeopleTab } from "../action/NavigationActions";
 import { getFriend, setFriendNickName, updateFriendData, pushFriend, popFriend } from "../action/FriendActions";
 import { getFriendRequest, popReceiveRequest, popSentRequest, pushReceiveRequest, pushSentRequest } from "../action/FriendRequestActions";
@@ -123,6 +124,25 @@ class HomeContainer extends Component<IHomeContainerProps> {
                 }
             }
         })();
+
+        // -CHAT_ROOM
+        let { getAllChatrooms } = this.props;
+        (async () => {
+            for await (let data of sc.receiver(packet.CHATROOM)) {
+                let { evt, payload } = data as ISocketResponseData
+                console.log(evt, payload)
+
+                if (evt === event.CHATROOM.CREATE) {
+
+                } else if (evt === event.CHATROOM.UNFOLLOW) {
+
+                } else if (evt === event.CHATROOM.INVITE) {
+
+                } else if (evt === event.CHATROOM.GETALLUSERCHATROOMS) {
+                    getAllChatrooms(payload)
+                }
+            }
+        })();
     }
 
     getSocketData() {
@@ -133,6 +153,7 @@ class HomeContainer extends Component<IHomeContainerProps> {
 
         sc.transmit(packet.FRIEND, { evt: event.FRIEND.GET })
         sc.transmit(packet.FRIEND, { evt: event.FRIEND.GETFRIENDREQUEST })
+        sc.transmit(packet.CHATROOM, { evt: event.CHATROOM.GETALLUSERCHATROOMS })
     }
 
     render() {
@@ -168,7 +189,8 @@ const mapDispatchToProps = {
     popFriend,
     pushToast,
     chooseContentTab,
-    choosePeopleTab
+    choosePeopleTab,
+    getAllChatrooms
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(HomeContainer);
