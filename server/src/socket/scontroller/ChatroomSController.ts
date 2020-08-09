@@ -199,6 +199,12 @@ function connection(agServer: AGServer, socket: AGServerSocket) {
     })();
 }
 
+
+/*__Send__*/
+function send(socket: AGServerSocket, payload: { evt: string, payload: { success: boolean, message?: string, data?: any } }) {
+    socket.transmit(PACKET, payload, {});
+}
+
 /* __Distribute server listener__ */
 export default function controller(agServer: AGServer, socket: AGServerSocket, eventName: string) {
     switch (eventName) {

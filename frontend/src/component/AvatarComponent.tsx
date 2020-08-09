@@ -8,7 +8,7 @@ export default function AvatarComponent({ url, online, size, className, onClick 
         <div
             className={`avatar ${className}`}
             onClick={() => { if (typeof onClick === 'function') onClick() }}
-            style={{ cursor: typeof onClick === 'function' ? "pointer" : "none" }}
+            style={{ cursor: typeof onClick === 'function' ? "pointer" : "initial" }}
         >
             <div className={`wrap ${size}`}>
                 {
