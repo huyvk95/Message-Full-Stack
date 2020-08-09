@@ -33,6 +33,9 @@ export interface IHomeContainerProps {
     popSentRequest: Function
     pushReceiveRequest: Function
     pushSentRequest: Function
+    pushToast: Function
+    chooseContentTab: Function
+    choosePeopleTab: Function
 }
 
 /* _______________COMPONENT_______________ */
@@ -48,7 +51,11 @@ export interface IAvatarComponentProps {
 
 export interface IFooterComponentProps {
     navigation: INavigatorData
+    friendRequest: IFriendRequestReducer
+    friend: IFriendData[]
     chooseContentTab: Function
+    choosePeopleTab: Function
+    pushToast: Function
 }
 
 export interface IContentBodyProps {
@@ -57,6 +64,8 @@ export interface IContentBodyProps {
 
 export interface IContentPeopleProps {
     navigation: INavigatorData
+    friend: IFriendData[]
+    friendRequest: IFriendRequestReducer
     choosePeopleTab: Function
 }
 
@@ -97,6 +106,7 @@ export interface IPopupProps {
 
 export interface IContentHeaderProps {
     navigation: INavigatorData
+    user: IUserData
     openPopup: Function
     openDialog: Function
 }

@@ -14,7 +14,7 @@ export function milisecondsToDigital(duration: number, format: string = "hh:mm:s
 }
 
 export function milisecondsToTimeString(duration: number, format: string = "hh:mm:ss:ms") {
-    if (duration < 5) return "Just now"
+    if (duration < 500) return "Just now"
 
     var milliseconds = (duration % 1000) / 100,
         seconds = Math.floor((duration / 1000) % 60),

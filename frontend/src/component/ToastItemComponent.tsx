@@ -7,6 +7,7 @@ import { IToastItemProps } from "../interface/ComponentInterface";
 function ToastItemComponent(props: IToastItemProps) {
     let { content, time, autohide, onClick } = props
     const [show, setShow] = useState(true);
+    const [onHorver, setOnHorver] = useState(false);
     const [now] = useState(Date.now())
     // Time handle
     let timeSpace = now - time.getTime();
@@ -27,10 +28,16 @@ function ToastItemComponent(props: IToastItemProps) {
                 //Handle
                 if (_.isFunction(onClick)) onClick()
             }}
+            onMouseEnter={() => {
+                setOnHorver(true)
+            }}
+            onMouseLeave={() => {
+                setOnHorver(false)
+            }}
             show={show}
             style={{ cursor: "pointer" }}
-            delay={_.isNumber(autohide) ? autohide : 5000}
-            autohide={true}
+            delay={_.isNumber(autohide) ? autohide : 4000}
+            autohide={onHorver ? false : true}
         >
             <Toast.Body>
                 <div>{content}</div>

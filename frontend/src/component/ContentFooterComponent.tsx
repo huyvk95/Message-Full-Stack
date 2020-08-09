@@ -1,11 +1,13 @@
 import React from "react";
 import { connect } from "react-redux";
 import { IStoreState } from "../interface/DataInterface";
-import { chooseContentTab } from "../action/NavigationActions";
+import { chooseContentTab, choosePeopleTab } from "../action/NavigationActions";
 import { IFooterComponentProps, IPopupProps } from "../interface/ComponentInterface";
-import { EContentTap } from "../common/TypeCommon";
+import { EContentTap, EPeopleTap } from "../common/TypeCommon";
+import { pushToast } from "../action/AppActions";
+import { ToastFriendRequestComponent, ToastFriendAcceptComponent } from "./ToastsComponent";
 
-function ContentFooterComponent({ navigation, chooseContentTab }: IFooterComponentProps) {
+function ContentFooterComponent({ navigation, chooseContentTab, pushToast, choosePeopleTab, friendRequest, friend }: IFooterComponentProps) {
     let tab = navigation.contentTab;
 
     return (
@@ -32,7 +34,7 @@ function ContentFooterComponent({ navigation, chooseContentTab }: IFooterCompone
     )
 }
 
-const mapStateToProps = (state: IStoreState) => ({ navigation: state.navigation })
-const mapDispatchToProps = { chooseContentTab }
+const mapStateToProps = ({ navigation, friendRequest, friend }: IStoreState) => ({ navigation, friendRequest, friend })
+const mapDispatchToProps = { chooseContentTab, pushToast, choosePeopleTab }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ContentFooterComponent)

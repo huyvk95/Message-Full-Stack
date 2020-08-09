@@ -1,5 +1,5 @@
 import React, { ChangeEvent, useState } from "react";
-import { InputGroup, FormControl } from "react-bootstrap";
+import { InputGroup, FormControl, Spinner } from "react-bootstrap";
 import AvatarComponent from "./AvatarComponent";
 import socket from "../socket";
 import common from "../common";
@@ -11,12 +11,15 @@ import PopupUserInfoComponent from "./PopupUserInfoComponent";
 let timeOut: NodeJS.Timeout | undefined = undefined;
 export default function PopupSearchUserComponent() {
     let [users, setUsers]: [IFriendData[], Function] = useState([])
+    let [onSearch, setOnSearch] = useState(false)
 
     const onInputChange = (event: ChangeEvent<HTMLInputElement>) => {
         let value = event.target.value;
         let sc = socket.getSocket()
         // Clear timeout
         if (timeOut) clearTimeout(timeOut)
+        // Set search state
+        if (!onSearch) setOnSearch(true)
         // Set new timeout
         timeOut = setTimeout(() => {
             if (timeOut) clearTimeout(timeOut)
@@ -26,7 +29,8 @@ export default function PopupSearchUserComponent() {
                         setUsers(data)
                     })
             }
-        }, 400)
+            setOnSearch(false)
+        }, 300)
     }
 
     return (
@@ -43,6 +47,11 @@ export default function PopupSearchUserComponent() {
                     aria-describedby="basic-addon1"
                     onChange={onInputChange}
                 />
+                <InputGroup.Append>
+                    <InputGroup.Text id="basic-addon1">
+                        {onSearch ? <Spinner size="sm" animation="border" /> : <></>}
+                    </InputGroup.Text>
+                </InputGroup.Append>
             </InputGroup>
             <div className="popup-content">
                 {

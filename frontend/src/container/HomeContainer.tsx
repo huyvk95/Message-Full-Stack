@@ -4,7 +4,9 @@ import { connect } from "react-redux";
 /* SCRIPT */
 import socket from "../socket";
 /* ACTION */
+import { pushToast } from "../action/AppActions";
 import { cleanUserData } from "../action/UserActions";
+import { chooseContentTab, choosePeopleTab } from "../action/NavigationActions";
 import { getFriend, setFriendNickName, updateFriendData, pushFriend, popFriend } from "../action/FriendActions";
 import { getFriendRequest, popReceiveRequest, popSentRequest, pushReceiveRequest, pushSentRequest } from "../action/FriendRequestActions";
 /* INTERFACE */
@@ -16,6 +18,8 @@ import ContentHeaderComponent from "../component/ContentHeaderComponent";
 import ContentFooterComponent from "../component/ContentFooterComponent";
 import ContentBodyComponent from "../component/ContentBodyComponent";
 import common from "../common";
+import { ToastFriendRequestComponent, ToastFriendAcceptComponent } from "../component/ToastsComponent";
+import { EContentTap, EPeopleTap } from "../common/TypeCommon";
 
 class HomeContainer extends Component<IHomeContainerProps> {
     constructor(props: IHomeContainerProps) {
@@ -55,19 +59,38 @@ class HomeContainer extends Component<IHomeContainerProps> {
                 updateFriendData(data)
             }
         })();
-        let { popReceiveRequest, popSentRequest, pushReceiveRequest, pushSentRequest, pushFriend, popFriend } = this.props;
+
+        let { popReceiveRequest, popSentRequest, pushReceiveRequest, pushSentRequest, pushFriend, popFriend, pushToast, chooseContentTab, choosePeopleTab } = this.props;
         (async () => {
             for await (let data of sc.receiver(packet.FRIEND)) {
                 let { evt, payload } = data as ISocketTransmitData
                 console.log(evt, payload)
                 if (evt === event.FRIEND.RECEIVEFRIENDREQUEST) { //Receive transmit from server
+                    // Set on request
                     if (payload.from._id === user._id) pushSentRequest(payload)
-                    else pushReceiveRequest(payload)
+                    else {
+                        pushReceiveRequest(payload)
+                        // Show toast
+                        pushToast({
+                            content: <ToastFriendRequestComponent data={payload} />,
+                            time: new Date(),
+                            onClick: () => {
+                                chooseContentTab(EContentTap.PEOPLE)
+                                choosePeopleTab(EPeopleTap.REQUEST)
+                            },
+                        })
+                    }
                 } else if (evt === event.FRIEND.REMOVEFRIENDREQUEST) { //Receive transmit from server
                     if (payload.from._id === user._id) popSentRequest(payload)
                     else popReceiveRequest(payload)
                 } else if (evt === event.FRIEND.ONACCEPTFRIENDREQUEST) { //Receive transmit from server
+                    // Push friend
                     pushFriend(payload)
+                    // Toast
+                    pushToast({
+                        content: <ToastFriendAcceptComponent data={payload} />,
+                        time: new Date(),
+                    })
                 } else if (evt === event.FRIEND.ONREMOVEFRIEND) { //Receive transmit from server
                     popFriend(payload)
                 }
@@ -142,7 +165,10 @@ const mapDispatchToProps = {
     pushReceiveRequest,
     pushSentRequest,
     pushFriend,
-    popFriend
+    popFriend,
+    pushToast,
+    chooseContentTab,
+    choosePeopleTab
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(HomeContainer);

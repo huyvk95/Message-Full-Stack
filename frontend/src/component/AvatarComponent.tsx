@@ -18,7 +18,7 @@ export default function AvatarComponent({ url, online, size, className }: IAvata
                         online.status ?
                             <div className="online-status" />
                             :
-                            <Badge variant="dark text-bolder">{util.string.roundTime(Date.now() - (new Date(online.lastOnlineTime)).getTime())}</Badge>
+                            <Badge variant="pill dark text-bolder">{util.string.roundTime(Date.now() - (new Date(online.lastOnlineTime)).getTime())}</Badge>
                         :
                         <></>
                 }

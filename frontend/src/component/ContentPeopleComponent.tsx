@@ -1,5 +1,5 @@
 import React from "react";
-import { Button } from "react-bootstrap";
+import { Button, Badge } from "react-bootstrap";
 import { IStoreState } from "../interface/DataInterface";
 import { connect } from "react-redux";
 import { IContentPeopleProps } from "../interface/ComponentInterface";
@@ -8,7 +8,7 @@ import { choosePeopleTab } from "../action/NavigationActions";
 import ListRequestComponent from "./ListRequestComponent";
 import ListPeopleComponent from "./ListPeopleComponent";
 
-function ContentPeopleComponent({ navigation, choosePeopleTab }: IContentPeopleProps) {
+function ContentPeopleComponent({ navigation, friend, friendRequest, choosePeopleTab }: IContentPeopleProps) {
     return (
         <div className="content-people">
             <div className="navigation px-3 py-2">
@@ -17,14 +17,14 @@ function ContentPeopleComponent({ navigation, choosePeopleTab }: IContentPeopleP
                     className="btn-outline-custom"
                     onClick={() => { choosePeopleTab(EPeopleTap.PEOPLE) }}
                 >
-                    Friends
+                    {`Friends${friend.length ? ` (${friend.length})` : ""}`}
                 </Button>
                 <Button
                     variant="outline-primary"
                     className="btn-outline-custom"
                     onClick={() => { choosePeopleTab(EPeopleTap.REQUEST) }}
                 >
-                    Request
+                    {`Request${friendRequest.receive.length ? ` (${friendRequest.receive.length})` : ""}`}
                 </Button>
             </div>
             {
@@ -38,7 +38,7 @@ function ContentPeopleComponent({ navigation, choosePeopleTab }: IContentPeopleP
     )
 }
 
-const mapStateToProps = (state: IStoreState) => ({ navigation: state.navigation })
+const mapStateToProps = ({ navigation, friend, friendRequest }: IStoreState) => ({ navigation, friend, friendRequest })
 const mapDispatchToProps = { choosePeopleTab }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ContentPeopleComponent)
