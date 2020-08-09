@@ -1,6 +1,7 @@
 import common from "../common";
 import * as api from "../Api"
 import socket from "../socket";
+import { IUserData } from "../interface/DataInterface";
 
 export function login(email: string, password: string) {
     return async function (dispatch: Function) {
@@ -52,6 +53,13 @@ export function token() {
                 payload: data.data.user
             })
         }
+    }
+}
+
+export function updateUserData(data: IUserData) {
+    return {
+        type: common.action.UPDATE_USER_DATA,
+        payload: data
     }
 }
 

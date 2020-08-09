@@ -1,0 +1,24 @@
+.popup_profile {
+    padding: 1.5rem 1rem;
+
+    .profile_name {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .profile_control {
+        display: flex;
+        justify-content: center;
+    }
+
+    .btn {
+        margin-left: 5px;
+        margin-right: 5px;
+    }
+
+    .input-group {
+        .wrong {
+            color: var(--danger);
+        }
+    }
+}

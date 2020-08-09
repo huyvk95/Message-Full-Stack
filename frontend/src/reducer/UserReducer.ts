@@ -15,6 +15,8 @@ export default function (state = initializeState, action: { type: string, payloa
             return Object.assign({}, state, action.payload);
         case common.action.TOKEN:
             return Object.assign({}, state, action.payload);
+        case common.action.UPDATE_USER_DATA:
+            return Object.assign({}, state, action.payload);
         case common.action.CLEAN_USER_DATA:
             return { _id: '', email: '', emailVerify: { verified: false } } as IUserData;
         case common.action.VERIFY:

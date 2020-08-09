@@ -2,6 +2,7 @@
 export const LOGIN = "LOGIN"
 export const REGISTER = "REGISTER"
 export const VERIFY = "VERIFY"
+export const UPDATE_USER_DATA = "UPDATE_USER_DATA"
 export const CLEAN_USER_DATA = "CLEAN_USER_DATA"
 export const LOGOUT = "LOGOUT"
 export const TOKEN = "TOKEN"

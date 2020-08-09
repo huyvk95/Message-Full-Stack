@@ -47,15 +47,12 @@ export interface IAvatarComponentProps {
     }
     size: "langer" | "medium" | "normal" | "small" | "tiny",
     className?: string,
+    onClick?: Function
 }
 
 export interface IFooterComponentProps {
     navigation: INavigatorData
-    friendRequest: IFriendRequestReducer
-    friend: IFriendData[]
     chooseContentTab: Function
-    choosePeopleTab: Function
-    pushToast: Function
 }
 
 export interface IContentBodyProps {
@@ -135,4 +132,11 @@ export interface IPopupSettingProps {
     user: IUserData
     toggleNotification: Function
     toggleSound: Function
+}
+
+export interface IPopupProfileProps {
+    user: IUserData
+    updateUserData: Function
+    pushToast: Function
+    closePopup: Function
 }

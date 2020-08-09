@@ -8,6 +8,7 @@ import { openPopup, openDialog } from "../action/AppActions";
 import util from "../util";
 import PopupSearchUserComponent from "./PopupSearchUserComponent";
 import DropdownSettingComponent from "./DropdownSettingComponent";
+import PopupProfileComponents from "./PopupProfileComponents";
 
 function ContentHeaderComponent({ openPopup, openDialog, navigation, user }: IContentHeaderProps) {
     return (
@@ -17,6 +18,7 @@ function ContentHeaderComponent({ openPopup, openDialog, navigation, user }: ICo
                     url={user.avatar}
                     size="normal"
                     className="mr-3"
+                    onClick={() => { openPopup({ body: <PopupProfileComponents /> }) }}
                 />
                 <h1 className="text-23 text-bold m-0 text-capitalize">
                     {util.string.capitalize(navigation.contentTab)}

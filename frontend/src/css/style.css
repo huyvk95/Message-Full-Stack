@@ -443,10 +443,12 @@ button:focus {
 .toast_contain {
   position: fixed;
   right: 5px;
-  bottom: 5px; }
+  bottom: 5px;
+  z-index: 3; }
 
 .popup {
-  font-family: "HelveticaNeue-Normal"; }
+  font-family: "HelveticaNeue-Normal";
+  z-index: 2; }
   .popup .popup-header {
     display: flex;
     justify-content: space-between;
@@ -556,3 +558,17 @@ button:focus {
     .popup_setting .popup_item .popup_item_content {
       display: flex;
       align-items: center; }
+
+.popup_profile {
+  padding: 1.5rem 1rem; }
+  .popup_profile .profile_name {
+    display: flex;
+    justify-content: space-between; }
+  .popup_profile .profile_control {
+    display: flex;
+    justify-content: center; }
+  .popup_profile .btn {
+    margin-left: 5px;
+    margin-right: 5px; }
+  .popup_profile .input-group .wrong {
+    color: var(--danger); }

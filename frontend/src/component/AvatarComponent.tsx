@@ -3,9 +3,13 @@ import { IAvatarComponentProps } from "../interface/ComponentInterface";
 import { Badge } from "react-bootstrap";
 import util from "../util";
 
-export default function AvatarComponent({ url, online, size, className }: IAvatarComponentProps) {
+export default function AvatarComponent({ url, online, size, className, onClick }: IAvatarComponentProps) {
     return (
-        <div className={`avatar ${className}`}>
+        <div
+            className={`avatar ${className}`}
+            onClick={() => { if (typeof onClick === 'function') onClick() }}
+            style={{ cursor: typeof onClick === 'function' ? "pointer" : "none" }}
+        >
             <div className={`wrap ${size}`}>
                 {
                     url ?

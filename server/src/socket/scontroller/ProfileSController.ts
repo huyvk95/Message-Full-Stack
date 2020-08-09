@@ -37,12 +37,14 @@ async function put(request: any) {
     if (firstName) user.set('firstName', firstName);
     if (lastName) user.set('lastName', lastName);
     if (avatar) user.set('avatar', avatar);
-    user.set('updateTime',new Date())
+    user.set('updateTime', new Date())
     await user.save();
     // Response
+    let data = await User.findById(request.socket.authToken._id)
+        .select(common.dbselect.profile)
     request.end({
         message: "success.update_user",
-        data: util.common.userPrivateInfoFilter(user.toObject())
+        data: data?.toObject()
     })
     // Check update password logout
     if (password) {
@@ -63,7 +65,7 @@ async function remove(request: any) {
     if (!compareResult) return request.error('error.bad');
     // Logout from all device
     user.set('device', {});
-    user.set('updateTime',new Date())
+    user.set('updateTime', new Date())
     user.set('active', false);
     await user.save();
     // Response
