@@ -13,18 +13,18 @@ import PopupProfileComponents from "./PopupProfileComponents";
 function ContentHeaderComponent({ openPopup, openDropdown, navigation, user }: IContentHeaderProps) {
     return (
         <div className="content-header justify-content-between px-3 py-2 position-relative">
-            <div className="d-flex align-items-center">
+            <div className="d-flex align-items-center" style={{ width: "100px" }}>
                 <AvatarComponent
                     url={user.avatar}
                     size="normal"
                     className="mr-3"
                     onClick={() => { openPopup({ body: <PopupProfileComponents /> }) }}
                 />
-                <h1 className="text-23 text-bold m-0 text-capitalize">
-                    {util.string.capitalize(navigation.contentTab)}
-                </h1>
             </div>
-            <div className="d-flex align-items-center">
+            <h1 className="text-23 text-bold m-0 text-capitalize">
+                {util.string.capitalize(navigation.contentTab)}
+            </h1>
+            <div className="d-flex align-items-center" style={{ width: "100px" }}>
                 <Button
                     variant="outline-danger"
                     className="btn-outline-custom btn-circle mr-3"
