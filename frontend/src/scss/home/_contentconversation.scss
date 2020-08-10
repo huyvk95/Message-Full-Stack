@@ -8,6 +8,8 @@
         overflow: auto;
 
         .conversation-item {
+            cursor: pointer;
+
             .conversation-background {
                 display: flex;
                 justify-content: space-between;

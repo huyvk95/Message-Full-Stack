@@ -37,6 +37,8 @@ export interface IHomeContainerProps {
     choosePeopleTab: Function
     getAllChatrooms: Function
     createChatroom: Function
+    unfollowChatroom: Function
+    updateChatroom: Function
 }
 
 /* _______________COMPONENT_______________ */
@@ -102,7 +104,7 @@ export interface IPopupUserInfoProps {
     openPopup: Function,
     closePopup: Function,
     chooseContentTab: Function,
-    setChatroom: Function,
+    setChatroomNavigation: Function,
     data: IFriendData,
     friend: IFriendData[],
     friendRequest: IFriendRequestReducer
@@ -141,6 +143,12 @@ export interface IItemConversationProps {
     friend: IFriendData[] 
     navigation: INavigatorData
     openDropdown: Function
+    setChatroomNavigation: Function
+}
+
+export interface IDropdownConversationProps {
+    openPopup: Function
+    chatroom: IChatroomReducerData
 }
 
 export interface IContentConversationProps {

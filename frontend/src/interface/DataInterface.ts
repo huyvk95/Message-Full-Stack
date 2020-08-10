@@ -95,6 +95,7 @@ export interface IUserChatroomData {
     archive: boolean,
     block: boolean,
     chatroom: string,
+    show: boolean,
     active: boolean,
 }
 

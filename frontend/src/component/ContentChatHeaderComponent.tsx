@@ -16,8 +16,8 @@ function ContentChatHeaderComponent({ chatroom, navigation, friend }: IContentCh
     let chatroomName = chatroomData.chatroom.type === 'conversation' ?
         friendsData.length > 0 && friendsData[0]?.nickname ? friendsData[0]?.nickname : `${friendsData[0]?.lastName} ${friendsData[0]?.firstName}` : chatroomData.chatroom.name
     // Active time
-    let activeTime = chatroomData.chatroom.type === 'conversation' && friendsData.length > 0 && friendsData[0]?.lastOnlineTime ?
-        util.string.roundTime(Date.now() - new Date(friendsData[0]?.lastOnlineTime).getTime(), true) : ""
+    let activeTime = chatroomData.chatroom.type === 'conversation' && friendsData.length > 0 && friendsData[0]?.online ? "Online" :
+        friendsData[0]?.lastOnlineTime ? `Active ${util.string.roundTime(Date.now() - new Date(friendsData[0]?.lastOnlineTime).getTime(), true)} ago` : ""
 
     return (
         <div className="info-area px-3 py-2">
@@ -25,7 +25,7 @@ function ContentChatHeaderComponent({ chatroom, navigation, friend }: IContentCh
                 <AvatarComponent size="normal" />
                 <div className="user-info ml-3">
                     <p className="text-bold text-16">{chatroomName}</p>
-                    <p className="text-normal text-light text-12">{`Active ${activeTime} ago`}</p>
+                    <p className="text-normal text-light text-12">{activeTime}</p>
                 </div>
             </div>
             <div className="control d-flex align-items-center">

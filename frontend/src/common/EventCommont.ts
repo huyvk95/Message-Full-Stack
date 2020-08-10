@@ -26,7 +26,11 @@ const event = {
         CREATE: "create",
         UNFOLLOW: "unfollow",
         INVITE: "invite",
-        GETALLUSERCHATROOMS: "getAllUserChatrooms"
+        GETALLUSERCHATROOMS: "getAllUserChatrooms",
+        MASK_AS_READ: "maskAsRead",
+        MASK_AS_UNREAD: "maskAsUnread",
+        // TRAMSMIT EVENT
+        UPDATE: "update",
     },
     MESSAGE: {},
 }

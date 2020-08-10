@@ -21,7 +21,7 @@ export default function (state = initializeState, { type, payload }: { type: str
         if (payload) {
             let nstate = Object.assign({}, state);
             let index = nstate.receive.findIndex(o => o._id === (payload as IFriendRequest)._id)
-            if (_.isNumber(index)) {
+            if (_.isNumber(index) && index !== -1) {
                 nstate.receive.splice(index, 1)
                 return nstate
             }
@@ -30,7 +30,7 @@ export default function (state = initializeState, { type, payload }: { type: str
         if (payload) {
             let nstate = Object.assign({}, state);
             let index = nstate.sent.findIndex(o => o._id === (payload as IFriendRequest)._id)
-            if (_.isNumber(index)) {
+            if (_.isNumber(index) && index !== -1) {
                 nstate.sent.splice(index, 1)
                 return nstate
             }

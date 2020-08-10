@@ -12,7 +12,7 @@ export default function (state = initializeState, { type, payload }: { type: str
     } else if (type === common.action.FRIEND_POP) {
         let nstate = [...state]
         let friendIndex = nstate.findIndex(o => o._id === (payload as IFriendData)._id)
-        if (_.isNumber(friendIndex)) {
+        if (_.isNumber(friendIndex) && friendIndex !== -1) {
             nstate.splice(friendIndex, 1)
             return nstate;
         }
@@ -26,7 +26,7 @@ export default function (state = initializeState, { type, payload }: { type: str
     } else if (type === common.action.FRIEND_UPDATE_DATA) {
         let nstate = [...state]
         let friendIndex = nstate.findIndex(o => o._id === (payload as IFriendData)._id)
-        if (_.isNumber(friendIndex)) {
+        if (_.isNumber(friendIndex) && friendIndex !== -1) {
             nstate.splice(friendIndex, 1, payload)
             return nstate;
         }

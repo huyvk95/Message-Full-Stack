@@ -286,28 +286,30 @@ button:focus {
       .home .content .content-body .content-conversation .list-conversation {
         flex: 1;
         overflow: auto; }
-        .home .content .content-body .content-conversation .list-conversation .conversation-item .conversation-background {
-          display: flex;
-          justify-content: space-between;
-          width: 100%;
-          border-radius: 10px; }
-          .home .content .content-body .content-conversation .list-conversation .conversation-item .conversation-background .left {
-            display: inline-flex;
-            margin-right: 10px;
-            width: 100%; }
-            .home .content .content-body .content-conversation .list-conversation .conversation-item .conversation-background .left .info {
-              display: flex;
-              flex-direction: column;
-              justify-content: center;
-              width: 100%; }
-              .home .content .content-body .content-conversation .list-conversation .conversation-item .conversation-background .left .info .last-message {
-                display: flex;
-                justify-content: space-between; }
-          .home .content .content-body .content-conversation .list-conversation .conversation-item .conversation-background .right {
+        .home .content .content-body .content-conversation .list-conversation .conversation-item {
+          cursor: pointer; }
+          .home .content .content-body .content-conversation .list-conversation .conversation-item .conversation-background {
             display: flex;
-            align-items: center; }
-        .home .content .content-body .content-conversation .list-conversation .conversation-item .active {
-          background-color: rgba(0, 0, 0, 0.05); }
+            justify-content: space-between;
+            width: 100%;
+            border-radius: 10px; }
+            .home .content .content-body .content-conversation .list-conversation .conversation-item .conversation-background .left {
+              display: inline-flex;
+              margin-right: 10px;
+              width: 100%; }
+              .home .content .content-body .content-conversation .list-conversation .conversation-item .conversation-background .left .info {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                width: 100%; }
+                .home .content .content-body .content-conversation .list-conversation .conversation-item .conversation-background .left .info .last-message {
+                  display: flex;
+                  justify-content: space-between; }
+            .home .content .content-body .content-conversation .list-conversation .conversation-item .conversation-background .right {
+              display: flex;
+              align-items: center; }
+          .home .content .content-body .content-conversation .list-conversation .conversation-item .active {
+            background-color: rgba(0, 0, 0, 0.05); }
     .home .content .content-body .content-people {
       display: flex;
       flex-direction: column;
@@ -505,28 +507,6 @@ button:focus {
 
 .drop_content .setting_drop_content {
   width: 220px; }
-
-.drop_content .setting_drop_content {
-  width: 220px; }
-
-.setting_drop_content {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  background-color: #fff; }
-  .setting_drop_content .setting_drop_seperate {
-    height: 1px;
-    background-color: rgba(204, 204, 204, 0.4);
-    margin-top: 3px;
-    margin-bottom: 3px; }
-  .setting_drop_content .setting_drop_item {
-    padding: 5px 25px;
-    text-align: left;
-    color: #000000;
-    border: none;
-    border-radius: 0px; }
-  .setting_drop_content .setting_drop_item:hover {
-    color: #fff; }
 
 .popup_search_user {
   padding: 0.5rem; }

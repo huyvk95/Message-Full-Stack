@@ -8,7 +8,7 @@ import common from "../common";
 import { IPopupUserInfoProps } from "../interface/ComponentInterface";
 import { openPopup, closePopup } from "../action/AppActions";
 import PopupConfirmComponent from "./PopupConfirmComponent";
-import { chooseContentTab, setChatroom } from "../action/NavigationActions";
+import { chooseContentTab, setChatroomNavigation } from "../action/NavigationActions";
 
 let timeOut: NodeJS.Timeout | undefined = undefined;
 function PopupUserInfoComponent(
@@ -22,7 +22,7 @@ function PopupUserInfoComponent(
         openPopup,
         closePopup,
         chooseContentTab,
-        setChatroom
+        setChatroomNavigation
     }: IPopupUserInfoProps) {
     let { lastName, email, firstName, avatar, _id, nickname, online, lastOnlineTime } = data
 
@@ -51,7 +51,7 @@ function PopupUserInfoComponent(
         let chatroomData = chatroom.find(o => {
             return o.chatroom.type === 'conversation' && o.friendsChatroom.length === 1 && o.friendsChatroom[0]._id === _id
         })
-        if (chatroomData) setChatroom(chatroomData.chatroom._id)
+        if (chatroomData) setChatroomNavigation(chatroomData.chatroom._id)
         else {
             let sc = socket.getSocket();
             if (sc) sc.transmit(common.packet.CHATROOM,
@@ -80,7 +80,7 @@ function PopupUserInfoComponent(
     const onRemoveFriend = () => {
         openPopup({
             body: <PopupConfirmComponent
-                content={`Bạn có chắc chắn muốn xóa ${lastName} ${firstName} khỏi danh sách bạn bè không?`}
+                content={`Are you sure you want to remove ${lastName} ${firstName} from your friends list?`}
                 buttons={[{
                     title: "Ok",
                     primary: true,
@@ -160,6 +160,6 @@ export default connect(
         openPopup,
         closePopup,
         chooseContentTab,
-        setChatroom
+        setChatroomNavigation
     }
 )(PopupUserInfoComponent)

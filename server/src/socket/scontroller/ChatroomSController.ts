@@ -17,7 +17,7 @@ async function getAllUserChatrooms(socket: AGServerSocket, data: any) {
         if (!_.isNumber(page)) page = 1;
         let skip = (page - 1) * limit;
         // Get all user chatroom data
-        let userChatrooms = await UserChatRoom.find({ user: socket.authToken?._id, show: true })
+        let userChatrooms = await UserChatRoom.find({ user: socket.authToken?._id, show: true, active: true })
             .populate({ path: 'user', select: common.dbselect.user })
             .skip(skip)
             .limit(limit)
@@ -49,7 +49,7 @@ async function getAllUserChatrooms(socket: AGServerSocket, data: any) {
         })
     }
 }
-// Cần tích hợp socket channel
+
 async function create(socket: AGServerSocket, data: any) {
     try {
         let { users, name, type } = data
@@ -66,16 +66,12 @@ async function create(socket: AGServerSocket, data: any) {
         // Push mine
         users.push(socket.authToken?._id)
 
-        // Get list user
-        let usersData = await User.find({ _id: { $in: users }, active: true })
-            .select(common.dbselect.user)
-
         // Check
         if (
-            !_.isArray(usersData) ||
-            _.size(usersData) <= 1 ||
-            (type === common.type.CHAT_ROOM.CONVERSATION && _.size(usersData) != 2) ||
-            (type === common.type.CHAT_ROOM.GROUP && _.size(usersData) > 50)
+            !_.isArray(users) ||
+            _.size(users) <= 1 ||
+            (type === common.type.CHAT_ROOM.CONVERSATION && _.size(users) != 2) ||
+            (type === common.type.CHAT_ROOM.GROUP && _.size(users) > 50)
         )
             throw 'error.error_occurred';
 
@@ -84,16 +80,14 @@ async function create(socket: AGServerSocket, data: any) {
 
         if (type == common.type.CHAT_ROOM.CONVERSATION) { // -If type of chat if conversation check old chatroom is exist
             // Get friend data
-            let friendData = usersData.find(o => o.get('_id') !== socket.authToken?._id);
+            let friendData = users.find(o => o !== socket.authToken?._id);
             // Get all friend chatroom data
-            let chatroomsData = await UserChatRoom.find({ user: friendData?.get('_id') })
+            let chatroomsData = await UserChatRoom.find({ user: friendData })
             let chatroomsId = chatroomsData.map(o => o.get('chatroom'))
             // Find chat room with me
             if (!_.isEmpty(chatroomsId)) {
                 let chatroomWithMe = await Chatroom.findOne({ _id: { $in: chatroomsId } })
-                if (chatroomWithMe) {
-                    chatroom = chatroomWithMe;
-                }
+                if (chatroomWithMe) chatroom = chatroomWithMe;
             }
         }
 
@@ -103,25 +97,32 @@ async function create(socket: AGServerSocket, data: any) {
         }
 
         // Create chatroom data
-        let usersChatroom = await Promise.all(usersData.map(async user => {
+        let usersChatroom = await Promise.all(users.map(async (userId: string) => {
             // If user is not mine and is friend with me, archive is true
-            let show = type === 'conversation' && user.get('_id') != socket.authToken?._id ? false : true;
-            let archive = user.get('_id') == socket.authToken?._id ? true : false;
+            let archive = userId == socket.authToken?._id ? true : false;
             if (!archive) {
-                let friendData = await UserFriend.findOne({ user: user.get('_id'), friend: socket.authToken?._id })
+                let friendData = await UserFriend.findOne({ user: userId, friend: socket.authToken?._id })
                 if (friendData) archive = true;
             }
 
-            let userChatroom = await UserChatRoom.findOne({ user: user.get('_id'), chatroom: (chatroom as Document).get('_id') })
+            let userChatroom = await UserChatRoom.findOne({ user: userId, chatroom: (chatroom as Document).get('_id') })
+            // -Modify userchatroom if my chatroom exist
+            if (userChatroom && userChatroom.get('user').toString() === socket.authToken?._id) {
+                userChatroom.set('show', true)
+                userChatroom.set('active', true)
+            }
+            // -Create user chatroom
             if (!userChatroom) {
                 userChatroom = new UserChatRoom({
-                    user: user.get('_id'),
+                    user: userId,
                     archive,
-                    show,
+                    show: type === 'conversation' && userId != socket.authToken?._id ? false : true,
                     chatroom: (chatroom as Document).get('_id')
                 })
-                await userChatroom.save()
             }
+
+            await userChatroom.save()
+            // Return userChatroom
             return await UserChatRoom.findById(userChatroom.get('_id'))
                 .select(common.dbselect.userChatroom)
                 .populate({ path: 'user', select: common.dbselect.user })
@@ -150,22 +151,52 @@ async function create(socket: AGServerSocket, data: any) {
         })
     }
 }
-// Cần tích hợp socket channel
-async function unfollow(socket: AGServerSocket, data: any) {
+
+async function unfollow(agServer: AGServer, socket: AGServerSocket, data: any) {
     try {
         let { chatroomId } = data
         if (!_.isString(chatroomId)) throw 'error.bad';
-        // Find user chatroom
-        let userChatroom = await UserChatRoom.findOne({ chatroom: chatroomId, user: socket.authToken?._id })
-        if (!userChatroom) throw 'error.never_follow_chatroom';
-        await userChatroom.remove()
+        // Find my chatroom
+        let myChatroom = await UserChatRoom.findOne({ chatroom: chatroomId, user: socket.authToken?._id })
+            .select(common.dbselect.userChatroom)
+            .populate({ path: 'user', select: common.dbselect.user })
+        if (!myChatroom) throw 'error.never_follow_chatroom';
+        // Get chatroom
+        let chatroom = await Chatroom.findById(myChatroom.get('chatroom'))
+            .populate('lastMessage')
+        if (!chatroom) throw 'error.chatroom_exist';
+        // Get friends chatroom
+        let friendsChatroom = await UserChatRoom.find({ chatroom: myChatroom.get('chatroom'), user: { $ne: socket.authToken?._id } })
+            .select(common.dbselect.userChatroom)
+            .populate({ path: 'user', select: common.dbselect.user })
+        // Handle
+        myChatroom.set('active', false)
+        await myChatroom.save();
         // Response
-        send(socket, {
-            evt: EVENT.UNFOLLOW,
-            payload: {
-                success: true,
-                message: "success.success",
+        // -Response to another
+        friendsChatroom.forEach(userChatroom => {
+            let fsockets: AGServerSocket[] = _.compact(userChatroom.get('user').get('socketId').map((o: string) => agServer.clients[o]))
+            let transData = {
+                evt: EVENT.UPDATE,
+                payload: {
+                    chatroom,
+                    myChatroom: userChatroom,
+                    friendsChatroom: [myChatroom, ...friendsChatroom].filter(o => o?.get('user').get('_id') !== userChatroom.get('user').get('_id'))
+                }
             }
+            if (fsockets) fsockets.forEach(o => o.transmit(PACKET, transData, {}))
+        })
+        // -Response to mine
+        let isockets: AGServerSocket[] = _.compact(myChatroom.get('user').get('socketId').map((o: string) => agServer.clients[o]))
+        isockets.forEach(sc => {
+            send(sc, {
+                evt: EVENT.UNFOLLOW,
+                payload: {
+                    success: true,
+                    message: "success.success",
+                    data: { chatroom, myChatroom, friendsChatroom }
+                }
+            })
         })
     } catch (error) {
         send(socket, {
@@ -177,7 +208,98 @@ async function unfollow(socket: AGServerSocket, data: any) {
         })
     }
 }
-// Cần tích hợp socket channel
+
+async function maskAsRead(agServer: AGServer, socket: AGServerSocket, data: any) {
+    try {
+        let { userChatroomId } = data
+        if (!_.isString(userChatroomId)) throw 'error.bad';
+        // Find my chatroom
+        let myChatroom = await UserChatRoom.findOne({ _id: userChatroomId, user: socket.authToken?._id })
+            .select(common.dbselect.userChatroom)
+            .populate({ path: 'user', select: common.dbselect.user })
+        if (!myChatroom) throw 'error.never_follow_chatroom';
+        // Get chatroom
+        let chatroom = await Chatroom.findById(myChatroom.get('chatroom'))
+            .populate('lastMessage')
+        if (!chatroom) throw 'error.chatroom_exist';
+        // Get friends chatroom
+        let friendsChatroom = await UserChatRoom.find({ chatroom: myChatroom.get('chatroom'), user: { $ne: socket.authToken?._id } })
+            .select(common.dbselect.userChatroom)
+            .populate({ path: 'user', select: common.dbselect.user })
+        // Handle
+        myChatroom.set('read', true)
+        await myChatroom.save();
+        // Response
+        // -Response to everyone
+        [myChatroom, ...friendsChatroom].forEach(userChatroom => {
+            let fsockets: AGServerSocket[] = _.compact(userChatroom.get('user').get('socketId').map((o: string) => agServer.clients[o]))
+            let transData = {
+                evt: EVENT.UPDATE,
+                payload: {
+                    chatroom,
+                    myChatroom: userChatroom,
+                    friendsChatroom: [myChatroom, ...friendsChatroom].filter(o => o?.get('user').get('_id') !== userChatroom.get('user').get('_id'))
+                }
+            }
+            if (fsockets) fsockets.forEach(o => o.transmit(PACKET, transData, {}))
+        })
+    } catch (error) {
+        send(socket, {
+            evt: EVENT.UNFOLLOW,
+            payload: {
+                success: false,
+                message: error
+            }
+        })
+    }
+}
+
+async function maskAsUnread(agServer: AGServer, socket: AGServerSocket, data: any) {
+    try {
+        let { userChatroomId } = data
+        if (!_.isString(userChatroomId)) throw 'error.bad';
+        // Find my chatroom
+        let myChatroom = await UserChatRoom.findOne({ _id: userChatroomId, user: socket.authToken?._id })
+            .select(common.dbselect.userChatroom)
+            .populate({ path: 'user', select: common.dbselect.user })
+        if (!myChatroom) throw 'error.never_follow_chatroom';
+        // Get chatroom
+        let chatroom = await Chatroom.findById(myChatroom.get('chatroom'))
+            .populate('lastMessage')
+        if (!chatroom) throw 'error.chatroom_exist';
+        // Get friends chatroom
+        let friendsChatroom = await UserChatRoom.find({ chatroom: myChatroom.get('chatroom'), user: { $ne: socket.authToken?._id } })
+            .select(common.dbselect.userChatroom)
+            .populate({ path: 'user', select: common.dbselect.user })
+        // Handle
+        myChatroom.set('read', false)
+        await myChatroom.save();
+        // Response
+        // -Response to everyone
+        [myChatroom, ...friendsChatroom].forEach(userChatroom => {
+            let fsockets: AGServerSocket[] = _.compact(userChatroom.get('user').get('socketId').map((o: string) => agServer.clients[o]))
+            let transData = {
+                evt: EVENT.UPDATE,
+                payload: {
+                    chatroom,
+                    myChatroom: userChatroom,
+                    friendsChatroom: [myChatroom, ...friendsChatroom].filter(o => o?.get('user').get('_id') !== userChatroom.get('user').get('_id'))
+                }
+            }
+            if (fsockets) fsockets.forEach(o => o.transmit(PACKET, transData, {}))
+        })
+    } catch (error) {
+        send(socket, {
+            evt: EVENT.UNFOLLOW,
+            payload: {
+                success: false,
+                message: error
+            }
+        })
+    }
+}
+
+// Done done
 async function invite(socket: AGServerSocket, data: any) {
     try {
         let { chatroomId, userId } = data
@@ -239,7 +361,13 @@ function connection(agServer: AGServer, socket: AGServerSocket) {
                         await invite(socket, data)
                         break
                     case EVENT.UNFOLLOW:
-                        await unfollow(socket, data)
+                        await unfollow(agServer, socket, data)
+                        break
+                    case EVENT.MASK_AS_READ:
+                        await maskAsRead(agServer, socket, data)
+                        break
+                    case EVENT.MASK_AS_UNREAD:
+                        await maskAsUnread(agServer, socket, data)
                         break
                     default:
                         break;
@@ -250,7 +378,6 @@ function connection(agServer: AGServer, socket: AGServerSocket) {
         }
     })();
 }
-
 
 /*__Send__*/
 function send(socket: AGServerSocket, payload: { evt: string, payload: { success: boolean, message?: string, data?: any } }) {

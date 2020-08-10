@@ -6,7 +6,7 @@ import socket from "../socket";
 /* ACTION */
 import { pushToast } from "../action/AppActions";
 import { cleanUserData } from "../action/UserActions";
-import { getAllChatrooms, createChatroom } from "../action/ChatroomActions";
+import { getAllChatrooms, createChatroom, unfollowChatroom, updateChatroom } from "../action/ChatroomActions";
 import { chooseContentTab, choosePeopleTab } from "../action/NavigationActions";
 import { getFriend, setFriendNickName, updateFriendData, pushFriend, popFriend } from "../action/FriendActions";
 import { getFriendRequest, popReceiveRequest, popSentRequest, pushReceiveRequest, pushSentRequest } from "../action/FriendRequestActions";
@@ -43,16 +43,16 @@ class HomeContainer extends Component<IHomeContainerProps> {
         let packet = common.packet;
         let event = common.event;
 
-        // Init socket
+        /* __INIT__ */
         socket.init({ deviceId: app.deviceId });
         let sc = socket.getSocket();
         if (!sc) return;
-        // Listener
+        /* __LISTENER__ */
         sc.listener('disconnect').once().then(() => {
             cleanUserData()
         });
 
-        // Receiver
+        /* __RECEIVE__ */
         let { updateFriendData } = this.props;
         (async () => {
             for await (let data of sc.receiver(packet.FRIEND_UPDATE_DATA)) {
@@ -98,6 +98,19 @@ class HomeContainer extends Component<IHomeContainerProps> {
             }
         })();
 
+        let { updateChatroom } = this.props;
+        (async () => {
+            for await (let data of sc.receiver(packet.CHATROOM)) {
+                let { evt, payload } = data as ISocketTransmitData
+                console.log(evt, payload)
+
+                if (evt === event.CHATROOM.UPDATE) {
+                    updateChatroom(payload)
+                }
+            }
+        })();
+
+        /* __HANDLE__ */
         // -FRIEND
         let { getFriend, setFriendNickName, getFriendRequest } = this.props;
         (async () => {
@@ -126,7 +139,7 @@ class HomeContainer extends Component<IHomeContainerProps> {
         })();
 
         // -CHAT_ROOM
-        let { getAllChatrooms, createChatroom } = this.props;
+        let { getAllChatrooms, createChatroom, unfollowChatroom } = this.props;
         (async () => {
             for await (let data of sc.receiver(packet.CHATROOM)) {
                 let { evt, payload } = data as ISocketResponseData
@@ -135,7 +148,7 @@ class HomeContainer extends Component<IHomeContainerProps> {
                 if (evt === event.CHATROOM.CREATE) {
                     createChatroom(payload)
                 } else if (evt === event.CHATROOM.UNFOLLOW) {
-
+                    unfollowChatroom(payload)
                 } else if (evt === event.CHATROOM.INVITE) {
 
                 } else if (evt === event.CHATROOM.GETALLUSERCHATROOMS) {
@@ -191,7 +204,8 @@ const mapDispatchToProps = {
     chooseContentTab,
     choosePeopleTab,
     getAllChatrooms,
-    createChatroom
+    createChatroom,
+    unfollowChatroom,
+    updateChatroom
 }
-
 export default connect(mapStateToProps, mapDispatchToProps)(HomeContainer);

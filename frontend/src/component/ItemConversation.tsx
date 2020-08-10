@@ -5,20 +5,22 @@ import { IStoreState } from "../interface/DataInterface";
 import { connect } from "react-redux";
 import { IItemConversationProps } from "../interface/ComponentInterface";
 import { openDropdown } from "../action/AppActions";
-import DropdownSettingComponent from "./DropdownSettingComponent";
+import { setChatroomNavigation } from "../action/NavigationActions";
 import DropdownConversationComponent from "./DropdownConversationComponent";
+import socket from "../socket";
+import common from "../common";
 
-function ItemConversationComponent({ data, user, friend, navigation, openDropdown }: IItemConversationProps) {
+function ItemConversationComponent({ data, user, friend, navigation, openDropdown, setChatroomNavigation }: IItemConversationProps) {
     // Props
     let { chatroom, friendsChatroom, myChatroom } = data;
-    let { lastMessage, name, type } = chatroom;
+    let { lastMessage, name, type, _id: chatroomId } = chatroom;
     // State
     const [hover, setHover] = useState(false);
     // Variable
     // -Get friend data
     let friendsData = friendsChatroom.map(o => friend.find(oo => oo._id === o.user._id))
     // -Check i read message
-    let myRead = lastMessage && lastMessage.user !== user._id && myChatroom.read
+    let myRead = myChatroom.read || lastMessage && lastMessage.user === user._id
     // -Chatroom name
     let chatroomName = chatroom.type === 'conversation' ?
         friendsData.length > 0 && friendsData[0]?.nickname ? friendsData[0]?.nickname : `${friendsData[0]?.lastName} ${friendsData[0]?.firstName}` : name
@@ -35,11 +37,25 @@ function ItemConversationComponent({ data, user, friend, navigation, openDropdow
         tdisplay = `${tu.getDate()} Tháng ${tu.getMonth() + 1}`
     }
 
+    const onClickItem = () => {
+        // Send read
+        let sc = socket.getSocket();
+        if (!myChatroom.read && sc) {
+            sc.transmit(common.packet.CHATROOM, {
+                evt: common.event.CHATROOM.MASK_AS_READ,
+                data: { userChatroomId: myChatroom._id }
+            })
+        }
+        // Set navigation
+        setChatroomNavigation(chatroomId)
+    }
+
     return (
         <div
-            className="conversation-item px-2"
+            className={`conversation-item px-2 ${myChatroom.show && myChatroom.active ? "d-block" : "d-none"}`}
             onMouseOver={() => { setHover(true) }}
             onMouseLeave={() => { setHover(false) }}
+            onClick={onClickItem}
         >
             <div className={`conversation-background px-2 py-2 ${active ? "active" : ""}`}>
                 <div className="left">
@@ -61,7 +77,7 @@ function ItemConversationComponent({ data, user, friend, navigation, openDropdow
                             <button
                                 onClick={(event: React.MouseEvent<HTMLElement, MouseEvent>) => {
                                     let rect = ((event.target as any).getBoundingClientRect())
-                                    openDropdown(<DropdownConversationComponent />, { x: rect.left - 10, y: rect.bottom + 5 })
+                                    openDropdown(<DropdownConversationComponent chatroom={data} />, { x: rect.left - 10, y: rect.bottom + 5 })
                                 }}
                             >
                                 <i className="fa fa-ellipsis-h" />
@@ -82,4 +98,4 @@ function ItemConversationComponent({ data, user, friend, navigation, openDropdow
     )
 }
 
-export default connect(({ user, friend, navigation }: IStoreState) => ({ user, friend, navigation }), { openDropdown })(ItemConversationComponent)
+export default connect(({ user, friend, navigation }: IStoreState) => ({ user, friend, navigation }), { openDropdown, setChatroomNavigation })(ItemConversationComponent)
