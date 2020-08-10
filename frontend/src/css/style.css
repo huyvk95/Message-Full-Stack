@@ -307,7 +307,8 @@ button:focus {
                   justify-content: space-between; }
             .home .content .content-body .content-conversation .list-conversation .conversation-item .conversation-background .right {
               display: flex;
-              align-items: center; }
+              align-items: center;
+              width: 25px; }
           .home .content .content-body .content-conversation .list-conversation .conversation-item .active {
             background-color: rgba(0, 0, 0, 0.05); }
     .home .content .content-body .content-people {

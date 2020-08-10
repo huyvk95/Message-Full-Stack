@@ -49,7 +49,10 @@ function ContentChatControlComponent({ chatroom, navigation }: IContentChatContr
                     <InputGroup.Text id="basic-addon1"></InputGroup.Text>
                 </InputGroup.Append>
             </InputGroup>
-            <Button className="ml-2 btn-circle">
+            <Button
+                className="ml-2 btn-circle"
+                onClick={onSubmit}
+            >
                 <i className="fa fa-paper-plane" />
             </Button>
         </Form>

@@ -27,11 +27,10 @@ function ItemConversationComponent({ data, user, friend, navigation, openDropdow
     // -Active
     let active = navigation.chatroom === chatroom._id
     // -Time display
-    let updateTime = "2020-08-03T23:03:29.777Z"
-    let tu = new Date(updateTime)
+    let tu = new Date(chatroom.updateTime)
     let tn = new Date()
     let tdisplay = ""
-    if (tn.getTime() - tu.getDate() < 1000 * 60 * 60 * 24 && tn.getDate() === tu.getDate()) {
+    if (tn.getTime() - tu.getTime() < 1000 * 60 * 60 * 24 && tn.getDate() === tu.getDate()) {
         tdisplay = `${util.string.zeroPad(tu.getHours(), 2)}:${util.string.zeroPad(tu.getMinutes(), 2)}`
     } else {
         tdisplay = `${tu.getDate()} Tháng ${tu.getMonth() + 1}`

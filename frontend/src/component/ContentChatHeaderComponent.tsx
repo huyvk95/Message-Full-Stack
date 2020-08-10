@@ -29,9 +29,9 @@ function ContentChatHeaderComponent({ chatroom, navigation, friend }: IContentCh
                 </div>
             </div>
             <div className="control d-flex align-items-center">
-                <button>
+                {/* <button>
                     <i className="fa fa-info-circle" />
-                </button>
+                </button> */}
             </div>
         </div>
     )
