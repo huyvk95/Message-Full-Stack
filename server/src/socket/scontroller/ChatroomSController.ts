@@ -19,7 +19,6 @@ async function getAllUserChatrooms(socket: AGServerSocket, data: any) {
         // Get all user chatroom data
         let userChatrooms = await UserChatRoom.find({ user: socket.authToken?._id, show: true })
             .populate({ path: 'user', select: common.dbselect.user })
-            .sort({ updateTime: -1 })
             .skip(skip)
             .limit(limit)
 
@@ -31,6 +30,7 @@ async function getAllUserChatrooms(socket: AGServerSocket, data: any) {
                 .populate({ path: 'user', select: common.dbselect.user })
             return { chatroom, myChatroom, friendsChatroom };
         }))
+            .then(data => data.sort((a, b) => new Date(b.chatroom?.get('updateTime')).getTime() - new Date(a.chatroom?.get('updateTime')).getTime()))
         // Response
         send(socket, {
             evt: EVENT.GETALLUSERCHATROOMS,

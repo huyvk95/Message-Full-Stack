@@ -5,7 +5,7 @@
     width: 100vw;
     height: 100vh;
 
-    .drop_content {
+    .drop_wrap {
         position: absolute;
         display: inline-flex;
         border-radius: 3px;
@@ -13,7 +13,39 @@
         box-shadow: 0 3px 8px rgba(0, 0, 0, 0.45);
     }
 
-    .drop_content > div {
+    .drop_wrap > div {
         border-radius: 3px;
+    }
+}
+
+.drop_content {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    background-color: #fff;
+
+    .drop_seperate {
+        height: 1px;
+        background-color: rgba($color: $color-mid-light, $alpha: 0.4);
+        margin-top: 3px;
+        margin-bottom: 3px;
+    }
+
+    .drop_item {
+        padding: 5px 25px;
+        text-align: left;
+        color: #000000;
+        border: none;
+        border-radius: 0px;
+    }
+
+    .drop_item:hover {
+        color: #fff;
+    }
+}
+
+.drop_content {
+    .setting_drop_content {
+        width: 220px;
     }
 }

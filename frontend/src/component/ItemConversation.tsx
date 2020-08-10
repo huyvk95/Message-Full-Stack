@@ -1,11 +1,14 @@
 import React, { useState } from "react";
 import AvatarComponent from "./AvatarComponent";
-import { IStoreState } from "../interface/DataInterface";
 import util from "../util";
+import { IStoreState } from "../interface/DataInterface";
 import { connect } from "react-redux";
 import { IItemConversationProps } from "../interface/ComponentInterface";
+import { openDropdown } from "../action/AppActions";
+import DropdownSettingComponent from "./DropdownSettingComponent";
+import DropdownConversationComponent from "./DropdownConversationComponent";
 
-function ItemConversationComponent({ data, user, friend, navigation }: IItemConversationProps) {
+function ItemConversationComponent({ data, user, friend, navigation, openDropdown }: IItemConversationProps) {
     // Props
     let { chatroom, friendsChatroom, myChatroom } = data;
     let { lastMessage, name, type } = chatroom;
@@ -55,7 +58,12 @@ function ItemConversationComponent({ data, user, friend, navigation }: IItemConv
                 <div className="right">
                     {
                         hover ?
-                            <button>
+                            <button
+                                onClick={(event: React.MouseEvent<HTMLElement, MouseEvent>) => {
+                                    let rect = ((event.target as any).getBoundingClientRect())
+                                    openDropdown(<DropdownConversationComponent />, { x: rect.left - 10, y: rect.bottom + 5 })
+                                }}
+                            >
                                 <i className="fa fa-ellipsis-h" />
                             </button>
                             :
@@ -74,4 +82,4 @@ function ItemConversationComponent({ data, user, friend, navigation }: IItemConv
     )
 }
 
-export default connect(({ user, friend, navigation }: IStoreState) => ({ user, friend, navigation }))(ItemConversationComponent)
+export default connect(({ user, friend, navigation }: IStoreState) => ({ user, friend, navigation }), { openDropdown })(ItemConversationComponent)

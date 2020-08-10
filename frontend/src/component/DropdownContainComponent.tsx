@@ -10,7 +10,7 @@ function DropdownContainComponent({ app, closeDialog }: { app: IAppData, closeDi
             onClick={() => { closeDialog() }}
         >
             <div
-                className="drop_content"
+                className="drop_wrap"
                 style={{
                     top: `${app.dropdown?.position.y || 0}px`,
                     left: `${app.dropdown?.position.x || 0}px`,

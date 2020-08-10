@@ -91,7 +91,7 @@ export function openPopup(data: IPopupProps) {
     }
 }
 
-export function openDialog(content: JSX.Element, position: { x: number, y: number }) {
+export function openDropdown(content: JSX.Element, position: { x: number, y: number }) {
     return {
         type: common.action.OPEN_DIALOG,
         payload: { content, position }

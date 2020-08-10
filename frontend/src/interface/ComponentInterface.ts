@@ -95,7 +95,7 @@ export interface IContentHeaderProps {
     navigation: INavigatorData
     user: IUserData
     openPopup: Function
-    openDialog: Function
+    openDropdown: Function
 }
 
 export interface IPopupUserInfoProps {
@@ -140,6 +140,7 @@ export interface IItemConversationProps {
     user: IUserData, 
     friend: IFriendData[] 
     navigation: INavigatorData
+    openDropdown: Function
 }
 
 export interface IContentConversationProps {

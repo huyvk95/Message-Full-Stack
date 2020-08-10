@@ -4,13 +4,13 @@ import { Button } from "react-bootstrap";
 import { connect } from "react-redux";
 import { IStoreState } from "../interface/DataInterface";
 import { IContentHeaderProps } from "../interface/ComponentInterface";
-import { openPopup, openDialog } from "../action/AppActions";
+import { openPopup, openDropdown } from "../action/AppActions";
 import util from "../util";
 import PopupSearchUserComponent from "./PopupSearchUserComponent";
 import DropdownSettingComponent from "./DropdownSettingComponent";
 import PopupProfileComponents from "./PopupProfileComponents";
 
-function ContentHeaderComponent({ openPopup, openDialog, navigation, user }: IContentHeaderProps) {
+function ContentHeaderComponent({ openPopup, openDropdown, navigation, user }: IContentHeaderProps) {
     return (
         <div className="content-header justify-content-between px-3 py-2 position-relative">
             <div className="d-flex align-items-center">
@@ -30,7 +30,7 @@ function ContentHeaderComponent({ openPopup, openDialog, navigation, user }: ICo
                     className="btn-outline-custom btn-circle mr-3"
                     onClick={(event: React.MouseEvent<HTMLElement, MouseEvent>) => {
                         let rect = ((event.target as any).getBoundingClientRect())
-                        openDialog(<DropdownSettingComponent />, { x: rect.left - 10, y: rect.bottom + 15 })
+                        openDropdown(<DropdownSettingComponent />, { x: rect.left - 10, y: rect.bottom + 15 })
                     }}
                 >
                     <i className="fa fa-cog" />
@@ -58,6 +58,6 @@ function ContentHeaderComponent({ openPopup, openDialog, navigation, user }: ICo
 }
 
 const mapStateToProps = ({ navigation, user }: IStoreState) => ({ navigation, user })
-const mapDispatchToProps = { openPopup, openDialog }
+const mapDispatchToProps = { openPopup, openDropdown }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ContentHeaderComponent);
