@@ -32,7 +32,12 @@ const event = {
         // TRAMSMIT EVENT
         UPDATE: "update",
     },
-    MESSAGE: {},
+    MESSAGE: {
+        GET: "get",
+        SEND: "send",
+        // TRAMSMIT EVENT
+        RECEIVE: "receive"
+    },
 }
 
 export default event;

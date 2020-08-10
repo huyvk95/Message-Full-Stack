@@ -43,6 +43,10 @@ export const OPEN_POPUP = "OPEN_POPUP"
 export const CLOSE_DIALOG = "CLOSE_DIALOG"
 export const OPEN_DIALOG = "OPEN_DIALOG"
 
+/* __MESSAGE__ */
+export const MESSAGE_GET = "MESSAGE_GET"
+export const MESSAGE_RECEIVE = "MESSAGE_RECEIVE"
+
 /* __NAVIGATION__ */
 export const CHOOSE_CONTENT_TAB = "CHOOSE_CONTENT_TAB"
 export const CHOOSE_PEOPLE_TAB = "CHOOSE_PEOPLE_TAB"

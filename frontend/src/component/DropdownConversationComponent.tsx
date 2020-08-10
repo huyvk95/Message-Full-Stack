@@ -23,7 +23,7 @@ function DropdownConversationComponent({ openPopup, chatroom: chatroomData }: ID
                                 func: () => {
                                     let sc = socket.getSocket()
                                     if (!sc) return;
-                                    sc.transmit(common.packet.CHATROOM, { evt: common.event.CHATROOM.UNFOLLOW, data: { userChatroomId: chatroom._id } })
+                                    sc.transmit(common.packet.CHATROOM, { evt: common.event.CHATROOM.UNFOLLOW, data: { chatroomId: chatroom._id } })
                                 }
                             }, { title: "Cancel" }]}
                         />

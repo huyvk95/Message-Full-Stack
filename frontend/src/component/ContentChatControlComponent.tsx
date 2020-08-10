@@ -1,26 +1,49 @@
-import React from "react";
-import { InputGroup, Button, FormControl } from "react-bootstrap";
+import React, { useState } from "react";
+import { InputGroup, Button, FormControl, Form } from "react-bootstrap";
 import { IContentChatControlProps } from "../interface/ComponentInterface";
 import { IStoreState } from "../interface/DataInterface";
 import { connect } from "react-redux";
+import socket from "../socket";
+import common from "../common";
 
 function ContentChatControlComponent({ chatroom, navigation }: IContentChatControlProps) {
+    let [text, setText] = useState("");
     // Get chatroom data
     let chatroomId = navigation.chatroom;
     let chatroomData = chatroom.find(o => o.chatroom._id === chatroomId);
-    if (!chatroomData) return (
-        <div className="d-flex w-100 h-100 justify-content-center align-items-center text-20">
-            Let's start your first conversation
-        </div>
-    )
+    if (!chatroomData) return <></>
+
+    const onSubmit = (event: React.FormEvent<HTMLElement>) => {
+        event.preventDefault();
+        // Check
+        if (typeof text !== 'string' || !text.length) return
+        // Reset
+        setText('')
+        // Send
+        let sc = socket.getSocket();
+        if (!sc) return;
+        sc.transmit(common.packet.MESSAGE, {
+            evt: common.event.MESSAGE.SEND,
+            data: { text, chatroomId }
+        })
+    }
+
+    const onChangeText = (event: React.FormEvent<HTMLElement>) => {
+        setText((event.target as any).value);
+    }
 
     return (
-        <div className="control-area px-3 py-2">
+        <Form
+            className="control-area px-3 py-2"
+            onSubmit={onSubmit}
+        >
             <InputGroup>
                 <FormControl
-                    placeholder="Username"
-                    aria-label="Username"
+                    placeholder="Enter your message..."
+                    aria-label="Enter your message..."
+                    value={text}
                     aria-describedby="basic-addon1"
+                    onChange={onChangeText}
                 />
                 <InputGroup.Append>
                     <InputGroup.Text id="basic-addon1"></InputGroup.Text>
@@ -29,7 +52,7 @@ function ContentChatControlComponent({ chatroom, navigation }: IContentChatContr
             <Button className="ml-2 btn-circle">
                 <i className="fa fa-paper-plane" />
             </Button>
-        </div>
+        </Form>
     )
 }
 

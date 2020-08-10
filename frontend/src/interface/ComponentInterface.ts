@@ -39,6 +39,8 @@ export interface IHomeContainerProps {
     createChatroom: Function
     unfollowChatroom: Function
     updateChatroom: Function
+    receiveMessage: Function
+    getMessages: Function
 }
 
 /* _______________COMPONENT_______________ */

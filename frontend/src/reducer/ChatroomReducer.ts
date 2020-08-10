@@ -12,7 +12,7 @@ export default function (state = initializeState, { type, payload }: { type: str
         let index = state.findIndex(o => o.chatroom._id === data.chatroom._id)
         if (typeof index === 'number' && index !== -1) {
             nstate.splice(index, 1, data)
-            return nstate;
+            return nstate.sort((a, b) => new Date(b.chatroom.updateTime).getTime() - new Date(a.chatroom.updateTime).getTime());
         }
     } else if (type === common.action.CHATROOM_UNFOLLOW) {
         let nstate = [...state]

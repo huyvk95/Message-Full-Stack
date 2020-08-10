@@ -73,6 +73,7 @@ export interface IStoreState {
     friend: IFriendData[]
     friendRequest: IFriendRequestReducer
     chatroom: IChatroomReducerData[]
+    message: { [key in string]: IMessageData[] }
 }
 
 /* Common */

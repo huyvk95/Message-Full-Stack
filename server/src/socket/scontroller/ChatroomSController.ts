@@ -11,18 +11,17 @@ const EVENT = common.event.CHATROOM;
 async function getAllUserChatrooms(socket: AGServerSocket, data: any) {
     try {
         data = data || {}
-        let { page } = data
+        let { skip } = data
         // Input handle
         const limit = 25;
-        if (!_.isNumber(page)) page = 1;
-        let skip = (page - 1) * limit;
+        if (!_.isNumber(skip)) skip = 0;
         // Get all user chatroom data
         let userChatrooms = await UserChatRoom.find({ user: socket.authToken?._id, show: true, active: true })
             .populate({ path: 'user', select: common.dbselect.user })
             .skip(skip)
             .limit(limit)
 
-        let response = await Promise.all(userChatrooms.map(async (myChatroom) => {
+        let payload = await Promise.all(userChatrooms.map(async (myChatroom) => {
             let chatroom = await Chatroom.findById(myChatroom.get('chatroom'))
                 .populate('lastMessage')
             let friendsChatroom = await UserChatRoom.find({ chatroom: myChatroom.get('chatroom'), user: { $ne: socket.authToken?._id } })
@@ -36,7 +35,7 @@ async function getAllUserChatrooms(socket: AGServerSocket, data: any) {
             evt: EVENT.GETALLUSERCHATROOMS,
             payload: {
                 success: true,
-                data: response,
+                data: payload
             }
         })
     } catch (error) {

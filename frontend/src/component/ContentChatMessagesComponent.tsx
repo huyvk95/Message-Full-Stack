@@ -7,7 +7,11 @@ function ContentChatMessagesComponent({ chatroom, navigation }: IContentChatMess
     // Get chatroom data
     let chatroomId = navigation.chatroom;
     let chatroomData = chatroom.find(o => o.chatroom._id === chatroomId);
-    if (!chatroomData) return <></>
+    if (!chatroomData) return (
+        <div className="d-flex w-100 h-100 justify-content-center align-items-center text-20">
+            Let's start your first conversation
+        </div>
+    )
 
     return (
         <div className="chat-area" style={{ height: window.innerHeight - 57 - 50 }}>

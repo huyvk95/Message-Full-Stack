@@ -6,6 +6,7 @@ import socket from "../socket";
 /* ACTION */
 import { pushToast } from "../action/AppActions";
 import { cleanUserData } from "../action/UserActions";
+import { receiveMessage, getMessages } from "../action/MessageActions";
 import { getAllChatrooms, createChatroom, unfollowChatroom, updateChatroom } from "../action/ChatroomActions";
 import { chooseContentTab, choosePeopleTab } from "../action/NavigationActions";
 import { getFriend, setFriendNickName, updateFriendData, pushFriend, popFriend } from "../action/FriendActions";
@@ -110,6 +111,18 @@ class HomeContainer extends Component<IHomeContainerProps> {
             }
         })();
 
+        let { receiveMessage } = this.props;
+        (async () => {
+            for await (let data of sc.receiver(packet.MESSAGE)) {
+                let { evt, payload } = data as ISocketTransmitData
+                console.log(evt, payload)
+
+                if (evt === event.MESSAGE.RECEIVE) {
+                    receiveMessage(payload)
+                }
+            }
+        })();
+
         /* __HANDLE__ */
         // -FRIEND
         let { getFriend, setFriendNickName, getFriendRequest } = this.props;
@@ -153,6 +166,19 @@ class HomeContainer extends Component<IHomeContainerProps> {
 
                 } else if (evt === event.CHATROOM.GETALLUSERCHATROOMS) {
                     getAllChatrooms(payload)
+                }
+            }
+        })();
+
+        // -MESSAGE
+        let { getMessages } = this.props;
+        (async () => {
+            for await (let data of sc.receiver(packet.MESSAGE)) {
+                let { evt, payload } = data as ISocketResponseData
+                console.log(evt, payload)
+
+                if (evt === event.MESSAGE.GET) {
+                    getMessages(payload)
                 }
             }
         })();
@@ -206,6 +232,8 @@ const mapDispatchToProps = {
     getAllChatrooms,
     createChatroom,
     unfollowChatroom,
-    updateChatroom
+    updateChatroom,
+    receiveMessage,
+    getMessages
 }
 export default connect(mapStateToProps, mapDispatchToProps)(HomeContainer);

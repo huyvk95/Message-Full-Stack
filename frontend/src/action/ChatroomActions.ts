@@ -59,6 +59,7 @@ export function getAllChatrooms({ success, data, message }: IPayloadData) {
         if (!success) {
             console.log(message)
         } else {
+            // Set natigation
             if (data && data.length) dispatch(setChatroomNavigation((data as IChatroomReducerData[])[0].chatroom._id))
             // Dispatch
             dispatch({

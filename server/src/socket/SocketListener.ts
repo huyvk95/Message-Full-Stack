@@ -4,6 +4,7 @@ import profileSController from "./scontroller/ProfileSController";
 import friendSController from "./scontroller/FriendSController";
 import chatroomSController from "./scontroller/ChatroomSController";
 import processSController from "./scontroller/ProcessSController";
+import messageSController from "./scontroller/MessageSController";
 
 export default async function socketListener(agServer: AGServer) {
     for await (let { socket } of agServer.listener('connection')) {
@@ -14,6 +15,7 @@ export default async function socketListener(agServer: AGServer) {
         profileSController(agServer, socket, 'connection');
         friendSController(agServer, socket, 'connection');
         chatroomSController(agServer, socket, 'connection');
+        messageSController(agServer, socket, 'connection');
     }
 
     for await (let { socket } of agServer.listener('disconnection')) {
