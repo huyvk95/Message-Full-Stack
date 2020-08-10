@@ -21,6 +21,66 @@
     }
 
     .chat-area {
+        $border-radius: 1.3rem;
+        $border-radius-light: 4px;
+
+        display: flex;
+        flex-direction: column-reverse;
+        overflow: scroll;
+
+        .item-chat-message {
+            display: flex;
+            align-items: flex-end;
+
+            .message-text {
+                padding: 6px 12px 7px;
+                border-radius: $border-radius;
+                margin: 1px 0px;
+            }
+        }
+
+        .mine {
+            justify-content: flex-end;
+            .message-text {
+                background-color: $color-primary;
+                color: white;
+            }
+            .chat-end {
+                border-top-right-radius: $border-radius-light;
+                border-bottom-right-radius: $border-radius;
+            }
+    
+            .chat-top {
+                border-top-right-radius: $border-radius;
+                border-bottom-right-radius: $border-radius-light;
+            }
+    
+            .chat-mid {
+                border-top-right-radius: $border-radius-light;
+                border-bottom-right-radius: $border-radius-light;
+            }
+        }
+
+        .friend {
+            justify-content: flex-start;
+            .message-text {
+                background-color: $color-low-light;
+            }
+            .chat-end {
+                border-top-left-radius: $border-radius-light;
+                border-bottom-left-radius: $border-radius;
+            }
+    
+            .chat-top {
+                border-top-left-radius: $border-radius;
+                border-bottom-left-radius: $border-radius-light;
+            }
+    
+            .chat-mid {
+                border-top-left-radius: $border-radius-light;
+                border-bottom-left-radius: $border-radius-light;
+            }
+        }
     }
 
     .control-area {

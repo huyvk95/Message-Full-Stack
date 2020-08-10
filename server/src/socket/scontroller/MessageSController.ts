@@ -49,7 +49,7 @@ async function sendMessage(agServer: AGServer, socket: AGServerSocket, data: any
         await myChatroom.save()
         // --Friend chatroom
         await Promise.all(friendsChatroom.map(async userChatroom => {
-            userChatroom.set('read', true)
+            userChatroom.set('read', false)
             if (!userChatroom.get('show')) userChatroom.set('show', true)
             await userChatroom.save()
         }));

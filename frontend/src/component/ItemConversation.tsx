@@ -20,7 +20,7 @@ function ItemConversationComponent({ data, user, friend, navigation, openDropdow
     // -Get friend data
     let friendsData = friendsChatroom.map(o => friend.find(oo => oo._id === o.user._id))
     // -Check i read message
-    let myRead = myChatroom.read || lastMessage && lastMessage.user === user._id
+    let read = myChatroom.read || lastMessage && (lastMessage.user as string) === user._id
     // -Chatroom name
     let chatroomName = chatroom.type === 'conversation' ?
         friendsData.length > 0 && friendsData[0]?.nickname ? friendsData[0]?.nickname : `${friendsData[0]?.lastName} ${friendsData[0]?.firstName}` : name
@@ -36,6 +36,8 @@ function ItemConversationComponent({ data, user, friend, navigation, openDropdow
     } else {
         tdisplay = `${tu.getDate()} Tháng ${tu.getMonth() + 1}`
     }
+    // -Message prefix
+    let msgPrefix = lastMessage && lastMessage.user === user._id ? "You: " : ""
 
     const onClickItem = () => {
         // Send read
@@ -60,13 +62,19 @@ function ItemConversationComponent({ data, user, friend, navigation, openDropdow
             <div className={`conversation-background px-2 py-2 ${active ? "active" : ""}`}>
                 <div className="left">
                     <AvatarComponent
+                        online={
+                            chatroom.type !== "conversation" || friendsData.length !== 1 || !friendsData[0] ? undefined : {
+                                status: friendsData[0].online,
+                                lastOnlineTime: friendsData[0].lastOnlineTime,
+                            }
+                        }
                         url={type === "conversation" && friendsChatroom.length === 1 ? friendsChatroom[0].user.avatar : undefined}
                         size="medium"
                     />
                     <div className="info ml-2">
-                        <p className={`text-15 ${myRead ? "text-bold" : "text-bolder"}`}>{chatroomName}</p>
+                        <p className={`text-15 ${read ? "text-bold" : "text-bolder"}`}>{chatroomName}</p>
                         <div className="last-message" style={{ visibility: lastMessage ? "visible" : "hidden" }}>
-                            <p className="text-bold text-light">{`Bạn: ${lastMessage?.message}`}</p>
+                            <p className="text-bold text-light">{`${msgPrefix}${lastMessage?.message}`}</p>
                             <p className="text-bold text-light"><span>· </span>{` ${tdisplay}`}</p>
                         </div>
                     </div>
@@ -83,14 +91,17 @@ function ItemConversationComponent({ data, user, friend, navigation, openDropdow
                                 <i className="fa fa-ellipsis-h" />
                             </button>
                             :
-                            myRead ?
-                                <AvatarComponent
-                                    url={type === "conversation" && friendsChatroom.length === 1 && friendsChatroom[0].read ? friendsChatroom[0].user.avatar : undefined}
-                                    size="tiny"
-                                    className={`${friendsChatroom.some(o => o.read) ? "d-inline-flex" : "d-none"}`}
-                                />
-                                :
+                            !read ?
                                 <div className="dot" />
+                                :
+                                lastMessage && (lastMessage.user as string) === user._id ?
+                                    <AvatarComponent
+                                        url={type === "conversation" && friendsChatroom.length === 1 && friendsChatroom[0].read ? friendsChatroom[0].user.avatar : undefined}
+                                        size="tiny"
+                                        className={`${friendsChatroom.some(o => o.read) ? "d-inline-flex" : "d-none"}`}
+                                    />
+                                    :
+                                    <></>
                     }
                 </div>
             </div>

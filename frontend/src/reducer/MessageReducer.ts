@@ -10,7 +10,7 @@ export default function (state = initializeState, { type, payload }: { type: str
         // Create chatroom if chatroom undefined
         nstate[data.chatroom] = nstate[data.chatroom] || []
         // Push message
-        nstate[data.chatroom].push(data);
+        nstate[data.chatroom].unshift(data);
         return nstate
     } else if (type === common.action.MESSAGE_GET) {
         let nstate = Object.assign({}, state);

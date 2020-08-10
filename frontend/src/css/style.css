@@ -370,6 +370,44 @@ button:focus {
       .home .content-chat .info-area .control i {
         font-size: 23px;
         color: var(--blue); }
+    .home .content-chat .chat-area {
+      display: flex;
+      flex-direction: column-reverse;
+      overflow: scroll; }
+      .home .content-chat .chat-area .item-chat-message {
+        display: flex;
+        align-items: flex-end; }
+        .home .content-chat .chat-area .item-chat-message .message-text {
+          padding: 6px 12px 7px;
+          border-radius: 1.3rem;
+          margin: 1px 0px; }
+      .home .content-chat .chat-area .mine {
+        justify-content: flex-end; }
+        .home .content-chat .chat-area .mine .message-text {
+          background-color: var(--blue);
+          color: white; }
+        .home .content-chat .chat-area .mine .chat-end {
+          border-top-right-radius: 4px;
+          border-bottom-right-radius: 1.3rem; }
+        .home .content-chat .chat-area .mine .chat-top {
+          border-top-right-radius: 1.3rem;
+          border-bottom-right-radius: 4px; }
+        .home .content-chat .chat-area .mine .chat-mid {
+          border-top-right-radius: 4px;
+          border-bottom-right-radius: 4px; }
+      .home .content-chat .chat-area .friend {
+        justify-content: flex-start; }
+        .home .content-chat .chat-area .friend .message-text {
+          background-color: #f3f3f3; }
+        .home .content-chat .chat-area .friend .chat-end {
+          border-top-left-radius: 4px;
+          border-bottom-left-radius: 1.3rem; }
+        .home .content-chat .chat-area .friend .chat-top {
+          border-top-left-radius: 1.3rem;
+          border-bottom-left-radius: 4px; }
+        .home .content-chat .chat-area .friend .chat-mid {
+          border-top-left-radius: 4px;
+          border-bottom-left-radius: 4px; }
     .home .content-chat .control-area {
       display: flex; }
 

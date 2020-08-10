@@ -1,5 +1,5 @@
 import { ELoginViewType } from "../common/TypeCommon";
-import { IAppData, INavigatorData, IUserData, IFriendData, IFriendRequestReducer, IChatroomReducerData } from "./DataInterface";
+import { IAppData, INavigatorData, IUserData, IFriendData, IFriendRequestReducer, IChatroomReducerData, IMessageData } from "./DataInterface";
 
 /* _______________CONTAINER_______________ */
 /* LOGIN */
@@ -170,4 +170,6 @@ export interface IContentChatControlProps extends IContentChatProps{
 }
 
 export interface IContentChatMessageProps extends IContentChatProps{
+    message: { [key in string]: IMessageData[] }
+    user: IUserData
 }

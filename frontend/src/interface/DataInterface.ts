@@ -113,7 +113,7 @@ export interface IChatroomData {
 export interface IMessageData {
     _id: string,
     chatroom: string
-    user: string,
+    user: IFriendData | string,
     message: string,
     createdTime: string,
     active: boolean,
