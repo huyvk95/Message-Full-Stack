@@ -21,9 +21,15 @@ class ToastContainComponent extends Component<IProps, IState> {
     }
 
     shouldComponentUpdate(nextProps: IProps) {
-        if (nextProps.app.toast) {
+        if (nextProps.app.toast && nextProps.app.notification) {
             let { content, time, onClick, autohide } = nextProps.app.toast
             let { elements } = this.state
+            // Play sound
+            if (nextProps.app.sound) {
+                let audio = new Audio('./src/mp3/notification.mp3')
+                audio.play()
+            }
+            // Set state
             this.setState({
                 elements: [...elements, <ToastItemComponent content={content} time={time} onClick={onClick} autohide={autohide} key={elements.length} />]
             })

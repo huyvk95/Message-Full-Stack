@@ -51,6 +51,7 @@ async function sendMessage(agServer: AGServer, socket: AGServerSocket, data: any
         await Promise.all(friendsChatroom.map(async userChatroom => {
             userChatroom.set('read', false)
             if (!userChatroom.get('show')) userChatroom.set('show', true)
+            if (!userChatroom.get('active')) userChatroom.set('active', true)
             await userChatroom.save()
         }));
 

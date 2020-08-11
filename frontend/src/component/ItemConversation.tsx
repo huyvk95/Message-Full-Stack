@@ -24,7 +24,7 @@ function ItemConversationComponent({ data, user, friend, navigation, openDropdow
     let read = myChatroom.read || lastMessage && (lastMessage.user as string) === user._id
     // -Chatroom name
     let chatroomName = chatroom.type === 'conversation' ?
-        friendsData.length > 0 && friendsData[0]?.nickname ? friendsData[0]?.nickname : `${friendsData[0]?.lastName} ${friendsData[0]?.firstName}` : name
+        friendsData.length > 0 && friendsData[0]?.nickname ? friendsData[0]?.nickname : `${friendsChatroom[0]?.user?.lastName} ${friendsChatroom[0]?.user?.firstName}` : name
     // -Active
     let active = navigation.chatroom === chatroom._id
     // -Time display
@@ -65,9 +65,9 @@ function ItemConversationComponent({ data, user, friend, navigation, openDropdow
                 >
                     <AvatarComponent
                         online={
-                            chatroom.type !== "conversation" || friendsData.length !== 1 || !friendsData[0] ? undefined : {
-                                status: friendsData[0].online,
-                                lastOnlineTime: friendsData[0].lastOnlineTime,
+                            chatroom.type !== "conversation" || friendsChatroom.length !== 1 || !friendsChatroom[0] ? undefined : {
+                                status: friendsChatroom[0]?.user?.online,
+                                lastOnlineTime: friendsChatroom[0]?.user?.lastOnlineTime,
                             }
                         }
                         url={type === "conversation" && friendsChatroom.length === 1 ? friendsChatroom[0].user.avatar : undefined}

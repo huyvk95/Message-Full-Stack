@@ -75,7 +75,7 @@ async function create(socket: AGServerSocket, data: any) {
             throw 'error.error_occurred';
 
         // Create chatroom
-        let chatroom: Document | undefined = undefined;
+        let chatroom: Document | null = null;
 
         if (type == common.type.CHAT_ROOM.CONVERSATION) { // -If type of chat if conversation check old chatroom is exist
             // Get friend data
@@ -84,10 +84,15 @@ async function create(socket: AGServerSocket, data: any) {
             let chatroomsData = await UserChatRoom.find({ user: friendData })
             let chatroomsId = chatroomsData.map(o => o.get('chatroom'))
             // Find chat room with me
-            if (!_.isEmpty(chatroomsId)) {
-                let chatroomWithMe = await Chatroom.findOne({ _id: { $in: chatroomsId } })
-                if (chatroomWithMe) chatroom = chatroomWithMe;
+            let userChatroom = await UserChatRoom.findOne({ user: socket.authToken?._id, chatroom: { $in: chatroomsId } })
+            if (userChatroom) {
+                chatroom = await Chatroom.findById(userChatroom.get('chatroom'))
+                    .populate('lastMessage')
             }
+            // if (!_.isEmpty(chatroomsId)) {
+            //     let chatroomWithMe = await Chatroom.findOne({ _id: { $in: chatroomsId } })
+            //     if (chatroomWithMe) chatroom = chatroomWithMe;
+            // }
         }
 
         if (!chatroom) {

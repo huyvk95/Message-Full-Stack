@@ -13,6 +13,8 @@ export default function (state = initializeState, { type, payload }: { type: str
         if (typeof index === 'number' && index !== -1) {
             nstate.splice(index, 1, data)
             return nstate.sort((a, b) => new Date(b.chatroom.updateTime).getTime() - new Date(a.chatroom.updateTime).getTime());
+        } else {
+            return [payload, ...nstate]
         }
     } else if (type === common.action.CHATROOM_UNFOLLOW) {
         let nstate = [...state]

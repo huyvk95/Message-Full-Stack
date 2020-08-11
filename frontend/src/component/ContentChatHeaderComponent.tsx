@@ -13,20 +13,24 @@ function ContentChatHeaderComponent({ chatroom, navigation, friend, setChatroomN
     let chatroomId = navigation.chatroom;
     let chatroomData = chatroom.find(o => o.chatroom._id === chatroomId);
     if (!chatroomData) return <></>
+    let { friendsChatroom } = chatroomData;
     // Get frienddata
     let friendsData = chatroomData.friendsChatroom.map(o => friend.find(oo => oo._id === o.user._id))
     // Chatroom name
     let chatroomName = chatroomData.chatroom.type === 'conversation' ?
-        friendsData.length > 0 && friendsData[0]?.nickname ? friendsData[0]?.nickname : `${friendsData[0]?.lastName} ${friendsData[0]?.firstName}` : chatroomData.chatroom.name
+        friendsData.length > 0 && friendsData[0]?.nickname ?
+            friendsData[0]?.nickname :
+            `${friendsChatroom[0]?.user?.lastName} ${friendsChatroom[0]?.user?.firstName}` :
+        chatroomData.chatroom.name
     // Active time
-    let activeTime = chatroomData.chatroom.type === 'conversation' && friendsData.length > 0 && friendsData[0]?.online ? "Online" :
-        friendsData[0]?.lastOnlineTime ? `Active ${util.string.roundTime(Date.now() - new Date(friendsData[0]?.lastOnlineTime).getTime(), true)} ago` : ""
+    let activeTime = chatroomData.chatroom.type === 'conversation' && friendsChatroom.length > 0 && friendsChatroom[0]?.user?.online ? "Online" :
+        friendsChatroom[0]?.user?.lastOnlineTime ? `Active ${util.string.roundTime(Date.now() - new Date(friendsChatroom[0]?.user?.lastOnlineTime).getTime(), true)} ago` : ""
     // Avatar
-    let avtUrl = chatroomData.chatroom.type === 'conversation' && friendsData.length > 0 ? friendsData[0]?.avatar : undefined
+    let avtUrl = chatroomData.chatroom.type === 'conversation' && friendsChatroom.length > 0 ? friendsChatroom[0]?.user?.avatar : undefined
     // Click handle
     let clickHandle = () => {
-        if (chatroomData && chatroomData.chatroom.type === 'conversation' && friendsData.length > 0 && friendsData[0]) {
-            openPopup({ body: <PopupUserInfoComponent data={friendsData[0]} form="friend" /> })
+        if (chatroomData && chatroomData.chatroom.type === 'conversation' && friendsChatroom.length > 0 && friendsChatroom[0]?.user) {
+            openPopup({ body: <PopupUserInfoComponent data={friendsChatroom[0]?.user} form="friend" /> })
         }
     }
 

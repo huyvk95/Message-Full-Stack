@@ -12,7 +12,7 @@ import { chooseContentTab, choosePeopleTab, setChatroomNavigation } from "../act
 import { getFriend, setFriendNickName, updateFriendData, pushFriend, popFriend } from "../action/FriendActions";
 import { getFriendRequest, popReceiveRequest, popSentRequest, pushReceiveRequest, pushSentRequest } from "../action/FriendRequestActions";
 /* INTERFACE */
-import { IStoreState, ISocketResponseData, ISocketTransmitData, IChatroomReducerData } from "../interface/DataInterface";
+import { IStoreState, ISocketResponseData, ISocketTransmitData, IChatroomReducerData, IMessageData } from "../interface/DataInterface";
 import { IHomeContainerProps } from "../interface/ComponentInterface";
 /* COMPONENT */
 import ContentChatComponent from "../component/ContentChatComponent";
@@ -22,7 +22,6 @@ import ContentBodyComponent from "../component/ContentBodyComponent";
 import common from "../common";
 import { ToastFriendRequestComponent, ToastFriendAcceptComponent } from "../component/ToastsComponent";
 import { EContentTap, EPeopleTap, EViewType } from "../common/TypeCommon";
-import { clearInterval } from "timers";
 import util from "../util";
 
 let interval: NodeJS.Timeout | undefined = undefined
@@ -43,7 +42,7 @@ class HomeContainer extends Component<IHomeContainerProps> {
     }
 
     socketHandle() {
-        let { app, user, cleanUserData } = this.props;
+        let { app, user, navigation, cleanUserData } = this.props;
         let packet = common.packet;
         let event = common.event;
 
@@ -109,6 +108,11 @@ class HomeContainer extends Component<IHomeContainerProps> {
                 console.log(evt, payload)
 
                 if (evt === event.CHATROOM.UPDATE) {
+                    // Navigator
+                    if (app.viewType !== EViewType.MOBILE && !navigation.chatroom) {
+                        setChatroomNavigation((payload as IChatroomReducerData).chatroom._id)
+                    }
+                    // Update chatroom
                     updateChatroom(payload)
                 }
             }
@@ -121,6 +125,12 @@ class HomeContainer extends Component<IHomeContainerProps> {
                 console.log(evt, payload)
 
                 if (evt === event.MESSAGE.RECEIVE) {
+                    // Play audio
+                    if (app.sound) {
+                        let audio = new Audio('./src/mp3/message.mp3')
+                        audio.play()
+                    }
+                    // Add message
                     receiveMessage(payload)
                 }
             }
