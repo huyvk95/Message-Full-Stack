@@ -22,18 +22,18 @@ function ContentSettingDropComponents({ logout, openPopup }: { logout: Function,
                     })
                 }}
             >
-                Cài đặt
+                Setting
             </Button>
             <div className="drop_seperate" />
-            <Button variant="outline-secondary drop_item">Giới thiệu</Button>
-            <Button variant="outline-secondary drop_item">Điều khoản</Button>
-            <Button variant="outline-secondary drop_item">Chính sách quyền riêng tư</Button>
-            <Button variant="outline-secondary drop_item">Chính sách về cookie</Button>
+            <Button variant="outline-secondary drop_item">About</Button>
+            <Button variant="outline-secondary drop_item">Rule</Button>
+            <Button variant="outline-secondary drop_item">Privacy policy</Button>
+            <Button variant="outline-secondary drop_item">Cookie policy</Button>
             <div className="drop_seperate" />
-            <Button variant="outline-secondary drop_item">Trợ giúp</Button>
-            <Button variant="outline-secondary drop_item">Báo cáo sự cố</Button>
+            <Button variant="outline-secondary drop_item">Help</Button>
+            <Button variant="outline-secondary drop_item">Report problem</Button>
             <div className="drop_seperate" />
-            <Button variant="outline-secondary drop_item" onClick={() => { logout() }}>Đăng xuất</Button>
+            <Button variant="outline-secondary drop_item" onClick={() => { logout() }}>Logout</Button>
         </div>
     )
 }

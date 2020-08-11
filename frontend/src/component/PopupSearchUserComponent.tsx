@@ -42,7 +42,7 @@ export default function PopupSearchUserComponent() {
                     </InputGroup.Text>
                 </InputGroup.Prepend>
                 <FormControl
-                    placeholder="Tìm kiếm trên Message"
+                    placeholder="Find on message"
                     aria-label="Username"
                     aria-describedby="basic-addon1"
                     onChange={onInputChange}
