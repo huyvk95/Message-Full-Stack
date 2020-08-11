@@ -15,6 +15,11 @@ export interface ILoginContainerState {
     lastName: string,
     password: string,
     confirmPassword: string,
+    isEmailFail: string,
+    isPasswordFail: string,
+    isConfirmPasswordFail: string,
+    isFirstNameFail: string,
+    isLastNameFail: string,
 }
 
 /* HOME */

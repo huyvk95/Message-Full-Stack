@@ -42,6 +42,9 @@ button:focus {
   outline: none;
   box-shadow: none; }
 
+form .invalid {
+  color: var(--danger); }
+
 .link {
   color: var(--blue) !important; }
 
@@ -221,6 +224,9 @@ button:focus {
   border: none; }
   .modal-content .modal-body {
     padding: 0px; }
+
+.tooltip-inner {
+  font-family: "HelveticaNeue-Normal" !important; }
 
 .login {
   width: 100vw;
@@ -415,6 +421,14 @@ button:focus {
 @media (max-width: 575.98px) {
   .home {
     display: block; } }
+
+.verify {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  height: 100vh; }
 
 .avatar {
   display: inline-flex; }

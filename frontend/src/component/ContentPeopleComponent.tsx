@@ -14,14 +14,14 @@ function ContentPeopleComponent({ navigation, friend, friendRequest, choosePeopl
             <div className="navigation px-3 py-2">
                 <Button
                     variant="outline-primary"
-                    className="btn-outline-custom"
+                    className={`btn-outline-custom ${navigation.peopleTab === EPeopleTap.PEOPLE? "text-dark":"text-light"}`}
                     onClick={() => { choosePeopleTab(EPeopleTap.PEOPLE) }}
                 >
                     {`Friends${friend.length ? ` (${friend.length})` : ""}`}
                 </Button>
                 <Button
                     variant="outline-primary"
-                    className="btn-outline-custom"
+                    className={`btn-outline-custom ${navigation.peopleTab === EPeopleTap.REQUEST? "text-dark":"text-light"}`}
                     onClick={() => { choosePeopleTab(EPeopleTap.REQUEST) }}
                 >
                     {`Request${friendRequest.receive.length ? ` (${friendRequest.receive.length})` : ""}`}
