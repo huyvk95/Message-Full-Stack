@@ -9,8 +9,9 @@ import { setChatroomNavigation } from "../action/NavigationActions";
 import DropdownConversationComponent from "./DropdownConversationComponent";
 import socket from "../socket";
 import common from "../common";
+import { EViewType } from "../common/TypeCommon";
 
-function ItemConversationComponent({ data, user, friend, navigation, openDropdown, setChatroomNavigation }: IItemConversationProps) {
+function ItemConversationComponent({ data, user, friend, navigation, openDropdown, setChatroomNavigation, app }: IItemConversationProps) {
     // Props
     let { chatroom, friendsChatroom, myChatroom } = data;
     let { lastMessage, name, type, _id: chatroomId } = chatroom;
@@ -56,10 +57,12 @@ function ItemConversationComponent({ data, user, friend, navigation, openDropdow
             className={`conversation-item px-2 ${myChatroom.show && myChatroom.active ? "d-block" : "d-none"}`}
             onMouseOver={() => { setHover(true) }}
             onMouseLeave={() => { setHover(false) }}
-            onClick={onClickItem}
         >
             <div className={`conversation-background px-2 py-2 ${active ? "active" : ""}`}>
-                <div className="left">
+                <div
+                    className="left"
+                    onClick={onClickItem}
+                >
                     <AvatarComponent
                         online={
                             chatroom.type !== "conversation" || friendsData.length !== 1 || !friendsData[0] ? undefined : {
@@ -84,7 +87,7 @@ function ItemConversationComponent({ data, user, friend, navigation, openDropdow
                             <button
                                 onClick={(event: React.MouseEvent<HTMLElement, MouseEvent>) => {
                                     let rect = ((event.target as any).getBoundingClientRect())
-                                    openDropdown(<DropdownConversationComponent chatroom={data} />, { x: rect.left - 10, y: rect.bottom + 5 })
+                                    openDropdown(<DropdownConversationComponent chatroom={data} />, { x: app.viewType === EViewType.WINDOW ? rect.left - 10 : rect.left - 130, y: rect.bottom + 5 })
                                 }}
                             >
                                 <i className="fa fa-ellipsis-h" />
@@ -108,4 +111,4 @@ function ItemConversationComponent({ data, user, friend, navigation, openDropdow
     )
 }
 
-export default connect(({ user, friend, navigation }: IStoreState) => ({ user, friend, navigation }), { openDropdown, setChatroomNavigation })(ItemConversationComponent)
+export default connect(({ user, friend, navigation, app }: IStoreState) => ({ user, friend, navigation, app }), { openDropdown, setChatroomNavigation })(ItemConversationComponent)

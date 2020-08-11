@@ -8,11 +8,11 @@ import { pushToast } from "../action/AppActions";
 import { cleanUserData } from "../action/UserActions";
 import { receiveMessage, getMessages } from "../action/MessageActions";
 import { getAllChatrooms, createChatroom, unfollowChatroom, updateChatroom } from "../action/ChatroomActions";
-import { chooseContentTab, choosePeopleTab } from "../action/NavigationActions";
+import { chooseContentTab, choosePeopleTab, setChatroomNavigation } from "../action/NavigationActions";
 import { getFriend, setFriendNickName, updateFriendData, pushFriend, popFriend } from "../action/FriendActions";
 import { getFriendRequest, popReceiveRequest, popSentRequest, pushReceiveRequest, pushSentRequest } from "../action/FriendRequestActions";
 /* INTERFACE */
-import { IStoreState, ISocketResponseData, ISocketTransmitData } from "../interface/DataInterface";
+import { IStoreState, ISocketResponseData, ISocketTransmitData, IChatroomReducerData } from "../interface/DataInterface";
 import { IHomeContainerProps } from "../interface/ComponentInterface";
 /* COMPONENT */
 import ContentChatComponent from "../component/ContentChatComponent";
@@ -21,7 +21,7 @@ import ContentFooterComponent from "../component/ContentFooterComponent";
 import ContentBodyComponent from "../component/ContentBodyComponent";
 import common from "../common";
 import { ToastFriendRequestComponent, ToastFriendAcceptComponent } from "../component/ToastsComponent";
-import { EContentTap, EPeopleTap } from "../common/TypeCommon";
+import { EContentTap, EPeopleTap, EViewType } from "../common/TypeCommon";
 
 class HomeContainer extends Component<IHomeContainerProps> {
     constructor(props: IHomeContainerProps) {
@@ -152,7 +152,7 @@ class HomeContainer extends Component<IHomeContainerProps> {
         })();
 
         // -CHAT_ROOM
-        let { getAllChatrooms, createChatroom, unfollowChatroom } = this.props;
+        let { getAllChatrooms, createChatroom, unfollowChatroom, setChatroomNavigation } = this.props;
         (async () => {
             for await (let data of sc.receiver(packet.CHATROOM)) {
                 let { evt, payload } = data as ISocketResponseData
@@ -166,6 +166,8 @@ class HomeContainer extends Component<IHomeContainerProps> {
 
                 } else if (evt === event.CHATROOM.GETALLUSERCHATROOMS) {
                     getAllChatrooms(payload)
+                    if (payload.data && payload.data.length && app.viewType === EViewType.WINDOW)
+                        setChatroomNavigation((payload.data as IChatroomReducerData[])[0].chatroom._id)
                 }
             }
         })();
@@ -196,22 +198,43 @@ class HomeContainer extends Component<IHomeContainerProps> {
     }
 
     render() {
+        let { app, navigation } = this.props;
+
         return (
             <div className="home">
-                <div className="content">
-                    <ContentHeaderComponent />
-                    <ContentBodyComponent />
-                    <ContentFooterComponent />
-                </div>
-                <ContentChatComponent />
+                {
+                    app.viewType === EViewType.MOBILE ?
+                        <>
+                            {
+                                navigation.chatroom ?
+                                    <ContentChatComponent />
+                                    :
+                                    <div className="content">
+                                        <ContentHeaderComponent />
+                                        <ContentBodyComponent />
+                                        <ContentFooterComponent />
+                                    </div>
+                            }
+                        </>
+                        :
+                        <>
+                            <div className="content">
+                                <ContentHeaderComponent />
+                                <ContentBodyComponent />
+                                <ContentFooterComponent />
+                            </div>
+                            <ContentChatComponent />
+                        </>
+                }
             </div>
         )
     }
 }
 
-const mapStateToProps = ({ app, user }: IStoreState) => ({
+const mapStateToProps = ({ app, user, navigation }: IStoreState) => ({
     app,
-    user
+    user,
+    navigation
 })
 
 const mapDispatchToProps = {
@@ -234,6 +257,8 @@ const mapDispatchToProps = {
     unfollowChatroom,
     updateChatroom,
     receiveMessage,
-    getMessages
+    getMessages,
+    setChatroomNavigation
 }
+
 export default connect(mapStateToProps, mapDispatchToProps)(HomeContainer);

@@ -9,8 +9,9 @@ import util from "../util";
 import PopupSearchUserComponent from "./PopupSearchUserComponent";
 import DropdownSettingComponent from "./DropdownSettingComponent";
 import PopupProfileComponents from "./PopupProfileComponents";
+import { EViewType } from "../common/TypeCommon";
 
-function ContentHeaderComponent({ openPopup, openDropdown, navigation, user }: IContentHeaderProps) {
+function ContentHeaderComponent({ openPopup, openDropdown, navigation, user, app }: IContentHeaderProps) {
     return (
         <div className="content-header justify-content-between px-3 py-2 position-relative">
             <div className="d-flex align-items-center" style={{ width: "100px" }}>
@@ -18,7 +19,11 @@ function ContentHeaderComponent({ openPopup, openDropdown, navigation, user }: I
                     url={user.avatar}
                     size="normal"
                     className="mr-3"
-                    onClick={() => { openPopup({ body: <PopupProfileComponents /> }) }}
+                    onClick={() => {
+                        openPopup({
+                            body: <PopupProfileComponents />
+                        })
+                    }}
                 />
             </div>
             <h1 className="text-23 text-bold m-0 text-capitalize">
@@ -30,7 +35,7 @@ function ContentHeaderComponent({ openPopup, openDropdown, navigation, user }: I
                     className="btn-outline-custom btn-circle mr-3"
                     onClick={(event: React.MouseEvent<HTMLElement, MouseEvent>) => {
                         let rect = ((event.target as any).getBoundingClientRect())
-                        openDropdown(<DropdownSettingComponent />, { x: rect.left - 10, y: rect.bottom + 15 })
+                        openDropdown(<DropdownSettingComponent />, { x: app.viewType === EViewType.WINDOW ? rect.left - 10 : rect.left - 130, y: rect.bottom + 15 })
                     }}
                 >
                     <i className="fa fa-cog" />
@@ -57,7 +62,7 @@ function ContentHeaderComponent({ openPopup, openDropdown, navigation, user }: I
     )
 }
 
-const mapStateToProps = ({ navigation, user }: IStoreState) => ({ navigation, user })
+const mapStateToProps = ({ navigation, user, app }: IStoreState) => ({ navigation, user, app })
 const mapDispatchToProps = { openPopup, openDropdown }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ContentHeaderComponent);

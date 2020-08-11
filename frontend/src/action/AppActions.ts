@@ -2,6 +2,7 @@ import common from "../common";
 import { v4 as uuidv4 } from "uuid";
 import * as api from "../Api";
 import { IToastItemProps, IPopupProps } from "../interface/ComponentInterface";
+import { EViewType } from "../common/TypeCommon";
 
 export function initialize() {
     /* __Device Id__ */
@@ -51,6 +52,13 @@ export function initialize() {
             sound,
             notification
         },
+    }
+}
+
+export function setAppViewType(type: EViewType) {
+    return {
+        type: common.action.SET_VIEW_TYPE,
+        payload: type
     }
 }
 

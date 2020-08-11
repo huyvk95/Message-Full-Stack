@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { IContentChatMessageProps } from "../interface/ComponentInterface";
 import { connect } from "react-redux";
 import { IStoreState, IMessageData, IUserData, IFriendData } from "../interface/DataInterface";
@@ -6,7 +6,24 @@ import socket from "../socket";
 import common from "../common";
 import AvatarComponent from "./AvatarComponent";
 
+let timeout: NodeJS.Timeout | undefined = undefined
 function ContentChatMessagesComponent({ chatroom, navigation, message, user }: IContentChatMessageProps) {
+    let [update, setUpdate]: [number, Function] = useState(0);
+    // On drag
+    window.addEventListener('resize', (...a) => {
+        if (timeout) {
+            clearTimeout(timeout);
+            timeout = undefined;
+        }
+        timeout = setTimeout(() => {
+            if (timeout) {
+                clearTimeout(timeout);
+                timeout = undefined;
+            }
+            setUpdate(Math.random())
+        }, 100);
+    })
+    let height = window.innerHeight - 57 - 50;
     // Get chatroom data
     let chatroomId = navigation.chatroom;
     let chatroomData = chatroom.find(o => o.chatroom._id === chatroomId);
@@ -15,6 +32,8 @@ function ContentChatMessagesComponent({ chatroom, navigation, message, user }: I
             Let's start your first conversation
         </div>
     )
+
+    // Get message list
     let messageData: IMessageData[] = [];
     if (chatroomId && message[chatroomId]) {
         messageData = message[chatroomId]
@@ -25,7 +44,7 @@ function ContentChatMessagesComponent({ chatroom, navigation, message, user }: I
     }
 
     return (
-        <div className="chat-area" style={{ height: window.innerHeight - 57 - 50 }}>
+        <div className="chat-area" style={{ height: update ? height : height }}>
             {
                 messageData.map((o, i) => (
                     <ItemChatMessagesComponent

@@ -12,3 +12,8 @@ export enum EPeopleTap {
     PEOPLE = 'PEOPLE',
     REQUEST = 'REQUEST'
 }
+
+export enum EViewType {
+    WINDOW = "WINDOW",
+    MOBILE = "MOBILE"
+}

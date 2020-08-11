@@ -1,4 +1,4 @@
-import { EContentTap, EPeopleTap } from "../common/TypeCommon";
+import { EContentTap, EPeopleTap, EViewType } from "../common/TypeCommon";
 import { IToastItemProps, IPopupProps } from "./ComponentInterface";
 
 /* Reducer data */
@@ -44,6 +44,7 @@ export interface IAppData {
     deviceId: string,
     notification: boolean,
     sound: boolean,
+    viewType: string
     toast?: IToastItemProps,
     dropdown?: {
         content: JSX.Element,

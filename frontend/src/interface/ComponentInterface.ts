@@ -21,6 +21,7 @@ export interface ILoginContainerState {
 export interface IHomeContainerProps {
     app: IAppData,
     user: IUserData,
+    navigation: INavigatorData
     cleanUserData: Function
     getFriend: Function
     pushFriend: Function
@@ -41,6 +42,7 @@ export interface IHomeContainerProps {
     updateChatroom: Function
     receiveMessage: Function
     getMessages: Function
+    setChatroomNavigation: Function
 }
 
 /* _______________COMPONENT_______________ */
@@ -96,6 +98,7 @@ export interface IPopupProps {
 }
 
 export interface IContentHeaderProps {
+    app: IAppData,
     navigation: INavigatorData
     user: IUserData
     openPopup: Function
@@ -140,6 +143,7 @@ export interface IPopupProfileProps {
 }
 
 export interface IItemConversationProps { 
+    app: IAppData,
     data: IChatroomReducerData,
     user: IUserData, 
     friend: IFriendData[] 
@@ -164,6 +168,8 @@ export interface IContentChatProps {
 
 export interface IContentChatHeaderProps extends IContentChatProps{
     friend: IFriendData[]
+    setChatroomNavigation: Function
+    openPopup: Function
 }
 
 export interface IContentChatControlProps extends IContentChatProps{
