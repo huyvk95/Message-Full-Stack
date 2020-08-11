@@ -27,3 +27,12 @@ export function setChatroomNavigation(id: string) {
         })
     }
 }
+
+export function setConversationViewType(type: string) {
+    return async function (dispatch: Function) {
+        dispatch({
+            type: common.action.SET_CONVERSATION_VIEW,
+            payload: type
+        })
+    }
+}

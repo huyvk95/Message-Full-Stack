@@ -29,6 +29,8 @@ const event = {
         GETALLUSERCHATROOMS: "getAllUserChatrooms",
         MASK_AS_READ: "maskAsRead",
         MASK_AS_UNREAD: "maskAsUnread",
+        SET_ARCHIVE: "setArchive",
+        SET_BLOCK: "setBlock",
         // TRAMSMIT EVENT
         UPDATE: "update",
     },

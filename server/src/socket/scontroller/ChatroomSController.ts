@@ -30,7 +30,7 @@ async function getAllUserChatrooms(socket: AGServerSocket, data: any) {
                 .populate({ path: 'user', select: common.dbselect.user })
             return { chatroom, myChatroom, friendsChatroom };
         }))
-            // .then(data => data.sort((a, b) => new Date(b.chatroom?.get('updateTime')).getTime() - new Date(a.chatroom?.get('updateTime')).getTime()))
+        // .then(data => data.sort((a, b) => new Date(b.chatroom?.get('updateTime')).getTime() - new Date(a.chatroom?.get('updateTime')).getTime()))
         // Response
         send(socket, {
             evt: EVENT.GETALLUSERCHATROOMS,
@@ -122,7 +122,8 @@ async function create(socket: AGServerSocket, data: any) {
                     user: userId,
                     archive,
                     show: type === 'conversation' && userId != socket.authToken?._id ? false : true,
-                    chatroom: (chatroom as Document).get('_id')
+                    chatroom: (chatroom as Document).get('_id'),
+                    updateTime: new Date()
                 })
             }
 
@@ -304,6 +305,103 @@ async function maskAsUnread(agServer: AGServer, socket: AGServerSocket, data: an
     }
 }
 
+async function setArchive(agServer: AGServer, socket: AGServerSocket, data: any) {
+    try {
+        let { archive, userChatroomId } = data;
+        if (!_.isString(userChatroomId) || !_.isBoolean(archive)) throw 'error.bad';
+        // Get all user
+        let user = await User.findById(socket.authToken?._id)
+            .select(common.dbselect.user)
+        if (!user) throw 'error.find_user';
+        // Find my chatroom
+        let myChatroom = await UserChatRoom.findOne({ _id: userChatroomId, user: socket.authToken?._id })
+            .select(common.dbselect.userChatroom)
+            .populate({ path: 'user', select: common.dbselect.user })
+        if (!myChatroom) throw 'error.never_follow_chatroom';
+        // Get chatroom
+        let chatroom = await Chatroom.findById(myChatroom.get('chatroom'))
+            .populate('lastMessage')
+        if (!chatroom) throw 'error.chatroom_exist';
+        // Get friends chatroom
+        let friendsChatroom = await UserChatRoom.find({ chatroom: myChatroom.get('chatroom'), user: { $ne: socket.authToken?._id } })
+            .select(common.dbselect.userChatroom)
+            .populate({ path: 'user', select: common.dbselect.user })
+        // Handle
+        myChatroom.set('archive', archive)
+        await myChatroom.save();
+        // Response
+        // -Response to everyone
+        [myChatroom, ...friendsChatroom].forEach(userChatroom => {
+            let fsockets: AGServerSocket[] = _.compact(userChatroom.get('user').get('socketId').map((o: string) => agServer.clients[o]))
+            let transData = {
+                evt: EVENT.UPDATE,
+                payload: {
+                    chatroom,
+                    myChatroom: userChatroom,
+                    friendsChatroom: [myChatroom, ...friendsChatroom].filter(o => o?.get('user').get('_id') !== userChatroom.get('user').get('_id'))
+                }
+            }
+            if (fsockets) fsockets.forEach(o => o.transmit(PACKET, transData, {}))
+        })
+    } catch (error) {
+        send(socket, {
+            evt: EVENT.SET_ARCHIVE,
+            payload: {
+                success: false,
+                message: error
+            }
+        })
+    }
+}
+
+async function setBlock(agServer: AGServer, socket: AGServerSocket, data: any) {
+    try {
+        let { block, userChatroomId } = data;
+        if (!_.isString(userChatroomId) || !_.isBoolean(block)) throw 'error.bad';
+        // Get all user
+        let user = await User.findById(socket.authToken?._id)
+            .select(common.dbselect.user)
+        if (!user) throw 'error.find_user';
+        // Find my chatroom
+        let myChatroom = await UserChatRoom.findOne({ _id: userChatroomId, user: socket.authToken?._id })
+            .select(common.dbselect.userChatroom)
+            .populate({ path: 'user', select: common.dbselect.user })
+        if (!myChatroom) throw 'error.never_follow_chatroom';
+        // Get chatroom
+        let chatroom = await Chatroom.findById(myChatroom.get('chatroom'))
+            .populate('lastMessage')
+        if (!chatroom) throw 'error.chatroom_exist';
+        // Get friends chatroom
+        let friendsChatroom = await UserChatRoom.find({ chatroom: myChatroom.get('chatroom'), user: { $ne: socket.authToken?._id } })
+            .select(common.dbselect.userChatroom)
+            .populate({ path: 'user', select: common.dbselect.user })
+        // Handle
+        myChatroom.set('block', block)
+        await myChatroom.save();
+        // Response
+        // -Response to everyone
+        [myChatroom, ...friendsChatroom].forEach(userChatroom => {
+            let fsockets: AGServerSocket[] = _.compact(userChatroom.get('user').get('socketId').map((o: string) => agServer.clients[o]))
+            let transData = {
+                evt: EVENT.UPDATE,
+                payload: {
+                    chatroom,
+                    myChatroom: userChatroom,
+                    friendsChatroom: [myChatroom, ...friendsChatroom].filter(o => o?.get('user').get('_id') !== userChatroom.get('user').get('_id'))
+                }
+            }
+            if (fsockets) fsockets.forEach(o => o.transmit(PACKET, transData, {}))
+        })
+    } catch (error) {
+        send(socket, {
+            evt: EVENT.SET_BLOCK,
+            payload: {
+                success: false,
+                message: error
+            }
+        })
+    }
+}
 // Done done
 async function invite(socket: AGServerSocket, data: any) {
     try {
@@ -323,6 +421,7 @@ async function invite(socket: AGServerSocket, data: any) {
             user: userId,
             archive: friendData ? false : true,
             chatroom: chatroomId,
+            updateTime: new Date()
         })
         await userChatroom.save()
         // Add chatroom user
@@ -373,6 +472,12 @@ function connection(agServer: AGServer, socket: AGServerSocket) {
                         break
                     case EVENT.MASK_AS_UNREAD:
                         await maskAsUnread(agServer, socket, data)
+                        break
+                    case EVENT.SET_ARCHIVE:
+                        await setArchive(agServer, socket, data)
+                        break
+                    case EVENT.SET_BLOCK:
+                        await setBlock(agServer, socket, data)
                         break
                     default:
                         break;

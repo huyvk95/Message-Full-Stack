@@ -9,7 +9,7 @@ import { setChatroomNavigation } from "../action/NavigationActions";
 import DropdownConversationComponent from "./DropdownConversationComponent";
 import socket from "../socket";
 import common from "../common";
-import { EViewType } from "../common/TypeCommon";
+import { EViewType, EConversationType } from "../common/TypeCommon";
 
 function ItemConversationComponent({ data, user, friend, navigation, openDropdown, setChatroomNavigation, app }: IItemConversationProps) {
     // Props
@@ -38,6 +38,10 @@ function ItemConversationComponent({ data, user, friend, navigation, openDropdow
     }
     // -Message prefix
     let msgPrefix = lastMessage && lastMessage.user === user._id ? "You: " : ""
+    // -Check hide
+    let show = (navigation.conversationView === EConversationType.NORMAL && myChatroom.show && !myChatroom.block && !myChatroom.archive && myChatroom.active) ||
+        (navigation.conversationView === EConversationType.ARCHIVE && myChatroom.show && myChatroom.archive && myChatroom.active) ||
+        (navigation.conversationView === EConversationType.BLOCK && myChatroom.show && myChatroom.block && myChatroom.active)
 
     const onClickItem = () => {
         // Send read
@@ -54,7 +58,7 @@ function ItemConversationComponent({ data, user, friend, navigation, openDropdow
 
     return (
         <div
-            className={`conversation-item px-2 ${myChatroom.show && !myChatroom.block && !myChatroom.archive && myChatroom.active ? "d-block" : "d-none"}`}
+            className={`conversation-item px-2 ${show ? "d-block" : "d-none"}`}
             onMouseOver={() => { setHover(true) }}
             onMouseLeave={() => { setHover(false) }}
         >

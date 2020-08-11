@@ -49,7 +49,38 @@ function DropdownConversationComponent({ openPopup, chatroom: chatroomData }: ID
                     myChatroom.read ? "Mask as unread" : "Mask as read"
                 }
             </Button>
-            <Button variant="outline-secondary drop_item">Archive</Button>
+            <Button
+                variant="outline-secondary drop_item"
+                onClick={() => {
+                    // Send read
+                    let sc = socket.getSocket();
+                    if (!sc) return
+                    sc.transmit(common.packet.CHATROOM, {
+                        evt: common.event.CHATROOM.SET_ARCHIVE,
+                        data: { userChatroomId: myChatroom._id, archive: !myChatroom.archive }
+                    })
+                }}
+            >
+                {
+                    myChatroom.archive ? "Unarchive" : "Archive"
+                }
+            </Button>
+            <Button
+                variant="outline-secondary drop_item"
+                onClick={() => {
+                    // Send read
+                    let sc = socket.getSocket();
+                    if (!sc) return
+                    sc.transmit(common.packet.CHATROOM, {
+                        evt: common.event.CHATROOM.SET_BLOCK,
+                        data: { userChatroomId: myChatroom._id, block: !myChatroom.block }
+                    })
+                }}
+            >
+                {
+                    myChatroom.block ? "Unblock" : "Block"
+                }
+            </Button>
         </div>
     )
 }

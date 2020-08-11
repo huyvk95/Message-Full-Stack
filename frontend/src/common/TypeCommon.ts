@@ -17,3 +17,9 @@ export enum EViewType {
     WINDOW = "WINDOW",
     MOBILE = "MOBILE"
 }
+
+export enum EConversationType {
+    NORMAL = "NORMAL",
+    ARCHIVE = "ARCHIVE",
+    BLOCK = "BLOCK",
+}

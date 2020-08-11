@@ -59,6 +59,7 @@ export interface INavigatorData {
     contentTab: EContentTap,
     peopleTab: EPeopleTap
     chatroom?: string,
+    conversationView: string,
 }
 
 export interface IChatroomReducerData {
