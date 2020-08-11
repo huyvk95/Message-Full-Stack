@@ -22,7 +22,10 @@ import ContentBodyComponent from "../component/ContentBodyComponent";
 import common from "../common";
 import { ToastFriendRequestComponent, ToastFriendAcceptComponent } from "../component/ToastsComponent";
 import { EContentTap, EPeopleTap, EViewType } from "../common/TypeCommon";
+import { clearInterval } from "timers";
+import util from "../util";
 
+let interval: NodeJS.Timeout | undefined = undefined
 class HomeContainer extends Component<IHomeContainerProps> {
     constructor(props: IHomeContainerProps) {
         super(props);
@@ -199,7 +202,26 @@ class HomeContainer extends Component<IHomeContainerProps> {
 
     render() {
         let { app, navigation } = this.props;
+        // Change tabview
+        if (interval) {
+            clearTimeout(interval);
+            interval = undefined;
+        }
+        if (app.unreadChatroom) {
+            // Fav icon
+            util.common.changeFAVIcon('./src/images/icon-noti.svg')
+            // Change title
+            interval = setInterval(() => {
+                document.title = document.title !== common.config.APP_NAME ? common.config.APP_NAME : "You have received a new message";
+            }, 1000)
+        } else {
+            // Fav icon
+            util.common.changeFAVIcon('./src/images/icon.svg')
+            // Change title
+            document.title = common.config.APP_NAME;
+        }
 
+        // Render
         return (
             <div className="home">
                 {

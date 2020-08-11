@@ -45,6 +45,7 @@ export interface IAppData {
     notification: boolean,
     sound: boolean,
     viewType: string
+    unreadChatroom: boolean,
     toast?: IToastItemProps,
     dropdown?: {
         content: JSX.Element,

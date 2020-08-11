@@ -1,6 +1,7 @@
 import common from "../common";
-import { IPayloadData, IChatroomReducerData, IFriendData } from "../interface/DataInterface";
+import { IPayloadData, IChatroomReducerData } from "../interface/DataInterface";
 import { setChatroomNavigation } from "./NavigationActions";
+import { setUnreadChatroom } from "./AppActions";
 
 export function createChatroom({ success, data, message }: IPayloadData) {
     return async function (dispatch: Function) {
@@ -21,6 +22,8 @@ export function createChatroom({ success, data, message }: IPayloadData) {
 
 export function updateChatroom(data: IChatroomReducerData) {
     return async function (dispatch: Function) {
+        dispatch(setUnreadChatroom(!data.myChatroom.read))
+
         dispatch({
             type: common.action.CHATROOM_UPDATE,
             payload: data

@@ -4,7 +4,6 @@ import { IStoreState } from "../interface/DataInterface";
 import { chooseContentTab } from "../action/NavigationActions";
 import { IFooterComponentProps } from "../interface/ComponentInterface";
 import { EContentTap } from "../common/TypeCommon";
-import { pushToast } from "../action/AppActions";
 
 function ContentFooterComponent({ navigation, chooseContentTab }: IFooterComponentProps) {
     let tab = navigation.contentTab;

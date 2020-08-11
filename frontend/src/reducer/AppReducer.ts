@@ -6,6 +6,7 @@ let initializeState: IAppData = {
     lang: 'en',
     deviceId: '',
     viewType: EViewType.WINDOW,
+    unreadChatroom: false,
     notification: true,
     sound: true,
     toast: undefined,
@@ -18,6 +19,8 @@ export default function (state = initializeState, action: { type: string, payloa
             return Object.assign({}, state, action.payload);
         case common.action.SET_VIEW_TYPE:
             return Object.assign({}, state, { viewType: action.payload });
+        case common.action.SET_UNREAD_STATE:
+            return Object.assign({}, state, { unreadChatroom: action.payload });
         case common.action.PUSH_TOAST:
             return Object.assign({}, state, { toast: action.payload });
         case common.action.TOGGLE_SOUND:

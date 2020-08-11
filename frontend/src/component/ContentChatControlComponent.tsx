@@ -32,6 +32,18 @@ function ContentChatControlComponent({ chatroom, navigation }: IContentChatContr
         setText((event.target as any).value);
     }
 
+    const onForcusInput = () => {
+        if (chatroomData && !chatroomData?.myChatroom.read) {
+            let sc = socket.getSocket();
+            if (sc) {
+                sc.transmit(common.packet.CHATROOM, {
+                    evt: common.event.CHATROOM.MASK_AS_READ,
+                    data: { userChatroomId: chatroomData.myChatroom._id }
+                })
+            }
+        }
+    }
+
     return (
         <Form
             className="control-area px-3 py-2"
@@ -44,6 +56,7 @@ function ContentChatControlComponent({ chatroom, navigation }: IContentChatContr
                     value={text}
                     aria-describedby="basic-addon1"
                     onChange={onChangeText}
+                    onFocus={onForcusInput}
                 />
                 <InputGroup.Append>
                     <InputGroup.Text id="basic-addon1"></InputGroup.Text>

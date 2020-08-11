@@ -3,6 +3,8 @@ import { v4 as uuidv4 } from "uuid";
 import * as api from "../Api";
 import { IToastItemProps, IPopupProps } from "../interface/ComponentInterface";
 import { EViewType } from "../common/TypeCommon";
+import { IMessageData, IChatroomReducerData } from "../interface/DataInterface";
+import { type } from "os";
 
 export function initialize() {
     /* __Device Id__ */
@@ -59,6 +61,13 @@ export function setAppViewType(type: EViewType) {
     return {
         type: common.action.SET_VIEW_TYPE,
         payload: type
+    }
+}
+
+export function setUnreadChatroom(state: boolean) {
+    return {
+        type: common.action.SET_UNREAD_STATE,
+        payload: state
     }
 }
 
