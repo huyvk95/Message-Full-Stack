@@ -41,10 +41,11 @@ const UserChatRoomSchema = new Schema({
     user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
     read: { type: Boolean, default: true },
     notification: { type: Boolean, default: true },
-    archive: { type: Boolean, default: true },
+    archive: { type: Boolean, default: false },
     block: { type: Boolean, default: false },
     chatroom: { type: Schema.Types.ObjectId, ref: 'Chatroom', required: true },
     show:  { type: Boolean, default: false },
+    updateTime: { type: Date, required: true },
     active: { type: Boolean, default: true },
 })
 

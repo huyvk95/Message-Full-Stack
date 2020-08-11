@@ -118,17 +118,17 @@ function PopupUserInfoComponent(
                 </div>
             </div>
             <div className="control-area">
-                {
+                {/* {
                     friend.every(o => o._id !== _id) ?
                         <>:</>
-                        :
-                        <Button
-                            variant="outline-primary"
-                            onClick={onClickChat}
-                        >
-                            <i className="fa fa-comment" />
-                        </Button>
-                }
+                        : */}
+                <Button
+                    variant="outline-primary"
+                    onClick={onClickChat}
+                >
+                    <i className="fa fa-comment" />
+                </Button>
+                {/* } */}
                 {
                     friend.every(o => o._id !== _id) ?
                         <Button variant={requestSent ? "outline-danger" : "outline-primary"} onClick={requestSent ? onCancelFriendRequest : onSendFriendRequest}>

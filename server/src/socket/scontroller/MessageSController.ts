@@ -45,11 +45,13 @@ async function sendMessage(agServer: AGServer, socket: AGServerSocket, data: any
         // -User chatrooom update
         // --Mychatroom
         myChatroom.set('read', true)
+        myChatroom.set("updateTime", new Date());
         if (!myChatroom.get('show')) myChatroom.set('show', true)
         await myChatroom.save()
         // --Friend chatroom
         await Promise.all(friendsChatroom.map(async userChatroom => {
             userChatroom.set('read', false)
+            userChatroom.set("updateTime", new Date());
             if (!userChatroom.get('show')) userChatroom.set('show', true)
             if (!userChatroom.get('active')) userChatroom.set('active', true)
             await userChatroom.save()
@@ -90,12 +92,13 @@ async function getMessages(socket: AGServerSocket, data: any) {
     try {
         let { skip, chatroomId } = data
         // Input handle
-        if(!_.isNumber(skip)) skip = 0;
+        if (!_.isNumber(skip)) skip = 0;
         if (!_.isString(chatroomId) || !_.isNumber(skip)) throw 'error.bad';
         // Get and check data
         const limit = 25;
         let messages = await Message.find({ chatroom: chatroomId })
             .populate('user')
+            .sort({ "createdTime": -1 })
             .skip(skip)
             .limit(limit)
         // Response to everyone

@@ -18,6 +18,7 @@ async function getAllUserChatrooms(socket: AGServerSocket, data: any) {
         // Get all user chatroom data
         let userChatrooms = await UserChatRoom.find({ user: socket.authToken?._id, show: true, active: true })
             .populate({ path: 'user', select: common.dbselect.user })
+            .sort({ "updateTime": -1 })
             .skip(skip)
             .limit(limit)
 
@@ -29,7 +30,7 @@ async function getAllUserChatrooms(socket: AGServerSocket, data: any) {
                 .populate({ path: 'user', select: common.dbselect.user })
             return { chatroom, myChatroom, friendsChatroom };
         }))
-            .then(data => data.sort((a, b) => new Date(b.chatroom?.get('updateTime')).getTime() - new Date(a.chatroom?.get('updateTime')).getTime()))
+            // .then(data => data.sort((a, b) => new Date(b.chatroom?.get('updateTime')).getTime() - new Date(a.chatroom?.get('updateTime')).getTime()))
         // Response
         send(socket, {
             evt: EVENT.GETALLUSERCHATROOMS,
@@ -103,10 +104,10 @@ async function create(socket: AGServerSocket, data: any) {
         // Create chatroom data
         let usersChatroom = await Promise.all(users.map(async (userId: string) => {
             // If user is not mine and is friend with me, archive is true
-            let archive = userId == socket.authToken?._id ? true : false;
-            if (!archive) {
+            let archive = userId == socket.authToken?._id ? false : true;
+            if (archive) {
                 let friendData = await UserFriend.findOne({ user: userId, friend: socket.authToken?._id })
-                if (friendData) archive = true;
+                if (friendData) archive = false;
             }
 
             let userChatroom = await UserChatRoom.findOne({ user: userId, chatroom: (chatroom as Document).get('_id') })

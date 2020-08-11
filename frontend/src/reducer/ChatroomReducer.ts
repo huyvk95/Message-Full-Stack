@@ -5,7 +5,9 @@ let initializeState: IChatroomReducerData[] = []
 
 export default function (state = initializeState, { type, payload }: { type: string, payload: any }) {
     if (type === common.action.CHATROOM_CREATE) {
-        return [payload, ...state]
+        let data: IChatroomReducerData = payload;
+        if (state.every(o => o.chatroom._id !== data.chatroom._id))
+            return [payload, ...state]
     } else if (type === common.action.CHATROOM_UPDATE) {
         let nstate = [...state]
         let data: IChatroomReducerData = payload;
@@ -29,7 +31,11 @@ export default function (state = initializeState, { type, payload }: { type: str
     } else if (type === common.action.CHATROOM_INVITE) {
 
     } else if (type === common.action.CHATROOM_GETALLUSERCHATROOMS) {
-        return payload
+        let nstate: IChatroomReducerData[] = [...payload, ...state];
+        let chatroomIds = Array.from(new Set(nstate.map(o => o.chatroom._id)));
+        let chatroomData = chatroomIds.map(chatroomId => nstate.find(oo => oo.chatroom._id === chatroomId))
+            .sort((a, b) => new Date((b?.chatroom?.updateTime) as string).getTime() - new Date((a?.chatroom?.updateTime) as string).getTime())
+        return chatroomData
     }
     return state;
 }

@@ -1,14 +1,16 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { IContentChatMessageProps } from "../interface/ComponentInterface";
 import { connect } from "react-redux";
 import { IStoreState, IMessageData, IUserData, IFriendData } from "../interface/DataInterface";
 import socket from "../socket";
 import common from "../common";
 import AvatarComponent from "./AvatarComponent";
+import { Spinner } from "react-bootstrap";
 
 let timeout: NodeJS.Timeout | undefined = undefined
 function ContentChatMessagesComponent({ chatroom, navigation, message, user }: IContentChatMessageProps) {
     let [update, setUpdate]: [number, Function] = useState(0);
+    let [loading, setLoading]: [boolean, Function] = useState(false);
     // On drag
     window.addEventListener('resize', (...a) => {
         if (timeout) {
@@ -24,6 +26,22 @@ function ContentChatMessagesComponent({ chatroom, navigation, message, user }: I
         }, 100);
     })
     let height = window.innerHeight - 57 - 50;
+    // Check scroll
+    useEffect(() => {
+        let chatArea = document.getElementById('chat-area');
+        if (chatArea) {
+            chatArea.addEventListener('scroll', (event) => {
+                let topOffset = (event.target as any).scrollTop;
+                if (typeof topOffset === 'number' && topOffset === 0 && !loading) {
+                    setLoading(true);
+
+                    let sc = socket.getSocket()
+                    if (sc) sc.transmit(common.packet.MESSAGE, { evt: common.event.MESSAGE.GET, data: { chatroomId: navigation.chatroom, skip: messageData.length } })
+                    setTimeout(() => { setLoading(false); }, 1000)
+                }
+            });
+        }
+    })
     // Get chatroom data
     let chatroomId = navigation.chatroom;
     let chatroomData = chatroom.find(o => o.chatroom._id === chatroomId);
@@ -44,7 +62,7 @@ function ContentChatMessagesComponent({ chatroom, navigation, message, user }: I
     }
 
     return (
-        <div className="chat-area" style={{ height: update ? height : height }}>
+        <div className="chat-area" id="chat-area" style={{ height: update ? height : height }}>
             {
                 messageData.map((o, i) => (
                     <ItemChatMessagesComponent
@@ -56,6 +74,9 @@ function ContentChatMessagesComponent({ chatroom, navigation, message, user }: I
                     />
                 ))
             }
+            <div className={`justify-content-center py-2 ${loading ? "d-flex" : "d-none"}`}>
+                <Spinner animation="border" />
+            </div>
         </div>
     )
 

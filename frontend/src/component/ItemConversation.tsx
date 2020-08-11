@@ -54,7 +54,7 @@ function ItemConversationComponent({ data, user, friend, navigation, openDropdow
 
     return (
         <div
-            className={`conversation-item px-2 ${myChatroom.show && myChatroom.active ? "d-block" : "d-none"}`}
+            className={`conversation-item px-2 ${myChatroom.show && !myChatroom.block && !myChatroom.archive && myChatroom.active ? "d-block" : "d-none"}`}
             onMouseOver={() => { setHover(true) }}
             onMouseLeave={() => { setHover(false) }}
         >
