@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { IContentChatMessageProps } from "../interface/ComponentInterface";
 import { connect } from "react-redux";
-import { IStoreState, IMessageData, IUserData, IFriendData } from "../interface/DataInterface";
+import { IStoreState, IMessageData, IUserData, IFriendData, INavigatorData } from "../interface/DataInterface";
 import socket from "../socket";
 import common from "../common";
 import AvatarComponent from "./AvatarComponent";
@@ -63,6 +63,8 @@ function ContentChatMessagesComponent({ chatroom, navigation, message, user }: I
 
     return (
         <div className="chat-area" id="chat-area" style={{ height: update ? height : height }}>
+            <ItemChatTypingComponent
+            />
             {
                 messageData.map((o, i) => (
                     <ItemChatMessagesComponent
@@ -98,6 +100,7 @@ function ItemChatMessagesComponent({ data, preData, nextData, user }: { data: IM
             `}
         >
             <AvatarComponent
+                url={(data.user as IFriendData).avatar}
                 size="small"
                 className={`${!isMine && (isEndChat || isAloneChat) ? "visible" : "invisible"} mr-2`}
             />
@@ -107,5 +110,31 @@ function ItemChatMessagesComponent({ data, preData, nextData, user }: { data: IM
         </div>
     )
 }
+
+
+const ItemChatTypingComponent = connect(({ typing, navigation, user }: IStoreState) => ({ typing, navigation, user }))
+    (function ({ typing, navigation, user }: { typing: { [key in string]: IFriendData[] }, navigation: INavigatorData, user: IUserData }) {
+        let chatroomId = navigation.chatroom;
+        let typingData = chatroomId ? typing[chatroomId] : undefined
+        let show = typingData && typingData.some(o => o._id !== user._id)
+        let avtUrl = typingData && typingData.find(o => o._id !== user._id)?.avatar;
+        return (
+            <div className={`item-chat-message px-3 friend mb-3 ${show ? "d-flex" : "d-none"}`}
+            >
+                <AvatarComponent
+                    url={avtUrl}
+                    size="small"
+                    className={`visible mr-2`}
+                />
+                <div>
+                    <div className="dotsContainer">
+                        <span id="dot1"></span>
+                        <span id="dot2"></span>
+                        <span id="dot3"></span>
+                    </div>
+                </div>
+            </div>
+        )
+    })
 
 export default connect(({ navigation, chatroom, message, user }: IStoreState) => ({ navigation, chatroom, message, user }))(ContentChatMessagesComponent);

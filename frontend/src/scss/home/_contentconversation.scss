@@ -47,3 +47,49 @@
         }
     }
 }
+
+.last-message {
+    .dotsContainer {
+        height: 20px;
+        width: 40px;
+        margin-left: 1px;
+        margin-right: 1px;
+
+        #dot1,
+        #dot2,
+        #dot3 {
+            width: 6px;
+            height: 6px;
+            animation: light_typing 1s infinite;
+        }
+
+        #dot1 {
+            animation-delay: 1s;
+        }
+
+        #dot2 {
+            animation-delay: 0.5s;
+        }
+
+        #dot3 {
+            animation-delay: 0.8s;
+        }
+
+        @keyframes light_typing {
+            0% {
+                transform: translateY(2px);
+                transition: all 0.5s ease-in-out;
+            }
+
+            50% {
+                transform: translateY(-2px);
+                transition: all 0.5s ease-in-out;
+            }
+
+            100% {
+                transform: translateY(2px);
+                transition: all 0.5s ease-in-out;
+            }
+        }
+    }
+}

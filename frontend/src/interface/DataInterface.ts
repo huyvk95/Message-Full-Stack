@@ -77,6 +77,7 @@ export interface IStoreState {
     friendRequest: IFriendRequestReducer
     chatroom: IChatroomReducerData[]
     message: { [key in string]: IMessageData[] }
+    typing: { [key in string]: IFriendData[] }
 }
 
 /* Common */

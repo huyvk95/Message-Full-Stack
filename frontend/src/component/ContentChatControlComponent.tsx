@@ -7,12 +7,25 @@ import socket from "../socket";
 import common from "../common";
 
 function ContentChatControlComponent({ chatroom, navigation }: IContentChatControlProps) {
+    let [onTyping, setOnTyping] = useState(false);
     let [text, setText] = useState("");
     // Get chatroom data
     let chatroomId = navigation.chatroom;
     let chatroomData = chatroom.find(o => o.chatroom._id === chatroomId);
     if (!chatroomData) return <></>
 
+    const sendTyping = (typing: boolean) => {
+        let sc = socket.getSocket();
+        if (sc) sc.transmit(common.packet.CHATROOM, {
+            evt: common.event.CHATROOM.SEND_TYPING,
+            data: {
+                typing,
+                chatroomId: chatroomId
+            }
+        })
+    }
+
+    // Submit handle
     const onSubmit = (event: React.FormEvent<HTMLElement>) => {
         event.preventDefault();
         // Check
@@ -26,10 +39,26 @@ function ContentChatControlComponent({ chatroom, navigation }: IContentChatContr
             evt: common.event.MESSAGE.SEND,
             data: { text, chatroomId }
         })
+        // Transmit typing
+        setOnTyping(false);
+        sendTyping(false);
     }
 
+    // Input handle
     const onChangeText = (event: React.FormEvent<HTMLElement>) => {
-        setText((event.target as any).value);
+        let value = (event.target as any).value;
+        setText(value);
+        if (!onTyping && value) {
+            // Set state
+            setOnTyping(true);
+            // Transmit
+            sendTyping(true);
+        } else if (onTyping && !value) {
+            // Set state
+            setOnTyping(false);
+            // Transmit
+            sendTyping(false);
+        }
     }
 
     const onForcusInput = () => {
@@ -41,6 +70,15 @@ function ContentChatControlComponent({ chatroom, navigation }: IContentChatContr
                     data: { userChatroomId: chatroomData.myChatroom._id }
                 })
             }
+        }
+    }
+
+    const onBlurInput = () => {
+        if (onTyping) {
+            // Set state
+            setOnTyping(false);
+            // Transmit
+            sendTyping(false);
         }
     }
 
@@ -57,6 +95,7 @@ function ContentChatControlComponent({ chatroom, navigation }: IContentChatContr
                     aria-describedby="basic-addon1"
                     onChange={onChangeText}
                     onFocus={onForcusInput}
+                    onBlur={onBlurInput}
                 />
                 <InputGroup.Append>
                     <InputGroup.Text id="basic-addon1"></InputGroup.Text>

@@ -317,6 +317,34 @@ form .invalid {
               width: 25px; }
           .home .content .content-body .content-conversation .list-conversation .conversation-item .active {
             background-color: rgba(0, 0, 0, 0.05); }
+    .home .content .content-body .last-message .dotsContainer {
+      height: 20px;
+      width: 40px;
+      margin-left: 1px;
+      margin-right: 1px; }
+      .home .content .content-body .last-message .dotsContainer #dot1,
+      .home .content .content-body .last-message .dotsContainer #dot2,
+      .home .content .content-body .last-message .dotsContainer #dot3 {
+        width: 6px;
+        height: 6px;
+        animation: light_typing 1s infinite; }
+      .home .content .content-body .last-message .dotsContainer #dot1 {
+        animation-delay: 1s; }
+      .home .content .content-body .last-message .dotsContainer #dot2 {
+        animation-delay: 0.5s; }
+      .home .content .content-body .last-message .dotsContainer #dot3 {
+        animation-delay: 0.8s; }
+
+@keyframes light_typing {
+  0% {
+    transform: translateY(2px);
+    transition: all 0.5s ease-in-out; }
+  50% {
+    transform: translateY(-2px);
+    transition: all 0.5s ease-in-out; }
+  100% {
+    transform: translateY(2px);
+    transition: all 0.5s ease-in-out; } }
     .home .content .content-body .content-people {
       display: flex;
       flex-direction: column;
@@ -507,6 +535,43 @@ form .invalid {
   height: 12px;
   background-color: var(--primary);
   border-radius: 50%; }
+
+.dotsContainer {
+  width: 60px;
+  height: 30px;
+  background: #f3f3f3;
+  border-radius: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center; }
+  .dotsContainer #dot1,
+  .dotsContainer #dot2,
+  .dotsContainer #dot3 {
+    width: 9px;
+    height: 9px;
+    background: #cacaca;
+    border-radius: 50%;
+    margin-left: 2px;
+    margin-right: 2px;
+    transition: all 0.5s ease-in-out;
+    animation: typing 1s infinite; }
+  .dotsContainer #dot1 {
+    animation-delay: 1s; }
+  .dotsContainer #dot2 {
+    animation-delay: 0.5s; }
+  .dotsContainer #dot3 {
+    animation-delay: 0.8s; }
+
+@keyframes typing {
+  0% {
+    transform: translateY(3px);
+    transition: all 0.5s ease-in-out; }
+  50% {
+    transform: translateY(-3px);
+    transition: all 0.5s ease-in-out; }
+  100% {
+    transform: translateY(3px);
+    transition: all 0.5s ease-in-out; } }
 
 .toast_contain {
   position: fixed;

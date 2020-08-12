@@ -49,6 +49,9 @@ export const OPEN_DIALOG = "OPEN_DIALOG"
 export const MESSAGE_GET = "MESSAGE_GET"
 export const MESSAGE_RECEIVE = "MESSAGE_RECEIVE"
 
+/* __TYPING__ */
+export const TYPING = "TYPING"
+
 /* __NAVIGATION__ */
 export const CHOOSE_CONTENT_TAB = "CHOOSE_CONTENT_TAB"
 export const CHOOSE_PEOPLE_TAB = "CHOOSE_PEOPLE_TAB"

@@ -402,6 +402,41 @@ async function setBlock(agServer: AGServer, socket: AGServerSocket, data: any) {
         })
     }
 }
+
+async function sendTyping(agServer: AGServer, socket: AGServerSocket, data: any) {
+    try {
+        let { typing, chatroomId } = data;
+        if (!_.isString(chatroomId) || !_.isBoolean(typing)) throw 'error.bad';
+        // Get user data
+        let user = await User.findById(socket.authToken?._id)
+            .select(common.dbselect.user)
+        if (!user) throw 'error.find_user';
+        // Get chatroom
+        let chatroom = await Chatroom.findById(chatroomId)
+            .populate('lastMessage')
+        if (!chatroom) throw 'error.chatroom_exist';
+        // Get all userchatroom
+        let userChatroom = await UserChatRoom.find({ chatroom: chatroomId })
+            .select(common.dbselect.userChatroom)
+            .populate({ path: 'user', select: common.dbselect.user })
+        // Response
+        // -Response to everyone
+        userChatroom.forEach(uchatroom => {
+            let fsockets: AGServerSocket[] = _.compact(uchatroom.get('user').get('socketId').map((o: string) => agServer.clients[o]))
+            let transData = {
+                evt: EVENT.SEND_TYPING,
+                payload: {
+                    chatroomId,
+                    typing,
+                    user,
+                }
+            }
+            if (fsockets) fsockets.forEach(o => o.transmit(PACKET, transData, {}))
+        })
+    } catch (error) {
+        console.log(error);
+    }
+}
 // Done done
 async function invite(socket: AGServerSocket, data: any) {
     try {
@@ -478,6 +513,9 @@ function connection(agServer: AGServer, socket: AGServerSocket) {
                         break
                     case EVENT.SET_BLOCK:
                         await setBlock(agServer, socket, data)
+                        break
+                    case EVENT.SEND_TYPING:
+                        await sendTyping(agServer, socket, data)
                         break
                     default:
                         break;

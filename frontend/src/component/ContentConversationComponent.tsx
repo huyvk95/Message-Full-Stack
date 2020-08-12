@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, ChangeEvent } from "react";
 import { InputGroup, FormControl } from "react-bootstrap";
 import ItemConversationComponent from "./ItemConversation";
 import { connect } from "react-redux";
@@ -9,6 +9,7 @@ import common from "../common";
 
 function ContentConversationComponent({ chatroom }: IContentConversationProps) {
     let [loading, setLoading]: [boolean, Function] = useState(false);
+    let [search, setSearch]: [string, Function] = useState("");
     // Check scroll
     useEffect(() => {
         let listArea = document.getElementById('list-conversation');
@@ -25,6 +26,17 @@ function ContentConversationComponent({ chatroom }: IContentConversationProps) {
         }
     })
 
+    const onChangeSearch = (event: ChangeEvent<HTMLInputElement>) => {
+        setSearch(event.target.value);
+    }
+
+    let chatroomFilter = chatroom.filter(o => o.friendsChatroom.some(oo => {
+        return new RegExp(`.*${search}.*`, "i").test(oo.user.email) ||
+            new RegExp(`.*${search}.*`, "i").test(oo.user.firstName) ||
+            new RegExp(`.*${search}.*`, "i").test(oo.user.lastName) ||
+            new RegExp(`.*${search}.*`, "i").test(oo.user.nickname)
+    }))
+
     return (
         <div className="content-conversation">
             <div className="px-3 pt-2 pb-3">
@@ -38,12 +50,13 @@ function ContentConversationComponent({ chatroom }: IContentConversationProps) {
                         placeholder="Find on message"
                         aria-label="Username"
                         aria-describedby="basic-addon1"
+                        onChange={onChangeSearch}
                     />
                 </InputGroup>
             </div>
             <div className="list-conversation" id="list-conversation">
                 {
-                    chatroom.map((o, i) => (
+                    chatroomFilter.map((o, i) => (
                         <ItemConversationComponent
                             data={o}
                             key={i}

@@ -23,6 +23,7 @@ import common from "../common";
 import { ToastFriendRequestComponent, ToastFriendAcceptComponent } from "../component/ToastsComponent";
 import { EContentTap, EPeopleTap, EViewType } from "../common/TypeCommon";
 import util from "../util";
+import { setTyping } from "../action/TypingAction";
 
 let interval: NodeJS.Timeout | undefined = undefined
 class HomeContainer extends Component<IHomeContainerProps> {
@@ -101,7 +102,7 @@ class HomeContainer extends Component<IHomeContainerProps> {
             }
         })();
 
-        let { updateChatroom } = this.props;
+        let { updateChatroom, setTyping } = this.props;
         (async () => {
             for await (let data of sc.receiver(packet.CHATROOM)) {
                 let { evt, payload } = data as ISocketTransmitData
@@ -114,6 +115,8 @@ class HomeContainer extends Component<IHomeContainerProps> {
                     }
                     // Update chatroom
                     updateChatroom(payload)
+                } else if (evt === event.CHATROOM.SEND_TYPING) {
+                    setTyping(payload)
                 }
             }
         })();
@@ -290,7 +293,8 @@ const mapDispatchToProps = {
     updateChatroom,
     receiveMessage,
     getMessages,
-    setChatroomNavigation
+    setChatroomNavigation,
+    setTyping
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(HomeContainer);

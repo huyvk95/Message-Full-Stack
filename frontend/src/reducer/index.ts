@@ -6,6 +6,7 @@ import FriendReducer from "./FriendReducer";
 import FriendRequestReducer from "./FriendRequestReducer";
 import ChatroomReducer from "./ChatroomReducer";
 import MessageReducer from "./MessageReducer";
+import TypingReducer from "./TypingReducer";
 
 const reducer = combineReducers({
     user: UserReducer,
@@ -14,7 +15,8 @@ const reducer = combineReducers({
     friend: FriendReducer,
     friendRequest: FriendRequestReducer,
     chatroom: ChatroomReducer,
-    message: MessageReducer
+    message: MessageReducer,
+    typing: TypingReducer,
 })
 
 export default reducer;

@@ -11,7 +11,7 @@ import socket from "../socket";
 import common from "../common";
 import { EViewType, EConversationType } from "../common/TypeCommon";
 
-function ItemConversationComponent({ data, user, friend, navigation, openDropdown, setChatroomNavigation, app }: IItemConversationProps) {
+function ItemConversationComponent({ data, user, friend, navigation, openDropdown, setChatroomNavigation, app, typing }: IItemConversationProps) {
     // Props
     let { chatroom, friendsChatroom, myChatroom } = data;
     let { lastMessage, name, type, _id: chatroomId } = chatroom;
@@ -27,6 +27,9 @@ function ItemConversationComponent({ data, user, friend, navigation, openDropdow
         friendsData.length > 0 && friendsData[0]?.nickname ? friendsData[0]?.nickname : `${friendsChatroom[0]?.user?.lastName} ${friendsChatroom[0]?.user?.firstName}` : name
     // -Active
     let active = navigation.chatroom === chatroom._id
+    // -Show typing
+    let typingData = typing[chatroom._id]
+    let showTyping = typingData && typingData.some(o => o._id !== user._id)
     // -Time display
     let tu = new Date(chatroom.updateTime)
     let tn = new Date()
@@ -80,8 +83,19 @@ function ItemConversationComponent({ data, user, friend, navigation, openDropdow
                     <div className="info ml-2">
                         <p className={`text-15 ${read ? "text-bold" : "text-bolder"}`}>{chatroomName}</p>
                         <div className="last-message" style={{ visibility: lastMessage ? "visible" : "hidden" }}>
-                            <p className="text-bold text-light">{`${msgPrefix}${lastMessage?.message}`}</p>
-                            <p className="text-bold text-light"><span>· </span>{` ${tdisplay}`}</p>
+                            {
+                                showTyping ?
+                                    <div className="dotsContainer">
+                                        <span id="dot1"></span>
+                                        <span id="dot2"></span>
+                                        <span id="dot3"></span>
+                                    </div>
+                                    :
+                                    <>
+                                        <p className="text-bold text-light">{`${msgPrefix}${lastMessage?.message}`}</p>
+                                        <p className="text-bold text-light"><span>· </span>{` ${tdisplay}`}</p>
+                                    </>
+                            }
                         </div>
                     </div>
                 </div>
@@ -115,4 +129,4 @@ function ItemConversationComponent({ data, user, friend, navigation, openDropdow
     )
 }
 
-export default connect(({ user, friend, navigation, app }: IStoreState) => ({ user, friend, navigation, app }), { openDropdown, setChatroomNavigation })(ItemConversationComponent)
+export default connect(({ user, friend, navigation, app, typing }: IStoreState) => ({ user, friend, navigation, app, typing }), { openDropdown, setChatroomNavigation })(ItemConversationComponent)

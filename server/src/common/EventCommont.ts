@@ -31,6 +31,7 @@ const event = {
         MASK_AS_UNREAD: "maskAsUnread",
         SET_ARCHIVE: "setArchive",
         SET_BLOCK: "setBlock",
+        SEND_TYPING: "sendTyping",
         // TRAMSMIT EVENT
         UPDATE: "update",
     },

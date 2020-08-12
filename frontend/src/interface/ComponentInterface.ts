@@ -48,6 +48,7 @@ export interface IHomeContainerProps {
     receiveMessage: Function
     getMessages: Function
     setChatroomNavigation: Function
+    setTyping: Function
 }
 
 /* _______________COMPONENT_______________ */
@@ -153,6 +154,7 @@ export interface IItemConversationProps {
     user: IUserData, 
     friend: IFriendData[] 
     navigation: INavigatorData
+    typing: { [key in string]: IFriendData[] }
     openDropdown: Function
     setChatroomNavigation: Function
 }
