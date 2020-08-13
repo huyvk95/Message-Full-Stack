@@ -12,7 +12,7 @@ import * as api from "../Api";
 
 function PopupProfileComponents({ user, updateUserData, pushToast, closePopup }: IPopupProfileProps) {
     // State variable
-    let [view, setView]: [string, Function] = useState("editData")
+    let [view, setView]: [string, Function] = useState("view")
     let [error, setError] = useState(false)
     let [dragEnter, setDragEnter] = useState(false)
     let [uploadImageData, setUploadImageData] = useState("");
