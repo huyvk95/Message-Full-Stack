@@ -33,6 +33,7 @@ i18next
 /* __MIDDLE_WARE__ */
 app.use(helmet())
 app.use(morgan('dev'))
+app.use(express.static(process.cwd() + "/public"))
 app.use(cors())
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))

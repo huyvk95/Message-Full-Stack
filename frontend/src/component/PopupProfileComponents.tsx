@@ -8,10 +8,16 @@ import { pushToast, closePopup } from "../action/AppActions";
 import AvatarComponent from "./AvatarComponent";
 import socket from "../socket";
 import common from "../common";
+import * as api from "../Api";
 
-function PopupProfileComponents({ user, updateUserData, pushToast,closePopup }: IPopupProfileProps) {
-    let [view, setView]: [string, Function] = useState("view")
+function PopupProfileComponents({ user, updateUserData, pushToast, closePopup }: IPopupProfileProps) {
+    // State variable
+    let [view, setView]: [string, Function] = useState("editData")
     let [error, setError] = useState(false)
+    let [dragEnter, setDragEnter] = useState(false)
+    let [uploadImageData, setUploadImageData] = useState("");
+    // Form variable
+    let [uploadImage, setUploadImage]: [File | undefined, Function] = useState(undefined);
     let [firstName, setFirstName] = useState(user.firstName)
     let [lastName, setLastName] = useState(user.lastName)
     let [password, setPassword] = useState("")
@@ -26,7 +32,7 @@ function PopupProfileComponents({ user, updateUserData, pushToast,closePopup }: 
         setError(false)
     }
 
-    const onClickDone = () => {
+    const onClickDone = async () => {
         let sc = socket.getSocket()
         if (!sc) return setView("view")
 
@@ -55,10 +61,26 @@ function PopupProfileComponents({ user, updateUserData, pushToast,closePopup }: 
                 setError(true)
             }
         } else if (view === "editData") {
+            // Upload avatar
+            let avatar = ""
+            if (uploadImage) {
+                let formData = new FormData();
+                formData.append('file', uploadImage as any)
+                let response = await api.uploadAvatar(formData)
+                if (response.success) avatar = response.data;
+                else {
+                    setError(true)
+                    return
+                }
+            }
+            // Change profile
+            let data: any = { oldPassword, firstName, lastName };
+            if (avatar) data.avatar = avatar
+
             sc.invoke(common.packet.PROFILE,
                 {
                     evt: common.event.PROFILE.PUT,
-                    data: { oldPassword, firstName, lastName }
+                    data: data
                 }).then(data => {
                     pushToast({
                         content: data.message,
@@ -98,10 +120,60 @@ function PopupProfileComponents({ user, updateUserData, pushToast,closePopup }: 
         setOldPassword(event.target.value);
     }
 
+    const onDragEnter = (event: React.DragEvent<HTMLInputElement>) => {
+        setDragEnter(true);
+    }
+
+    const onDragLeave = (event: React.DragEvent<HTMLInputElement>) => {
+        setDragEnter(false)
+    }
+
+    const onFileDrop = (event: ChangeEvent<HTMLInputElement>) => {
+        // Set view
+        setDragEnter(false);
+        // File
+        let file = event.target.files?.[0];
+        if (file) {
+            var reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = (event) => {
+                setUploadImage(file)
+                setUploadImageData(event.target?.result as string)
+            }
+        }
+    }
+
     return (
         <div className="popup_profile">
             <div className="d-flex justify-content-center mb-1 position-relative">
-                <AvatarComponent url={user.avatar} size="langer" />
+                <AvatarComponent
+                    url={user.avatar}
+                    size="langer"
+                    className={`${view !== "editData" ? "d-inline-flex" : "d-none"}`}
+                />
+                <div className={`${view === "editData" ? "avatar" : "d-none"}`}>
+                    <div className="wrap langer">
+                        {
+                            user.avatar || uploadImageData ?
+                                <img src={uploadImageData ? uploadImageData : `http://${common.config.HOST}:${common.config.PORT}/${user.avatar}`} alt="" height="100%" />
+                                :
+                                <div></div>
+                        }
+                        <div className={`avatar-form ${dragEnter || (!user.avatar && !uploadImageData) ? "drag-enter" : ""}`}>
+                            <span className="file-msg">
+                                <i className="fa fa-plus" />
+                            </span>
+                            <input
+                                className="file-input"
+                                type="file"
+                                multiple
+                                onDragEnter={onDragEnter}
+                                onDragLeave={onDragLeave}
+                                onChange={onFileDrop}
+                            />
+                        </div>
+                    </div>
+                </div>
                 <button
                     className={`position-absolute text-18 ${view === 'view' ? 'd-none' : 'd-block'}`}
                     style={{ left: "0px" }}
@@ -110,8 +182,8 @@ function PopupProfileComponents({ user, updateUserData, pushToast,closePopup }: 
                     <i className="fa fa-chevron-left font-weight-light" />
                 </button>
             </div>
-            <div className="mb-3 text-center">{user.email}</div>
-            <InputGroup className={`mb-3 ${view === "changePassword" ? "d-none" : "d-flex"}`}>
+            <div className={`mb-3 text-center`}>{user.email}</div>
+            <InputGroup className={`mb-3 ${view === "editData" || view === "view" ? "d-flex" : "d-none"}`}>
                 <FormControl
                     placeholder="Lastname"
                     aria-label="Lastname"
@@ -121,7 +193,7 @@ function PopupProfileComponents({ user, updateUserData, pushToast,closePopup }: 
                     onChange={onChangeLastName}
                 />
             </InputGroup>
-            <InputGroup className={`mb-3 ${view === "changePassword" ? "d-none" : "d-flex"}`}>
+            <InputGroup className={`mb-3 ${view === "editData" || view === "view" ? "d-flex" : "d-none"}`}>
                 <FormControl
                     placeholder="Firstname"
                     aria-label="Firstname"
@@ -151,7 +223,7 @@ function PopupProfileComponents({ user, updateUserData, pushToast,closePopup }: 
                     onChange={onChangeConfirmPassword}
                 />
             </InputGroup>
-            <InputGroup className={`mb-3 ${view === "view" ? "d-none" : "d-flex"}`}>
+            <InputGroup className={`mb-3 ${view === "view" || view === "changeAvatar" ? "d-none" : "d-flex"}`}>
                 <FormControl
                     placeholder="Old password"
                     aria-label="Old password"

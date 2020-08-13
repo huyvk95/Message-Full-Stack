@@ -21,4 +21,62 @@
             color: var(--danger);
         }
     }
+
+    .avatar {
+        .wrap {
+            position: relative;
+            overflow: hidden;
+
+            .avatar-form {
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                background-color: rgba($color: #000000, $alpha: 0.5);
+                opacity: 0;
+                transition: ease-in 0.2s;
+
+                i {
+                    font-size: 30px;
+                    color: white;
+                }
+
+                .file-msg {
+                    display: flex;
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    justify-content: center;
+                    align-items: center;
+                    font-weight: 300;
+                    line-height: 1.4;
+                    white-space: nowrap;
+                    overflow: hidden;
+                }
+
+                .file-input {
+                    position: absolute;
+                    left: 0;
+                    top: 0;
+                    height: 100%;
+                    width: 100%;
+                    opacity: 0;
+                    cursor: pointer;
+                }
+
+                .file-input:focus {
+                    outline: red($color: #000000);
+                }
+            }
+
+            .avatar-form:hover {
+                opacity: 1;
+            }
+
+            .drag-enter {
+                opacity: 1;
+            }
+        }
+    }
 }

@@ -20,7 +20,8 @@
         "create_user": "Create user successfully",
         "update_user": "Update user data successfully",
         "verification": "Verification success",
-        "resend_verification": "Verification email has been sent"
+        "resend_verification": "Verification email has been sent",
+        "upload": "Upload file success"
     },
     "msg": {
         "resend_verification": "Hello,\nYou requested to use this email address to access your message account.\nClick the link below to verify this email address."

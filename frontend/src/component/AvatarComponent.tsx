@@ -2,6 +2,7 @@ import React from "react";
 import { IAvatarComponentProps } from "../interface/ComponentInterface";
 import { Badge } from "react-bootstrap";
 import util from "../util";
+import common from "../common";
 
 export default function AvatarComponent({ url, online, size, className, onClick }: IAvatarComponentProps) {
     return (
@@ -11,12 +12,14 @@ export default function AvatarComponent({ url, online, size, className, onClick 
             style={{ cursor: typeof onClick === 'function' ? "pointer" : "initial" }}
         >
             <div className={`wrap ${size}`}>
-                {
-                    url ?
-                        <img src={url} alt="" height="100%" />
-                        :
-                        <i className="fa fa-user" />
-                }
+                <div className="img-wrap">
+                    {
+                        url ?
+                            <img src={`http://${common.config.HOST}:${common.config.PORT}/${url}`} alt="" height="100%" />
+                            :
+                            <i className="fa fa-user" />
+                    }
+                </div>
                 {
                     online ?
                         online.status ?

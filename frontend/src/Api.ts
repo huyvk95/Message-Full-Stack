@@ -101,3 +101,12 @@ export async function getUser() {
     let response = await axios.get(`${HOST}/user`, { headers });
     return responseFormat(response);
 }
+
+export async function uploadAvatar(payload: FormData) {
+    // Request
+    let response = await axios.post(`${HOST}/upload/avatar`, payload, { headers });
+    // Format data
+    let data = responseFormat(response);
+    // Return
+    return data;
+}
