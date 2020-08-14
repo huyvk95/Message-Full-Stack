@@ -7,6 +7,6 @@ const store = createStore(
     applyMiddleware(thunk)
 );
 
-store.subscribe(()=>console.log('%cStore','color: #1e88e5',store.getState()))
+// store.subscribe(()=>console.log('%cStore','color: #1e88e5',store.getState()))
 
 export default store;
