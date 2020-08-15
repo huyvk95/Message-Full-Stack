@@ -5,7 +5,7 @@ import style from "../style";
 import baseStyle from "../style/base";
 import { ILoginContainer } from "../interface/ComponentInterface";
 
-const LoginContainer = ({ }: ILoginContainer) => {
+const LoginContainer = ({ navigation }: ILoginContainer) => {
     let [view, setView]: [string, Function] = useState("signin")
 
     return (
@@ -74,7 +74,10 @@ const LoginContainer = ({ }: ILoginContainer) => {
             </View>
             <TouchableOpacity
                 style={style.login.button}
-                onPress={() => { console.log("Click") }}
+                onPress={() => { 
+                    navigation.navigate('main')
+                    console.log("Click") 
+                }}
             >
                 <Text style={style.login.buttonText}>Sign In</Text>
             </TouchableOpacity>
