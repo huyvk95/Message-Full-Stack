@@ -1,6 +1,6 @@
 import common from "../common";
-import * as api from "../Api"
-import socket from "../socket";
+import * as api from "../api"
+// import socket from "../socket";
 import { IUserData } from "../interface/interface.data";
 
 export function login(email: string, password: string) {
@@ -94,7 +94,7 @@ export function logout() {
             console.log(data?.message)
         } else {
             // Socket disconnect
-            socket.socket?.disconnect();
+            // socket.socket?.disconnect();
             // Dispatch action
             dispatch({
                 type: common.action.LOGOUT,

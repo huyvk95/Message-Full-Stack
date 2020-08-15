@@ -1,8 +1,7 @@
 import common from "../common";
-import * as api from "../Api";
+import * as api from "../api";
 import { EViewType } from "../common/common.type";
-import { IMessageData, IChatroomReducerData } from "../interface/interface.data";
-import { type } from "os";
+import { getUniqueId } from "react-native-device-info";
 import AsyncStorage from "@react-native-community/async-storage";
 
 export function initialize() {
@@ -11,10 +10,10 @@ export function initialize() {
             /* __Device Id__ */
             let deviceId = await AsyncStorage.getItem('deviceId');
             // Check deviceId exist
-            // if (!deviceId) {
-            //     // deviceId = uuidv4();
-            //     await AsyncStorage.setItem('deviceId', deviceId);
-            // }
+            if (!deviceId) {
+                deviceId = getUniqueId();
+                await AsyncStorage.setItem('deviceId', deviceId);
+            }
 
             /* __Language__ */
             let lang = await AsyncStorage.getItem('lang');
@@ -43,8 +42,8 @@ export function initialize() {
             }
 
             /* __API_CONFIG__ */
-            // api.config({ "deviceId": deviceId })
-            // api.config({ "accept-language": lang })
+            api.config({ "deviceId": deviceId })
+            api.config({ "accept-language": lang })
 
             dispatch({
                 type: common.action.INITIALIZE,
