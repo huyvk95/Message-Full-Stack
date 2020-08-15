@@ -21,10 +21,10 @@ let danger = "#dc3545";
 let semiDark = "#444";
 let midDark = "#292929";
 let dark = "#131313";
-let lowLight = "#f3f3f3";
-let semiLight = "#dadcde";
+let lowLight = "#f6f6f6";
+let semiLight = "#eaecee";
 let midLight = "#ccc";
-let light = "#999";
+let light = "#aaa";
 
 const color = StyleSheet.create({
     /* __TEXT__ */

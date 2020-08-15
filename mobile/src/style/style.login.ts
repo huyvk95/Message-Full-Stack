@@ -3,28 +3,100 @@ import baseStyle from "./base";
 
 const login = StyleSheet.create({
     wrap: {
-        height: "100%",
+        flex: 1,
         justifyContent: "center",
-        alignItems: "center"
+        alignItems: "center",
     },
+
+    // Content
     logo: {
         marginBottom: 20,
     },
+
     title: {
         fontSize: baseStyle.size.textTitle.fontSize,
         marginBottom: 10,
     },
+
     message: {
         marginBottom: 10,
     },
-    input: StyleSheet.flatten([
-        baseStyle.component.inputText,
+
+    // Input
+    inputArea: {
+        marginVertical: 10
+    },
+
+    // -Tab
+    tabGroup: baseStyle.component.tabGroup,
+
+    tabLeft: StyleSheet.flatten([
+        baseStyle.component.tabButton,
+        baseStyle.component.tabButtonLeft
+    ]),
+
+    tabRight: StyleSheet.flatten([
+        baseStyle.component.tabButton,
+        baseStyle.component.tabButtonRight
+    ]),
+
+    tabText: StyleSheet.flatten([
+        baseStyle.color.textLight,
+        baseStyle.size.text15,
         StyleSheet.create({
             custom: {
-                marginVertical: 5
+                fontWeight: "bold"
             }
         }).custom
     ]),
+
+    tabTextActive: StyleSheet.flatten([
+        baseStyle.color.textPrimary,
+        baseStyle.size.text15,
+        StyleSheet.create({
+            custom: {
+                fontWeight: "bold"
+            }
+        }).custom
+    ]),
+
+    // -Input
+    inputGroup: {
+        flexDirection: "row",
+    },
+
+    inputFirstName: StyleSheet.flatten([
+        baseStyle.component.inputText,
+        baseStyle.component.inputMid,
+        StyleSheet.create({
+            custom: {
+                flex: 1,
+                borderRightWidth: 0,
+            }
+        }).custom
+    ]),
+
+    inputLastName: StyleSheet.flatten([
+        baseStyle.component.inputText,
+        baseStyle.component.inputMid,
+        StyleSheet.create({
+            custom: {
+                flex: 1
+            }
+        }).custom
+    ]),
+
+    inputMid: StyleSheet.flatten([
+        baseStyle.component.inputText,
+        baseStyle.component.inputMid,
+    ]),
+
+    inputBot: StyleSheet.flatten([
+        baseStyle.component.inputText,
+        baseStyle.component.inputBot,
+    ]),
+
+    // Button
     button: StyleSheet.flatten([
         baseStyle.component.button,
         StyleSheet.create({

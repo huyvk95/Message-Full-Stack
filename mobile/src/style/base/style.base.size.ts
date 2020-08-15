@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
 
-const color = StyleSheet.create({
+const size = StyleSheet.create({
     /* __TEXT__ */
     textNormal: { fontSize: 14 },
     textTitle: { fontSize: 35 },
@@ -23,4 +23,4 @@ const color = StyleSheet.create({
     text30: { fontSize: 30 },
 })
 
-export default color;
+export default size;

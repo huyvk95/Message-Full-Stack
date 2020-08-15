@@ -7,6 +7,7 @@ const COMPONENT_WIDTH = 280;
 const BORDER_RADIUS = 4;
 
 const component = StyleSheet.create({
+    /* INPUT */
     inputText: {
         height: COMPONENT_HEIGHT,
         width: COMPONENT_WIDTH,
@@ -16,6 +17,17 @@ const component = StyleSheet.create({
         borderWidth: 1
     },
 
+    inputMid: {
+        borderRadius: 0,
+        borderBottomWidth: 0,
+    },
+
+    inputBot: {
+        borderTopLeftRadius: 0,
+        borderTopRightRadius: 0,
+    },
+
+    /* BUTTON */
     button: {
         height: COMPONENT_HEIGHT,
         width: COMPONENT_WIDTH,
@@ -29,6 +41,33 @@ const component = StyleSheet.create({
         color: color.textWhite.color,
         fontWeight: "bold",
         fontSize: size.text15.fontSize
+    },
+
+    /* TAB */
+    tabGroup: {
+        flexDirection: "row",
+        height: COMPONENT_HEIGHT,
+        width: COMPONENT_WIDTH,
+    },
+
+    tabButton: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        borderTopLeftRadius: BORDER_RADIUS,
+        borderTopRightRadius: BORDER_RADIUS,
+        borderWidth: 1,
+        borderBottomWidth: 0,
+        borderColor: color.borderMidLight.borderColor,
+    },
+
+    tabButtonLeft: {
+        borderTopRightRadius: 0,
+        borderRightWidth: 0,
+    },
+
+    tabButtonRight: {
+        borderTopLeftRadius: 0,
     }
 })
 
