@@ -3,7 +3,7 @@ import { View, Text, TextInput, TouchableOpacity, TouchableHighlight } from "rea
 import Icon from "react-native-vector-icons/FontAwesome";
 import style from "../style";
 import baseStyle from "../style/base";
-import { ILoginContainer } from "../interface/ComponentInterface";
+import { ILoginContainer } from "../interface/interface.component";
 
 const LoginContainer = ({ navigation }: ILoginContainer) => {
     let [view, setView]: [string, Function] = useState("signin")

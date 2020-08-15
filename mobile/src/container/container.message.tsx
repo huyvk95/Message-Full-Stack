@@ -4,7 +4,7 @@ import style from "../style";
 import MessageHeader from "../component/component.message.header";
 import MessageControl from "../component/component.message.control";
 import MessageContent from "../component/component.message.content";
-import { IComponentProps } from "../interface/ComponentInterface";
+import { IComponentProps } from "../interface/interface.component";
 
 const MessageContainer = ({ navigation }: IComponentProps) => {
     return (

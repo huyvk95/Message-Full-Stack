@@ -3,7 +3,7 @@ import { View, Button } from "react-native";
 import style from "../style";
 import MainHeader from "../component/component.main.header";
 import MainContent from "../component/component.main.content";
-import { IComponentProps } from "../interface/ComponentInterface";
+import { IComponentProps } from "../interface/interface.component";
 
 const MainContainer = ({ navigation }: IComponentProps) => {
     return (

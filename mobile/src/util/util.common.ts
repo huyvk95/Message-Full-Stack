@@ -1,5 +1,5 @@
 import { AxiosResponse } from "axios";
-import { IResponseData } from "../interface/DataInterface";
+import { IResponseData } from "../interface/interface.data";
 import _ from "underscore";
 
 export function responseFormat(response?: AxiosResponse): IResponseData {
