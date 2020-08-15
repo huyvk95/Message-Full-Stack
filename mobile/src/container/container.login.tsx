@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, Button, TouchableHighlight } from "react-native";
+import { View, Text, TextInput, TouchableOpacity, TouchableHighlight } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 import style from "../style";
 import baseStyle from "../style/base";
@@ -37,6 +37,7 @@ const LoginContainer = ({ }: ILoginContainer) => {
                     style={style.login.inputMid}
                     placeholder="Email address"
                     keyboardType="email-address"
+                    placeholderTextColor={baseStyle.color.textLight.color}
                 />
                 {
                     view === "signup" ? (
@@ -44,10 +45,12 @@ const LoginContainer = ({ }: ILoginContainer) => {
                             <TextInput
                                 style={style.login.inputFirstName}
                                 placeholder="First name"
+                                placeholderTextColor={baseStyle.color.textLight.color}
                             />
                             <TextInput
                                 style={style.login.inputLastName}
                                 placeholder="Last name"
+                                placeholderTextColor={baseStyle.color.textLight.color}
                             />
                         </View>
                     ) : <></>
@@ -57,6 +60,7 @@ const LoginContainer = ({ }: ILoginContainer) => {
                     placeholder="Password"
                     secureTextEntry
                     returnKeyType="done"
+                    placeholderTextColor={baseStyle.color.textLight.color}
                 />
                 {
                     view === "signup" ? (<TextInput
@@ -64,6 +68,7 @@ const LoginContainer = ({ }: ILoginContainer) => {
                         placeholder="Confirm password"
                         secureTextEntry
                         returnKeyType="done"
+                        placeholderTextColor={baseStyle.color.textLight.color}
                     />) : <></>
                 }
             </View>

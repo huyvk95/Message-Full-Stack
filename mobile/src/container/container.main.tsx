@@ -9,6 +9,7 @@ const MainContainer = () => {
         <View style={style.main.content.wrap}>
             <MainHeader />
             <MainContent />
+            {/* <MainFooter /> */}
         </View>
     )
 }

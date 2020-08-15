@@ -12,7 +12,7 @@ const MainConversation = () => {
     const renderItem = () => (<ItemConversation />)
 
     return (
-        <>
+        <View style={{ backgroundColor: "#fff" }}>
             <View
                 style={style.component.inputGroup.wrap}
             >
@@ -24,24 +24,25 @@ const MainConversation = () => {
                 <TextInput
                     placeholder="Search"
                     style={style.component.inputGroup.text}
+                    placeholderTextColor={baseStyle.color.textLight.color}
                 />
             </View>
             <FlatList
                 data={DATA}
                 renderItem={renderItem}
-                keyExtractor={item=>item}
+                keyExtractor={item => item}
             />
-        </>
+        </View>
     )
 }
 
 const ItemConversation = () => {
     return (
-        <View style={{ flexDirection: "row", marginVertical: 5 }}>
+        <View style={style.main.conversation.item}>
             <AvatarComponent size="normal" />
-            <View style={{ flex: 1, justifyContent: "center", marginLeft: 10 }}>
-                <Text style={{ marginBottom: 4 }}>Cún (Mập)</Text>
-                <View style={{ flexDirection: "row" }}>
+            <View style={style.main.conversation.info}>
+                <Text style={style.main.conversation.name}>Cún (Mập)</Text>
+                <View style={style.main.conversation.lastMessage}>
                     <Text>You: Xin chào</Text>
                     <Text>·</Text>
                     <Text>5:53 am</Text>

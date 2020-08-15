@@ -6,10 +6,11 @@ import Icon from "react-native-vector-icons/FontAwesome";
 interface IAvatarProps {
     size: "langer" | "normal" | "small" | "smaller" | "tiny",
     url?: string,
+    styleCustom?: object
 }
 
-const AvatarComponent = ({ size }: IAvatarProps) => {
-    let radius = size === "langer" ? 100 : size === "normal" ? 60 : size === "small" ? 50 : size==="smaller"? 35:20
+const AvatarComponent = ({ size, styleCustom }: IAvatarProps) => {
+    let radius = size === "langer" ? 100 : size === "normal" ? 60 : size === "small" ? 45 : size === "smaller" ? 35 : 20
 
     return (
         <View
@@ -21,7 +22,8 @@ const AvatarComponent = ({ size }: IAvatarProps) => {
                         height: radius,
                         borderRadius: radius * 0.5,
                     }
-                }).custom
+                }).custom,
+                styleCustom || {}
             ])}
         >
             <Icon

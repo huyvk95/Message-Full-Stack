@@ -7,6 +7,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from '@react-navigation/stack';
 import LoginContainer from './src/container/container.login';
 import MainContainer from './src/container/container.main';
+import MessageContainer from './src/container/container.message';
 import style from './src/style';
 
 const Stack = createStackNavigator();
@@ -22,14 +23,18 @@ const App = () => {
               cardStyle: style.app.card
             }}
           >
-            {/* <Stack.Screen
+            <Stack.Screen
               name="login"
               component={LoginContainer}
-            /> */}
-            <Stack.Screen
+            />
+            {/* <Stack.Screen
               name="main"
               component={MainContainer}
-            />
+            /> */}
+            {/* <Stack.Screen
+              name="message"
+              component={MessageContainer}
+            /> */}
           </Stack.Navigator>
         </NavigationContainer>
       </SafeAreaView>

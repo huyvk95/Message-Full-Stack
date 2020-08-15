@@ -34,6 +34,7 @@ const inputGroup = StyleSheet.create({
     },
 
     text: {
+        flex: 1,
         color: color.textSemiDark.color,
         fontSize: size.text16.fontSize,
     }

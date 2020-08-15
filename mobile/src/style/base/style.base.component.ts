@@ -2,9 +2,9 @@ import { StyleSheet } from "react-native";
 import color from "./style.base.color";
 import size from "./style.base.size";
 
-const COMPONENT_HEIGHT = 40;
-const COMPONENT_WIDTH = 280;
-const BORDER_RADIUS = 4;
+export const COMPONENT_HEIGHT = 40;
+export const COMPONENT_WIDTH = 280;
+export const BORDER_RADIUS = 4;
 
 const component = StyleSheet.create({
     /* INPUT */
