@@ -1,5 +1,5 @@
 import common from "../common";
-import { EContentTap, EPeopleTap } from "../common/TypeCommon";
+import { EContentTap, EPeopleTap } from "../common/common.type";
 
 export function chooseContentTab(tab: EContentTap) {
     return async function (dispatch: Function) {

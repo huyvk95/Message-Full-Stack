@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   SafeAreaView,
   StatusBar,
@@ -11,27 +11,30 @@ import { IApp } from './src/interface/interface.component';
 import { connect } from 'react-redux';
 import { initialize } from './src/action/action.app';
 import { IStoreState } from './src/interface/interface.data';
-import AsyncStorage from '@react-native-community/async-storage';
 
-const App = ({ initialize, app }: IApp) => {
-  // Mounted effect
+const App = ({ initialize }: IApp) => {
+  let [inited, setInited] = useState(false);
+  /* __MOUNTED EFFECT__ */
   useEffect(() => {
-    // Init api and reducer
-    api.initialize();
-    initialize();
+    (async () => {
+      // Init api and reducer
+      api.initialize();
+      await initialize();
+      setInited(true);
+    })()
   }, []);
-  console.log(app)
 
+  /* __RENDER__ */
   return (
     <>
       <StatusBar barStyle="dark-content" />
       <SafeAreaView style={style.app.wrap}>
         <NavigationContainer>
-          <AuthNavigation />
+          {!inited ? <></> : <AuthNavigation />}
         </NavigationContainer>
       </SafeAreaView>
     </>
   );
 };
 
-export default connect(({ app }: IStoreState) => ({ app }), { initialize })(App);
+export default connect(null, { initialize })(App);

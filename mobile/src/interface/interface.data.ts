@@ -1,3 +1,5 @@
+import { EContentTap, EPeopleTap } from "../common/common.type";
+
 /* Reducer data */
 export interface IUserData {
     _id: string
@@ -46,6 +48,9 @@ export interface IAppData {
 }
 
 export interface INavigatorData {
+    contentTab: EContentTap,
+    peopleTab: EPeopleTap,
+    chatroom?: string,
 }
 
 export interface IChatroomReducerData {

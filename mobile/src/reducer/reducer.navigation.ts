@@ -5,7 +5,6 @@ import { EPeopleTap, EContentTap, EConversationType } from "../common/common.typ
 let initializeState: INavigatorData = {
     contentTab: EContentTap.CONVERSATION,
     peopleTab: EPeopleTap.PEOPLE,
-    conversationView: EConversationType.NORMAL
 }
 
 export default function (state = initializeState, action: { type: string, payload: any }) {
