@@ -1,10 +1,12 @@
 import React from "react";
-import { View, Text } from "react-native";
+import { View, Text, Button } from "react-native";
 import { TextInput, FlatList } from "react-native-gesture-handler";
 import style from "../style";
 import Icon from "react-native-vector-icons/FontAwesome";
 import AvatarComponent from "./component.avatar";
 import baseStyle from "../style/base";
+import socket from "../socket";
+import common from "../common";
 
 const DATA = Object.keys(Array(20).fill(""))
 
@@ -13,6 +15,15 @@ const MainConversation = () => {
 
     return (
         <View style={{ backgroundColor: "#fff" }}>
+            <Button
+                title="OK"
+                onPress={() => {
+                    let sc = socket.getSocket();
+                    if (!sc) return;
+                    console.log("OK2", sc.clientId, sc.id)
+                    sc.transmit(common.packet.FRIEND, { evt: common.event.FRIEND.GET })
+                }}
+            />
             <View
                 style={style.component.inputGroup.wrap}
             >

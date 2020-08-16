@@ -1,5 +1,6 @@
 import socketClusterClient, { AGClientSocket } from "socketcluster-client";
 import common from "../common";
+import AsyncStorage from "@react-native-community/async-storage";
 
 class Socket {
     /* __STATIC__ */
@@ -29,62 +30,70 @@ class Socket {
         this.socket = socket;
 
         // Listener
-        socket.listener('connect').once().then(({ id, isAuthenticated }) => {
-            console.log('%cSocket', 'color: #2e7d32', 'connect', id, isAuthenticated);
+        socket.listener('connect').once().then(async ({ id, isAuthenticated }) => {
+            console.log('Socket', 'connect', id, isAuthenticated);
+
+            try {
+                // Token
+                let token = await AsyncStorage.getItem('socketcluster.authToken');
+                socket.transmit(common.packet.AUTH, { token })
+            } catch (error) {
+                console.error(error)
+            }
         })
 
         socket.listener('disconnect').once().then(({ reason }) => {
-            console.log('%cSocket', 'color: #2e7d32', 'disconnect', reason)
+            console.log('Socket', 'disconnect', reason)
             //Close all listener
             socket.closeAllChannels();
         })
 
         socket.listener('removeAuthToken').once().then(({ oldAuthToken }) => {
-            console.log('%cSocket', 'color: #2e7d32', 'removeAuthToken', oldAuthToken)
+            console.log('Socket', 'removeAuthToken', oldAuthToken)
         })
 
         socket.listener('connecting').once().then(() => {
-            console.log('%cSocket', 'color: #2e7d32', 'connecting')
+            console.log('Socket', 'connecting')
         })
 
         socket.listener('authStateChange').once().then((data) => {
-            console.log('%cSocket', 'color: #2e7d32', 'authStateChange')
+            console.log('Socket', 'authStateChange')
         })
 
         socket.listener('authenticate').once().then(({ authToken, signedAuthToken }) => {
-            console.log('%cSocket', 'color: #2e7d32', 'authenticate', authToken, signedAuthToken)
+            console.log('Socket', 'authenticate', authToken, signedAuthToken)
         })
 
         socket.listener('deauthenticate').once().then(({ oldAuthToken, oldSignedAuthToken }) => {
-            console.log('%cSocket', 'color: #2e7d32', 'deauthenticate', oldAuthToken, oldSignedAuthToken)
+            console.log('Socket', 'deauthenticate', oldAuthToken, oldSignedAuthToken)
         })
 
         socket.listener('error').once().then(({ error }) => {
-            console.log('%cSocket', 'color: #2e7d32', 'error', error)
+            console.log('Socket', 'error', error)
         })
 
         socket.listener('connectAbort').once().then(({ code, reason }) => {
-            console.log('%cSocket', 'color: #2e7d32', 'connectAbort', code, reason)
+            console.log('Socket', 'connectAbort', code, reason)
         })
 
         socket.listener('subscribeStateChange').once().then(({ channel, newChannelState, oldChannelState, subscriptionOptions }) => {
-            console.log('%cSocket', 'color: #2e7d32', 'subscribeStateChange', channel, newChannelState, oldChannelState, subscriptionOptions)
+            console.log('Socket', 'subscribeStateChange', channel, newChannelState, oldChannelState, subscriptionOptions)
         })
 
         socket.listener('subscribe').once().then(({ channel, subscriptionOptions }) => {
-            console.log('%cSocket', 'color: #2e7d32', 'subscribe', channel, subscriptionOptions)
+            console.log('Socket', 'subscribe', channel, subscriptionOptions)
         })
 
         socket.listener('subscribeFail').once().then(({ channel, error, subscriptionOptions }) => {
-            console.log('%cSocket', 'color: #2e7d32', 'subscribeFail', channel, error, subscriptionOptions)
+            console.log('Socket', 'subscribeFail', channel, error, subscriptionOptions)
         })
 
         socket.listener('unsubscribe').once().then(({ channel }) => {
-            console.log('%cSocket', 'color: #2e7d32', 'unsubscribe', channel)
+            console.log('Socket', 'unsubscribe', channel)
         })
 
         socket.listener('kickOut').once().then(({ channel, message }) => {
-            console.log('%cSocket', 'color: #2e7d32', 'kickOut', channel, message)
+            console.log('Socket', 'kickOut', channel, message)
         })
     }
 }

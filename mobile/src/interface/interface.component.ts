@@ -14,7 +14,7 @@ export interface ILoginContainer extends IComponentProps {
     register: Function
 }
 
-export interface IHomeContainerProps extends IComponentProps {
+export interface IMainNavigationProps extends IComponentProps {
     app: IAppData,
     user: IUserData,
     navigation: INavigatorData
