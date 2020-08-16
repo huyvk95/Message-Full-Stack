@@ -49,6 +49,7 @@ const content = StyleSheet.create({
 })
 
 const conversation = StyleSheet.create({
+    list: { height: "100%" },
     item: { flexDirection: "row", marginVertical: 5 },
     info: { flex: 1, justifyContent: "center", marginLeft: 10 },
     name: { marginBottom: 4 },

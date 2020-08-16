@@ -7,8 +7,18 @@ const avatar = StyleSheet.create({
     wrap: {
         alignItems: "center",
         justifyContent: "center",
-        backgroundColor: baseStyle.color.backgroundSemiLight.backgroundColor
-    }
+    },
+
+    imgContain: {
+        width: "100%",
+        height: "100%",
+        justifyContent: "center",
+        alignItems: "center",
+        overflow: "hidden",
+        backgroundColor: baseStyle.color.backgroundSemiLight.backgroundColor,
+    },
+
+    img: { height: "100%", width: "100%" }
 })
 
 const inputGroup = StyleSheet.create({
