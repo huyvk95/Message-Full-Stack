@@ -1,5 +1,6 @@
 const packet = {
     // Transmit data
+    AUTH: "AUTH",
     PROFILE: "PROFILE",
     USER: "USER",
     FRIEND: "FRIEND",

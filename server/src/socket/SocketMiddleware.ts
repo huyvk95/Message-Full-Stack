@@ -1,5 +1,6 @@
 import { AGServer } from "socketcluster-server";
 import { User } from "../database/ModelDatabase";
+import packet from "../common/PacketCommon";
 
 export default function socketMiddleware(agServer: AGServer) {
     agServer.setMiddleware(agServer.MIDDLEWARE_INBOUND, async (middlewareStream) => {
@@ -22,7 +23,7 @@ export default function socketMiddleware(agServer: AGServer) {
                     let device = user.get('device');
                     if (device[deviceId] != signedAuthToken) throw "error.auth"
                     // Save socket id
-                    let scIds = [...user.get('socketId')].filter(o=>agServer.clients[o])
+                    let scIds = [...user.get('socketId')].filter(o => agServer.clients[o])
                     user.set('socketId', [...scIds, action.socket.id])
                     user.set('online', true);
                     user.set('loginTime', new Date())
@@ -30,7 +31,17 @@ export default function socketMiddleware(agServer: AGServer) {
 
                     action.allow()
                 } else {
-                    action.allow()
+                    if (action.receiver === packet.AUTH
+                        && action.data
+                        && action.data.token
+                        && action.socket.deviceId
+                    ) {
+                        action.allow()
+                    } else if (action.socket.authState === "authenticated") {
+                        action.allow()
+                    } else {
+                        action.block()
+                    }
                 }
             } catch (error) {
                 action.block(error)

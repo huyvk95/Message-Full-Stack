@@ -3,6 +3,7 @@ import userSController from "./scontroller/UserSController";
 import profileSController from "./scontroller/ProfileSController";
 import friendSController from "./scontroller/FriendSController";
 import chatroomSController from "./scontroller/ChatroomSController";
+import authSController from "./scontroller/AuthSController";
 import processSController from "./scontroller/ProcessSController";
 import messageSController from "./scontroller/MessageSController";
 
@@ -10,6 +11,7 @@ export default async function socketListener(agServer: AGServer) {
     for await (let { socket } of agServer.listener('connection')) {
         console.log('Socket on connection');
         // Controller
+        authSController(agServer, socket, 'connection')
         processSController(agServer, socket, 'connection')
         userSController(agServer, socket, 'connection');
         profileSController(agServer, socket, 'connection');
