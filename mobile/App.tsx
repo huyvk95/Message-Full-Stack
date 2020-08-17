@@ -10,7 +10,7 @@ import * as api from "./src/api";
 import { IApp } from './src/interface/interface.component';
 import { connect } from 'react-redux';
 import { initialize } from './src/action/action.app';
-import { IStoreState } from './src/interface/interface.data';
+import { navigationRef } from './src/navigation';
 
 const App = ({ initialize }: IApp) => {
   let [inited, setInited] = useState(false);
@@ -29,7 +29,7 @@ const App = ({ initialize }: IApp) => {
     <>
       <StatusBar barStyle="dark-content" />
       <SafeAreaView style={style.app.wrap}>
-        <NavigationContainer>
+        <NavigationContainer ref={navigationRef as any}>
           {!inited ? <></> : <AuthNavigation />}
         </NavigationContainer>
       </SafeAreaView>

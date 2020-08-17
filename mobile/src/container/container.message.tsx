@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Button } from "react-native";
+import { View } from "react-native";
 import style from "../style";
 import MessageHeader from "../component/component.message.header";
 import MessageControl from "../component/component.message.control";
@@ -9,11 +9,7 @@ import { IComponentProps } from "../interface/interface.component";
 const MessageContainer = ({ navigation }: IComponentProps) => {
     return (
         <View style={style.message.message.wrap}>
-            {/* <Button
-                title="OK"
-                onPress={() => { navigation.navigate("main") }}
-            /> */}
-            <MessageHeader />
+            <MessageHeader navigation={navigation} />
             <MessageContent />
             <MessageControl />
         </View>

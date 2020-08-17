@@ -3,9 +3,9 @@ import * as api from "../api";
 import { connect } from 'react-redux';
 import { token } from "../action/action.user";
 import { IStoreState, IUserData } from '../interface/interface.data';
+import { View } from 'react-native';
 import MainNavigation from "./navigation.main";
 import LoginContainer from '../container/container.login';
-import { View } from 'react-native';
 
 const AuthNavigation = ({ user, token }: { user: IUserData, token: Function }) => {
     let [fail, setFail] = useState(false)

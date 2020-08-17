@@ -6,10 +6,14 @@ import MainConversation from "./component.main.conversation";
 import MainPeople from "./component.main.people";
 import Icon from "react-native-vector-icons/Ionicons";
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { chooseContentTab } from "../action/action.navigation";
+import { EContentTap } from "../common/common.type";
+import { connect } from "react-redux";
+import { IMainContent } from "../interface/interface.component";
 
 const Tab = createBottomTabNavigator();
 
-const MainContent = () => {
+const MainContent = ({ chooseContentTab }: IMainContent) => {
     return (
         <View style={style.main.content.wrap}>
             <Tab.Navigator
@@ -17,6 +21,7 @@ const MainContent = () => {
                     activeTintColor: "black",
                     inactiveTintColor: "#999",
                 }}
+                initialRouteName="chats"
             >
                 <Tab.Screen
                     name="chats"
@@ -33,8 +38,18 @@ const MainContent = () => {
                         )),
                         tabBarLabel: (({ color }) => (
                             <Text style={StyleSheet.flatten([style.main.footer.itemTitle, { color }])}>Chats</Text>
-                        ))
+                        )),
                     }}
+                    listeners={({ navigation, route }) => ({
+                        tabPress: e => {
+                            // Prevent default action
+                            e.preventDefault();
+                            // Set navigation
+                            chooseContentTab(EContentTap.CONVERSATION);
+                            // Do something with the `navigation` object
+                            navigation.navigate('chats');
+                        },
+                    })}
                 />
                 <Tab.Screen
                     name="people"
@@ -53,10 +68,20 @@ const MainContent = () => {
                             <Text style={StyleSheet.flatten([style.main.footer.itemTitle, { color }])}>People</Text>
                         ))
                     }}
+                    listeners={({ navigation, route }) => ({
+                        tabPress: e => {
+                            // Prevent default action
+                            e.preventDefault();
+                            // Set navigation
+                            chooseContentTab(EContentTap.PEOPLE);
+                            // Do something with the `navigation` object
+                            navigation.navigate('people');
+                        },
+                    })}
                 />
             </Tab.Navigator>
         </View>
     )
 }
 
-export default MainContent;
+export default connect(null, { chooseContentTab })(MainContent);

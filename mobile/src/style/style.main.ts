@@ -14,7 +14,7 @@ const header = StyleSheet.create({
 
     title: {
         fontWeight: "bold",
-        fontSize: baseStyle.size.text21.fontSize,
+        fontSize: baseStyle.size.text23.fontSize,
     },
 })
 
@@ -52,8 +52,9 @@ const conversation = StyleSheet.create({
     list: { height: "100%" },
     item: { flexDirection: "row", marginVertical: 5 },
     info: { flex: 1, justifyContent: "center", marginLeft: 10 },
-    name: { marginBottom: 4 },
+    name: { marginBottom: 4, fontWeight: "normal", fontSize: 16 },
     lastMessage: { flexDirection: "row" },
+    lastMessageText: { fontWeight: "300", fontSize: 13 },
 })
 
 const people = StyleSheet.create({
@@ -90,6 +91,7 @@ const people = StyleSheet.create({
     ]),
 
     list: {
+        height: '100%',
         marginTop: 5,
     },
 

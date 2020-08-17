@@ -1,12 +1,18 @@
-import { IAppData, IUserData, INavigatorData, IChatroomReducerData, IFriendData } from "./interface.data";
+import { IAppData, IUserData, INavigatorData, IChatroomReducerData, IFriendData, IFriendRequestReducer } from "./interface.data";
+import { Icon } from "react-native-vector-icons/Icon";
 
 export interface IComponentProps {
     navigation?: any
+    route?: {params: any}
 }
 
 export interface IApp extends IComponentProps {
     initialize: Function,
     app: IAppData
+}
+
+export interface IMainContent extends IComponentProps {
+    chooseContentTab: Function
 }
 
 export interface ILoginContainer extends IComponentProps {
@@ -15,7 +21,8 @@ export interface ILoginContainer extends IComponentProps {
 }
 
 export interface IMainHeader extends IComponentProps {
-    user: IUserData
+    user: IUserData,
+    navigation: INavigatorData
 }
 
 export interface IMainConversation extends IComponentProps {
@@ -24,10 +31,33 @@ export interface IMainConversation extends IComponentProps {
 
 export interface IItemConversation extends IComponentProps {
     data: IChatroomReducerData
-    user: IUserData, 
-    friend: IFriendData[] 
+    user: IUserData,
+    friend: IFriendData[]
     navigation: INavigatorData
     typing: { [key in string]: IFriendData[] }
+}
+
+export interface IMainPeople extends IComponentProps {
+    friend: IFriendData[]
+    friendRequest: IFriendRequestReducer
+    navigation: INavigatorData
+    choosePeopleTab: Function
+}
+
+export interface IItemPeople extends IComponentProps {
+    data: IFriendData
+}
+
+export interface IUserInfoContainer extends IComponentProps {
+    friend: IFriendData[]
+}
+
+export interface IUserProfileContainer extends IComponentProps {
+    app: IAppData
+    user: IUserData
+    logout: Function
+    toggleNotification: Function
+    toggleSound: Function
 }
 
 export interface IMainNavigationProps extends IComponentProps {

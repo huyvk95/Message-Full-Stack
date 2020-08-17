@@ -43,6 +43,12 @@ const component = StyleSheet.create({
         fontSize: size.text15.fontSize
     },
 
+    buttonCircle: {
+        height: COMPONENT_HEIGHT,
+        width: COMPONENT_HEIGHT,
+        borderRadius: COMPONENT_HEIGHT*0.5,
+    },
+
     /* TAB */
     tabGroup: {
         flexDirection: "row",

@@ -1,6 +1,6 @@
-import React from "react";
-import { View, Text } from "react-native";
-import { TextInput, FlatList } from "react-native-gesture-handler";
+import React, { useState } from "react";
+import { View, Text, StyleSheet } from "react-native";
+import { TextInput, FlatList, TouchableWithoutFeedback } from "react-native-gesture-handler";
 import style from "../style";
 import Icon from "react-native-vector-icons/FontAwesome";
 import AvatarComponent from "./component.avatar";
@@ -8,15 +8,26 @@ import baseStyle from "../style/base";
 import { connect } from "react-redux";
 import { IMainConversation, IItemConversation } from "../interface/interface.component";
 import { IStoreState, IChatroomReducerData } from "../interface/interface.data";
-import util from "../util";
 import { EConversationType } from "../common/common.type";
+import util from "../util";
 import socket from "../socket";
 import common from "../common";
-
-const DATA = Object.keys(Array(20).fill(""))
+import DotComponent from "./component.dot";
+import * as Navigation from "../navigation";
 
 const MainConversation = ({ chatroom }: IMainConversation) => {
+    let [filter, setFilter] = useState("")
     const renderItem = ({ item }: { item: IChatroomReducerData }) => (<ItemConversation data={item} />)
+    let data = chatroom.filter(o => o.friendsChatroom.some(oo => {
+        return new RegExp(`.*${filter}.*`, "i").test(oo.user.email) ||
+            new RegExp(`.*${filter}.*`, "i").test(oo.user.firstName) ||
+            new RegExp(`.*${filter}.*`, "i").test(oo.user.lastName) ||
+            new RegExp(`.*${filter}.*`, "i").test(oo.user.nickname)
+    }))
+
+    function onChangeFilter(text: string) {
+        setFilter(text)
+    }
 
     return (
         <View style={{ backgroundColor: "#fff" }}>
@@ -30,13 +41,15 @@ const MainConversation = ({ chatroom }: IMainConversation) => {
                 />
                 <TextInput
                     placeholder="Search"
+                    value={filter}
                     style={style.component.inputGroup.text}
                     placeholderTextColor={baseStyle.color.textLight.color}
+                    onChangeText={onChangeFilter}
                 />
             </View>
             <FlatList
                 style={style.main.conversation.list}
-                data={chatroom}
+                data={data}
                 renderItem={renderItem}
                 keyExtractor={item => item.chatroom._id}
             />
@@ -86,31 +99,79 @@ const ItemConversationRaw = ({ data, friend, user, typing, navigation }: IItemCo
                 data: { userChatroomId: myChatroom._id }
             })
         }
+        // Set navigation
+        Navigation.navigate('message');
     }
 
     return (
-        <View style={style.main.conversation.item}>
-            <AvatarComponent
-                online={
-                    chatroom.type !== "conversation" || friendsChatroom.length !== 1 || !friendsChatroom[0] ? undefined : {
-                        status: friendsChatroom[0]?.user?.online,
-                        lastOnlineTime: friendsChatroom[0]?.user?.lastOnlineTime,
+        <View>
+            <TouchableWithoutFeedback
+                style={StyleSheet.flatten([
+                    style.main.conversation.item,
+                    StyleSheet.create({
+                        custom: {
+                            display: show ? "flex" : "none"
+                        }
+                    }).custom
+                ])}
+                onPress={onClickItem}
+            >
+                <AvatarComponent
+                    online={
+                        chatroom.type !== "conversation" || friendsChatroom.length !== 1 || !friendsChatroom[0] ? undefined : {
+                            status: friendsChatroom[0]?.user?.online,
+                            lastOnlineTime: friendsChatroom[0]?.user?.lastOnlineTime,
+                        }
                     }
-                }
-                url={type === "conversation" && friendsChatroom.length === 1 ? friendsChatroom[0].user.avatar : undefined}
-                size="normal"
-            />
-            <View style={style.main.conversation.info}>
-                <Text style={style.main.conversation.name}>{chatroomName}</Text>
-                <View style={style.main.conversation.lastMessage}>
-                    <Text>{`${msgPrefix}${lastMessage?.message}`}</Text>
-                    <Text>·</Text>
-                    <Text>{tdisplay}</Text>
+                    url={type === "conversation" && friendsChatroom.length === 1 ? friendsChatroom[0].user.avatar : undefined}
+                    size="normal"
+                />
+                <View style={style.main.conversation.info}>
+                    <Text style={StyleSheet.flatten([
+                        style.main.conversation.name,
+                        StyleSheet.create({
+                            custom: {
+                                fontWeight: read ? "normal" : "600"
+                            }
+                        }).custom
+                    ])}>{chatroomName}</Text>
+                    <View style={style.main.conversation.lastMessage}>
+                        <Text style={style.main.conversation.lastMessageText}>{`${msgPrefix}${lastMessage?.message}`}</Text>
+                        <Text style={style.main.conversation.lastMessageText}>·</Text>
+                        <Text style={style.main.conversation.lastMessageText}>{tdisplay}</Text>
+                    </View>
                 </View>
-            </View>
-            <View>
-
-            </View>
+                <View style={{ justifyContent: "center" }}>
+                    {
+                        !read ?
+                            <DotComponent
+                                radius={13}
+                                color="#63bf38"
+                                style={StyleSheet.flatten([
+                                    baseStyle.color.backgroundPrimary,
+                                    StyleSheet.create({
+                                        custom: {
+                                            position: "relative"
+                                        }
+                                    }).custom
+                                ])}
+                            />
+                            :
+                            lastMessage && (lastMessage.user as string) === user._id ?
+                                <AvatarComponent
+                                    url={type === "conversation" && friendsChatroom.length === 1 && friendsChatroom[0].read ? friendsChatroom[0].user.avatar : undefined}
+                                    size="tiny"
+                                    styleCustom={StyleSheet.create({
+                                        custom: {
+                                            display: friendsChatroom.some(o => o.read) ? "flex" : "none"
+                                        }
+                                    }).custom}
+                                />
+                                :
+                                <></>
+                    }
+                </View>
+            </TouchableWithoutFeedback>
         </View>
     )
 }

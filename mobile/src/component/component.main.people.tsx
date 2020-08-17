@@ -1,16 +1,31 @@
 import React from "react";
 import { View, Text } from "react-native";
 import { TextInput, FlatList, TouchableWithoutFeedback, TouchableOpacity } from "react-native-gesture-handler";
+import { IStoreState, IFriendData, IFriendRequest } from "../interface/interface.data";
+import { IMainPeople, IItemPeople } from "../interface/interface.component";
+import { choosePeopleTab } from "../action/action.navigation";
+import { EPeopleTap } from "../common/common.type";
+import { connect } from "react-redux";
 import style from "../style";
-import Icon from "react-native-vector-icons/FontAwesome";
 import AvatarComponent from "./component.avatar";
-import baseStyle from "../style/base";
+import common from "../common";
+import socket from "../socket";
+import * as Navigation from "../navigation";
 
-const DATA = Object.keys(Array(20).fill(""))
-
-const MainPeople = () => {
-    const renderItem = () => (<ItemPeople />)
-    // const renderItem = () => (<ItemRequest />)
+const MainPeople = ({ navigation, choosePeopleTab, friend, friendRequest }: IMainPeople) => {
+    // Data
+    let friendData = [...friend.filter(o => o.online), ...friend.filter(o => !o.online)]
+    let requestData = friendRequest.receive;
+    const data: any[] = navigation.peopleTab === common.type.EPeopleTap.PEOPLE ? friendData : requestData;
+    // Render function
+    const renderItem = ({ item }: { item: any }) => {
+        if (navigation.peopleTab === common.type.EPeopleTap.PEOPLE)
+            return (<ItemPeople data={item} />)
+        else if (navigation.peopleTab === common.type.EPeopleTap.REQUEST)
+            return (<ItemRequest data={item} />)
+        else
+            return (<View></View>)
+    }
 
     return (
         <View style={{ backgroundColor: "#fff" }}>
@@ -20,24 +35,37 @@ const MainPeople = () => {
                 <View style={style.main.people.tab}>
                     <TouchableWithoutFeedback
                         style={style.main.people.tabContent}
-                        onPress={() => { console.log("Click") }}
+                        onPress={() => { choosePeopleTab(EPeopleTap.PEOPLE) }}
                     >
-                        <Text style={style.main.people.tabTitleActive}>Sign In</Text>
+                        <Text
+                            style={navigation.peopleTab === common.type.EPeopleTap.PEOPLE ? style.main.people.tabTitleActive : style.main.people.tabTitle}
+                        >
+                            Friends
+                        </Text>
                     </TouchableWithoutFeedback>
                 </View>
                 <View style={style.main.people.tab}>
                     <TouchableWithoutFeedback
                         style={style.main.people.tabContent}
-                        onPress={() => { console.log("Click") }}
+                        onPress={() => { choosePeopleTab(EPeopleTap.REQUEST) }}
                     >
-                        <Text style={style.main.people.tabTitle}>Sign In</Text>
+                        <Text
+                            style={navigation.peopleTab === common.type.EPeopleTap.REQUEST ? style.main.people.tabTitleActive : style.main.people.tabTitle}
+                        >
+                            Request
+                        </Text>
                     </TouchableWithoutFeedback>
                 </View>
             </View>
             <FlatList
-                data={DATA}
+                data={data}
                 renderItem={renderItem}
-                keyExtractor={item => item}
+                keyExtractor={item => {
+                    if (navigation.peopleTab === common.type.EPeopleTap.PEOPLE)
+                        return (item as IFriendData)._id
+                    else
+                        return (item as IFriendRequest)._id
+                }}
                 style={style.main.people.list}
             />
 
@@ -45,46 +73,98 @@ const MainPeople = () => {
     )
 }
 
-const ItemPeople = () => {
+const ItemPeople = ({ data }: IItemPeople) => {
+    let { avatar, firstName, lastName, nickname, online, lastOnlineTime, email } = data;
+
     return (
-        <View style={style.main.people.itemPeople}>
-            <AvatarComponent size="small" />
-            <View style={style.main.people.itemPeopleWrap}>
-                <View style={style.main.people.itemPeopleInfo}>
-                    <Text style={style.main.people.itemPeopleTitle}>Cún (Mập)</Text>
-                    <Text style={style.main.people.itemPeopleInfoText}>abcdef@gmail.com</Text>
+        <View>
+            <TouchableWithoutFeedback
+                style={style.main.people.itemPeople}
+                onPress={() => {
+                    Navigation.navigate('userInfo', { data: data, view: "info" });
+                }}
+            >
+                <AvatarComponent
+                    url={avatar}
+                    online={{
+                        status: online,
+                        lastOnlineTime
+                    }}
+                    size="small"
+                />
+                <View style={style.main.people.itemPeopleWrap}>
+                    <View style={style.main.people.itemPeopleInfo}>
+                        <Text style={style.main.people.itemPeopleTitle}>{nickname ? nickname : `${lastName} ${firstName}`}</Text>
+                        <Text style={style.main.people.itemPeopleInfoText}>{email}</Text>
+                    </View>
                 </View>
-            </View>
+            </TouchableWithoutFeedback>
         </View>
     )
 }
 
-const ItemRequest = () => {
+const ItemRequest = ({ data }: { data: IFriendRequest }) => {
+    let { from, _id } = data;
+    let { avatar, firstName, lastName, email } = from
+
+    const onRefuseClick = () => {
+        let sc = socket.getSocket()
+        if (!sc) return;
+        sc.transmit(common.packet.FRIEND, { evt: common.event.FRIEND.REFUSEFRIENDREQUEST, data: { requestId: _id } })
+    }
+
+    const onAccepClick = () => {
+        let sc = socket.getSocket()
+        if (!sc) return;
+        sc.transmit(common.packet.FRIEND, { evt: common.event.FRIEND.ACCEPTFRIENDREQUEST, data: { requestId: _id } })
+    }
+
+    const onClickItem = () => {
+        Navigation.navigate('userInfo', { data: from, view: "view" });
+    }
+
     return (
-        <View style={style.main.people.itemPeople}>
-            <AvatarComponent size="small" />
-            <View style={style.main.people.itemPeopleWrap}>
-                <View style={style.main.people.itemPeopleInfo}>
-                    <Text style={style.main.people.itemPeopleTitle}>Cún (Mập)</Text>
-                    <Text style={style.main.people.itemPeopleInfoText}>abcdef@gmail.com</Text>
+        <View>
+            <TouchableWithoutFeedback
+                style={style.main.people.itemPeople}
+                onPress={onClickItem}
+            >
+                <AvatarComponent
+                    url={avatar}
+                    size="small"
+                />
+                <View style={style.main.people.itemPeopleWrap}>
+                    <View style={style.main.people.itemPeopleInfo}>
+                        <Text style={style.main.people.itemPeopleTitle}>{`${lastName} ${firstName}`}</Text>
+                        <Text style={style.main.people.itemPeopleInfoText}>{email}</Text>
+                    </View>
+                    <View style={style.main.people.itemPeopleControl}>
+                        <TouchableOpacity
+                            style={style.main.people.itemPeopleButton}
+                            onPress={onRefuseClick}
+                        >
+                            <Text style={style.main.people.itemPeopleButtonText}>Refuse</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            style={style.main.people.itemPeopleButton}
+                            onPress={onAccepClick}
+                        >
+                            <Text style={style.main.people.itemPeopleButtonTextActive}>Accept</Text>
+                        </TouchableOpacity>
+                    </View>
                 </View>
-                <View style={style.main.people.itemPeopleControl}>
-                    <TouchableOpacity
-                        style={style.main.people.itemPeopleButton}
-                        onPress={() => { console.log("Click") }}
-                    >
-                        <Text style={style.main.people.itemPeopleButtonText}>Refuse</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                        style={style.main.people.itemPeopleButton}
-                        onPress={() => { console.log("Click") }}
-                    >
-                        <Text style={style.main.people.itemPeopleButtonTextActive}>Accept</Text>
-                    </TouchableOpacity>
-                </View>
-            </View>
+            </TouchableWithoutFeedback>
         </View>
     )
 }
 
-export default MainPeople;
+let mapStateToProps = ({ navigation, friend, user, friendRequest }: IStoreState) => ({
+    navigation,
+    friend,
+    user,
+    friendRequest
+})
+let mapDispatchToProps = {
+    choosePeopleTab
+}
+export default connect(mapStateToProps, mapDispatchToProps)(MainPeople);

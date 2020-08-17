@@ -1,8 +1,5 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
-import style from '../style';
-import MainContainer from '../container/container.main';
-import MessageContainer from '../container/container.message';
 import { connect } from 'react-redux';
 import { IStoreState, ISocketTransmitData, IChatroomReducerData, ISocketResponseData } from '../interface/interface.data';
 import { cleanUserData } from '../action/action.user';
@@ -12,10 +9,15 @@ import { chooseContentTab, choosePeopleTab, setChatroomNavigation } from '../act
 import { getAllChatrooms, createChatroom, unfollowChatroom, updateChatroom } from '../action/action.chatroom';
 import { receiveMessage, getMessages } from '../action/action.message';
 import { setTyping } from '../action/action.typing';
-import common from '../common';
 import { IMainNavigationProps } from '../interface/interface.component';
 import { EViewType } from '../common/common.type';
+import style from '../style';
+import common from '../common';
 import socket from '../socket';
+import UserProfileContainer from '../container/container.profile';
+import UserInfoContainer from '../container/container.userInfo';
+import MainContainer from '../container/container.main';
+import MessageContainer from '../container/container.message';
 
 const Stack = createStackNavigator();
 class MainNavigation extends React.Component<IMainNavigationProps> {
@@ -238,6 +240,7 @@ class MainNavigation extends React.Component<IMainNavigationProps> {
                     headerShown: false,
                     cardStyle: style.app.card
                 }}
+                initialRouteName="main"
             >
                 <Stack.Screen
                     name="main"
@@ -246,6 +249,14 @@ class MainNavigation extends React.Component<IMainNavigationProps> {
                 <Stack.Screen
                     name="message"
                     component={MessageContainer}
+                />
+                <Stack.Screen
+                    name="userInfo"
+                    component={UserInfoContainer}
+                />
+                <Stack.Screen
+                    name="profile"
+                    component={UserProfileContainer}
                 />
             </Stack.Navigator>
         )
