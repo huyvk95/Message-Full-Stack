@@ -61,6 +61,12 @@ export interface IUserProfileContainer extends IComponentProps {
     toggleSound: Function
 }
 
+export interface IMessageHeader extends IComponentProps {
+    chatroomId: string,
+    chatroom: IChatroomReducerData[]
+    friend: IFriendData[]
+}
+
 export interface IMainNavigationProps extends IComponentProps {
     app: IAppData,
     user: IUserData,
