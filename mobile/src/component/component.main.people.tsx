@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
 import { TextInput, FlatList, TouchableWithoutFeedback, TouchableOpacity } from "react-native-gesture-handler";
 import { IStoreState, IFriendData, IFriendRequest } from "../interface/interface.data";
 import { IMainPeople, IItemPeople } from "../interface/interface.component";
@@ -16,16 +16,6 @@ const MainPeople = ({ navigation, choosePeopleTab, friend, friendRequest }: IMai
     // Data
     let friendData = [...friend.filter(o => o.online), ...friend.filter(o => !o.online)]
     let requestData = friendRequest.receive;
-    const data: any[] = navigation.peopleTab === common.type.EPeopleTap.PEOPLE ? friendData : requestData;
-    // Render function
-    const renderItem = ({ item }: { item: any }) => {
-        if (navigation.peopleTab === common.type.EPeopleTap.PEOPLE)
-            return (<ItemPeople data={item} />)
-        else if (navigation.peopleTab === common.type.EPeopleTap.REQUEST)
-            return (<ItemRequest data={item} />)
-        else
-            return (<View></View>)
-    }
 
     return (
         <View style={{ backgroundColor: "#fff" }}>
@@ -58,15 +48,22 @@ const MainPeople = ({ navigation, choosePeopleTab, friend, friendRequest }: IMai
                 </View>
             </View>
             <FlatList
-                data={data}
-                renderItem={renderItem}
-                keyExtractor={item => {
-                    if (navigation.peopleTab === common.type.EPeopleTap.PEOPLE)
-                        return (item as IFriendData)._id
-                    else
-                        return (item as IFriendRequest)._id
-                }}
-                style={style.main.people.list}
+                data={friendData}
+                renderItem={({ item }: { item: any }) => (<ItemPeople data={item} />)}
+                keyExtractor={item => item._id}
+                style={StyleSheet.flatten([
+                    style.main.people.list,
+                    { display: navigation.peopleTab === common.type.EPeopleTap.PEOPLE ? "flex" : "none" }
+                ])}
+            />
+            <FlatList
+                data={requestData}
+                renderItem={({ item }: { item: any }) => (<ItemRequest data={item} />)}
+                keyExtractor={item => item._id}
+                style={StyleSheet.flatten([
+                    style.main.people.list,
+                    { display: navigation.peopleTab === common.type.EPeopleTap.REQUEST ? "flex" : "none" }
+                ])}
             />
 
         </View>
