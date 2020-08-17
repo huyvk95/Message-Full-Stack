@@ -33,7 +33,8 @@ function connection(agServer: AGServer, socket: AGServerSocket) {
             user.set('loginTime', new Date())
             await user.save()
             // Sign for socket
-            socket.setAuthToken(util.common.userPrivateInfoFilter(user.toObject()))
+            let userObject = Object.assign({}, user.toObject(), { _id: user.get('_id').toString() });
+            socket.setAuthToken(util.common.userPrivateInfoFilter(userObject))
         }
     })();
 }

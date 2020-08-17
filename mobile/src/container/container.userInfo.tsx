@@ -1,19 +1,18 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, NativeSyntheticEvent, TextInputFocusEventData, Alert } from "react-native";
-import style from "../style";
+import { connect } from "react-redux";
+import { View, Text, StyleSheet, Alert } from "react-native";
 import { IUserInfoContainer } from "../interface/interface.component";
-import { TextInput, TouchableWithoutFeedback } from "react-native-gesture-handler";
 import { IFriendData, IStoreState } from "../interface/interface.data";
-import Icon from "react-native-vector-icons/FontAwesome";
+import style from "../style";
 import SubviewHeader from "../component/component.subview.header";
 import AvatarComponent from "../component/component.avatar";
 import baseStyle from "../style/base";
-import { connect } from "react-redux";
 import socket from "../socket";
 import common from "../common";
 import LineButton from "../component/component.linebutton";
+import * as Navigation from "../navigation";
 
-const UserInfoContainer = ({ navigation, route, friend, friendRequest }: IUserInfoContainer) => {
+const UserInfoContainer = ({ navigation, route, friend, friendRequest, chatroom }: IUserInfoContainer) => {
     let data: IFriendData = route?.params?.data
     let { _id, avatar, firstName, lastName, email, lastOnlineTime, online, nickname } = data;
     let isFriend = friend.some(o => o._id === _id);
@@ -40,7 +39,22 @@ const UserInfoContainer = ({ navigation, route, friend, friendRequest }: IUserIn
     }
 
     function onClickSendMessage() {
-        console.log("onClickSendMessage")
+        // Find or create new chatroom
+        let chatroomData = chatroom.find(o => {
+            return o.chatroom.type === 'conversation' && o.friendsChatroom.length === 1 && o.friendsChatroom[0]._id === _id
+        })
+        if (chatroomData) Navigation.navigate('message', { chatroomId: chatroomData.chatroom._id });
+        else {
+            let sc = socket.getSocket();
+            if (sc) sc.transmit(common.packet.CHATROOM,
+                {
+                    evt: common.event.CHATROOM.CREATE,
+                    data: {
+                        users: [_id],
+                        type: 'conversation',
+                    }
+                })
+        }
     }
 
     function onClickRemoveFriend() {
@@ -158,4 +172,4 @@ const UserInfoContainer = ({ navigation, route, friend, friendRequest }: IUserIn
     )
 }
 
-export default connect(({ friend, friendRequest }: IStoreState) => ({ friend, friendRequest }))(UserInfoContainer);
+export default connect(({ friend, friendRequest, chatroom }: IStoreState) => ({ friend, friendRequest, chatroom }))(UserInfoContainer);

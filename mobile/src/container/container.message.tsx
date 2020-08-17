@@ -6,7 +6,9 @@ import MessageControl from "../component/component.message.control";
 import MessageContent from "../component/component.message.content";
 import { IComponentProps } from "../interface/interface.component";
 
-const MessageContainer = ({ navigation }: IComponentProps) => {
+const MessageContainer = ({ navigation, route }: IComponentProps) => {
+    let { chatroomId } = route?.params;
+
     return (
         <View style={style.message.message.wrap}>
             <MessageHeader navigation={navigation} />

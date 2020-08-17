@@ -101,7 +101,7 @@ const ItemConversationRaw = ({ data, friend, user, typing, navigation }: IItemCo
             })
         }
         // Set navigation
-        Navigation.navigate('message');
+        Navigation.navigate('message', {chatroomId});
     }
 
     return (

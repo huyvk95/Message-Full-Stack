@@ -1,7 +1,8 @@
 import common from "../common";
 import { IPayloadData, IChatroomReducerData } from "../interface/interface.data";
-import { setChatroomNavigation } from "./action.navigation";
+// import { setChatroomNavigation } from "./action.navigation";
 import { setUnreadChatroom } from "./action.app";
+import * as Navigation from "../navigation";
 
 export function createChatroom({ success, data, message }: IPayloadData) {
     return async function (dispatch: Function) {
@@ -10,7 +11,8 @@ export function createChatroom({ success, data, message }: IPayloadData) {
         } else if (data && (data as IChatroomReducerData).chatroom) {
             let chatroomData: IChatroomReducerData = data;
             // Set chat room
-            dispatch(setChatroomNavigation(chatroomData.chatroom._id))
+            Navigation.navigate('message', { chatroomId: chatroomData.chatroom._id });
+            // dispatch(setChatroomNavigation(chatroomData.chatroom._id))
             // Create
             dispatch({
                 type: common.action.CHATROOM_CREATE,

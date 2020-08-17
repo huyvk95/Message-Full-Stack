@@ -50,6 +50,7 @@ export interface IItemPeople extends IComponentProps {
 export interface IUserInfoContainer extends IComponentProps {
     friend: IFriendData[]
     friendRequest: IFriendRequestReducer
+    chatroom: IChatroomReducerData[]
 }
 
 export interface IUserProfileContainer extends IComponentProps {
