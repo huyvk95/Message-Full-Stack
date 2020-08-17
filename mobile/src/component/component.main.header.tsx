@@ -12,12 +12,12 @@ import baseStyle from "../style/base";
 import * as Navigation from "../navigation";
 
 const MainHeader = ({ user, navigation }: IMainHeader) => {
-    function onClickAddFriend() {
-        console.log("onClickAddFriend")
-    }
-
     function onClickAvatar() {
         Navigation.navigate('profile');
+    }
+
+    function onClickFindPeople() {
+        Navigation.navigate('findPeople');
     }
 
     return (
@@ -44,7 +44,7 @@ const MainHeader = ({ user, navigation }: IMainHeader) => {
                         baseStyle.component.buttonCircle,
                         baseStyle.color.backgroundSemiLight
                     ])}
-                    onPress={onClickAddFriend}
+                    onPress={onClickFindPeople}
                 >
                     <Icon
                         name="user-plus"

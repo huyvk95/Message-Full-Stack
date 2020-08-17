@@ -44,6 +44,7 @@ const MainConversation = ({ chatroom }: IMainConversation) => {
                     value={filter}
                     style={style.component.inputGroup.text}
                     placeholderTextColor={baseStyle.color.textLight.color}
+                    autoCorrect={false}
                     onChangeText={onChangeFilter}
                 />
             </View>

@@ -18,6 +18,7 @@ import UserProfileContainer from '../container/container.profile';
 import UserInfoContainer from '../container/container.userInfo';
 import MainContainer from '../container/container.main';
 import MessageContainer from '../container/container.message';
+import FindPeopleContainer from '../container/container.findpeople';
 
 const Stack = createStackNavigator();
 class MainNavigation extends React.Component<IMainNavigationProps> {
@@ -257,6 +258,10 @@ class MainNavigation extends React.Component<IMainNavigationProps> {
                 <Stack.Screen
                     name="profile"
                     component={UserProfileContainer}
+                />
+                <Stack.Screen
+                    name="findPeople"
+                    component={FindPeopleContainer}
                 />
             </Stack.Navigator>
         )

@@ -8,7 +8,6 @@ export interface IComponentProps {
 
 export interface IApp extends IComponentProps {
     initialize: Function,
-    app: IAppData
 }
 
 export interface IMainContent extends IComponentProps {
@@ -50,6 +49,7 @@ export interface IItemPeople extends IComponentProps {
 
 export interface IUserInfoContainer extends IComponentProps {
     friend: IFriendData[]
+    friendRequest: IFriendRequestReducer
 }
 
 export interface IUserProfileContainer extends IComponentProps {

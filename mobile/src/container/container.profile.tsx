@@ -1,12 +1,9 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, Alert } from "react-native";
 import { IUserProfileContainer } from "../interface/interface.component";
-import { TouchableWithoutFeedback, Switch } from "react-native-gesture-handler";
 import { IStoreState } from "../interface/interface.data";
 import { connect } from "react-redux";
 import style from "../style";
-import Icon from "react-native-vector-icons/FontAwesome";
-import IoniIcon from "react-native-vector-icons/Ionicons";
 import SubviewHeader from "../component/component.subview.header";
 import AvatarComponent from "../component/component.avatar";
 import baseStyle from "../style/base";
@@ -15,9 +12,11 @@ import { toggleNotification, toggleSound } from "../action/action.app";
 import Dialog from "react-native-dialog";
 import socket from "../socket";
 import common from "../common";
+import LineButton from "../component/component.linebutton";
 
 const UserProfileContainer = ({ navigation, user, app, logout, toggleSound, toggleNotification }: IUserProfileContainer) => {
     let [onChangePassword, setOnChangePassword] = useState(false);
+    let [onEditProfile, setOnEditProfile] = useState(false);
     let { _id, email, avatar, firstName, lastName } = user;
     let cstyle = style.userinfo.content;
 
@@ -26,7 +25,7 @@ const UserProfileContainer = ({ navigation, user, app, logout, toggleSound, togg
     }
 
     function onClickEditProfile() {
-        console.log("onClickEditProfile");
+        setOnEditProfile(true)
     }
 
     function onClickChangePassword() {
@@ -55,37 +54,37 @@ const UserProfileContainer = ({ navigation, user, app, logout, toggleSound, togg
                 <View style={StyleSheet.flatten([
                     cstyle.controlLayout,
                 ])}>
-                    <ButtonLine
+                    <LineButton
                         icon={{ ioni: "notifications" }}
                         title={{ text: "Notification" }}
                         switchElem={{ onChange: (check: boolean) => { toggleNotification(check) }, value: app.notification }}
                     />
 
-                    <ButtonLine
+                    <LineButton
                         icon={{ fontawesome: "music" }}
                         title={{ text: "Sound" }}
                         switchElem={{ onChange: (check: boolean) => { toggleSound(check) }, value: app.sound }}
                     />
 
-                    <ButtonLine
+                    <LineButton
                         icon={{ fontawesome: "user-circle-o" }}
                         title={{ text: "Change avatar" }}
                         onPress={onClickChangerAvatar}
                     />
 
-                    <ButtonLine
+                    <LineButton
                         icon={{ fontawesome: "edit" }}
                         title={{ text: "Edit profile" }}
                         onPress={onClickEditProfile}
                     />
 
-                    <ButtonLine
+                    <LineButton
                         icon={{ fontawesome: "unlock" }}
                         title={{ text: "Change password" }}
                         onPress={onClickChangePassword}
                     />
 
-                    <ButtonLine
+                    <LineButton
                         icon={{ fontawesome: "sign-out", style: baseStyle.color.textDanger }}
                         title={{ text: "Logout", style: baseStyle.color.textDanger }}
                         onPress={onClickLogout}
@@ -93,6 +92,7 @@ const UserProfileContainer = ({ navigation, user, app, logout, toggleSound, togg
                 </View>
             </View>
             <ChangePasswordDialog show={onChangePassword} setShow={setOnChangePassword} />
+            <EditProfileDialog show={onEditProfile} setShow={setOnEditProfile} />
         </View>
     )
 }
@@ -146,10 +146,22 @@ const ChangePasswordDialog = connect(null, { updateUserData })(({ show, setShow,
                                 updateUserData(data.data)
                                 setShow(false);
                             }).catch(err => {
-                                // setError(true)
+                                Alert.alert(
+                                    "Error",
+                                    err,
+                                    [
+                                        { text: "OK", onPress: () => console.log("OK Pressed") }
+                                    ],
+                                )
                             })
                     } else {
-                        // setError(true)
+                        Alert.alert(
+                            "Error",
+                            "Password and confirm password not match",
+                            [
+                                { text: "OK", onPress: () => console.log("OK Pressed") }
+                            ],
+                        )
                     }
                 }}
             />
@@ -157,59 +169,65 @@ const ChangePasswordDialog = connect(null, { updateUserData })(({ show, setShow,
     )
 })
 
-const ButtonLine = ({ icon, title, onPress, switchElem }: {
-    icon: { ioni?: string, fontawesome?: string, style?: any }
-    title: { text: string, style?: any }
-    onPress?: Function
-    switchElem?: { value: boolean, onChange: Function }
+const EditProfileDialog = connect(null, { updateUserData })(({ show, setShow, updateUserData }: {
+    show: boolean,
+    setShow: Function,
+    updateUserData: Function
 }) => {
-    let cstyle = style.userinfo.content;
-    let styleIcon = StyleSheet.flatten([
-        cstyle.buttonIcon,
-        icon.style || {}
-    ])
-    let styleTitle = StyleSheet.flatten([
-        cstyle.buttonText,
-        title.style || {}
-    ])
+    let [firstName, setFirstName] = useState("")
+    let [lastName, setLastName] = useState("")
+    let [oldPassword, setOldPassword] = useState("")
 
     return (
-        <TouchableWithoutFeedback
-            style={cstyle.buttonWrap}
-            onPress={() => { if (typeof onPress === "function") onPress() }}
-        >
-            {
-                icon.fontawesome ?
-                    <Icon
-                        name={icon.fontawesome}
-                        style={styleIcon}
-                    /> : icon.ioni ?
-                        <IoniIcon
-                            name={icon.ioni}
-                            style={styleIcon}
-                        /> :
-                        <></>
-            }
-            <View style={StyleSheet.flatten([
-                cstyle.buttonTextWrap,
-                cstyle.buttonTextContent
-            ])}>
-                <Text style={styleTitle}>{title.text}</Text>
-                {
-                    switchElem ?
-                        <Switch
-                            onValueChange={(check) => {
-                                if (typeof switchElem.onChange === "function") switchElem.onChange(check)
-                            }}
-                            value={switchElem.value}
-                        />
-                        :
-                        <></>
-                }
-            </View>
-        </TouchableWithoutFeedback>
+        <Dialog.Container visible={show}>
+            <Dialog.Title>Change password</Dialog.Title>
+            <Dialog.Input
+                placeholder="First name"
+                placeholderTextColor={baseStyle.color.textLight.color}
+                onChangeText={(text: string) => { setFirstName(text) }}
+            />
+            <Dialog.Input
+                placeholder="Last name"
+                placeholderTextColor={baseStyle.color.textLight.color}
+                onChangeText={(text: string) => { setLastName(text) }}
+            />
+            <Dialog.Input
+                placeholder="Old password"
+                placeholderTextColor={baseStyle.color.textLight.color}
+                secureTextEntry={true}
+                onChangeText={(text: string) => { setOldPassword(text) }}
+            />
+            <Dialog.Button
+                label="Cancel"
+                onPress={() => {
+                    setShow(false);
+                }}
+            />
+            <Dialog.Button
+                label="Submit"
+                onPress={() => {
+                    let sc = socket.getSocket()
+                    if (sc) sc.invoke(common.packet.PROFILE,
+                        {
+                            evt: common.event.PROFILE.PUT,
+                            data: { oldPassword, firstName, lastName }
+                        }).then(data => {
+                            updateUserData(data.data)
+                            setShow(false);
+                        }).catch(err => {
+                            Alert.alert(
+                                "Error",
+                                err,
+                                [
+                                    { text: "OK", onPress: () => console.log("OK Pressed") }
+                                ],
+                            )
+                        })
+                }}
+            />
+        </Dialog.Container>
     )
-}
+})
 
 export default connect(({ user, app }: IStoreState) => ({
     app,

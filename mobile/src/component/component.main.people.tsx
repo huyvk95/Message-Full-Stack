@@ -81,7 +81,7 @@ const ItemPeople = ({ data }: IItemPeople) => {
             <TouchableWithoutFeedback
                 style={style.main.people.itemPeople}
                 onPress={() => {
-                    Navigation.navigate('userInfo', { data: data, view: "info" });
+                    Navigation.navigate('userInfo', { data: data });
                 }}
             >
                 <AvatarComponent
@@ -120,7 +120,7 @@ const ItemRequest = ({ data }: { data: IFriendRequest }) => {
     }
 
     const onClickItem = () => {
-        Navigation.navigate('userInfo', { data: from, view: "view" });
+        Navigation.navigate('userInfo', { data: from });
     }
 
     return (

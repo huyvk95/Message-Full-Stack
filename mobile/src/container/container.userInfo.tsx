@@ -11,19 +11,32 @@ import baseStyle from "../style/base";
 import { connect } from "react-redux";
 import socket from "../socket";
 import common from "../common";
+import LineButton from "../component/component.linebutton";
 
-const UserInfoContainer = ({ navigation, route, friend }: IUserInfoContainer) => {
-    let [onEditNickname, setOnEditNickname] = useState(false);
-    let [inputNicknameValue, setInputNicknameValue] = useState("");
+const UserInfoContainer = ({ navigation, route, friend, friendRequest }: IUserInfoContainer) => {
     let data: IFriendData = route?.params?.data
-    let view = route?.params?.view
     let { _id, avatar, firstName, lastName, email, lastOnlineTime, online, nickname } = data;
     let isFriend = friend.some(o => o._id === _id);
     let cstyle = style.userinfo.content;
 
+    // Check friend request
+    // -Check receive
+    let frrData = friendRequest.receive.find(o => o.from._id === _id)
+    // -Check sent
+    let frsData = friendRequest.sent.find(o => o.to._id === _id)
+
     function onClickSetNickname() {
-        setOnEditNickname(!onEditNickname);
-        setInputNicknameValue("");
+        Alert.prompt("Nickname", "Set your friend nickname", [
+            {
+                text: "OK", onPress: (text) => {
+                    let sc = socket.getSocket()
+                    if (sc) sc.transmit(common.packet.FRIEND, {
+                        evt: common.event.FRIEND.SETNICKNAME,
+                        data: { friendId: _id, nickname: text }
+                    })
+                }
+            }
+        ])
     }
 
     function onClickSendMessage() {
@@ -59,20 +72,22 @@ const UserInfoContainer = ({ navigation, route, friend }: IUserInfoContainer) =>
         sc.transmit(common.packet.FRIEND, { evt: common.event.FRIEND.SENDFRIENDREQUEST, data: { userId: _id } })
     }
 
-    function onChangeNickname(text: string) {
-        setInputNicknameValue(text);
+    function onClickAccept() {
+        let sc = socket.getSocket()
+        if (!sc || !frrData || !frrData._id) return;
+        sc.transmit(common.packet.FRIEND, { evt: common.event.FRIEND.ACCEPTFRIENDREQUEST, data: { requestId: frrData._id } })
     }
 
-    function onBlurInput(e: NativeSyntheticEvent<TextInputFocusEventData>) {
+    function onClickRefuse() {
         let sc = socket.getSocket()
-        if (sc) sc.transmit(common.packet.FRIEND, {
-            evt: common.event.FRIEND.SETNICKNAME,
-            data: { friendId: _id, nickname: e.nativeEvent.text }
-        })
+        if (!sc || !frrData || !frrData._id) return;
+        sc.transmit(common.packet.FRIEND, { evt: common.event.FRIEND.REFUSEFRIENDREQUEST, data: { requestId: frrData._id } })
+    }
 
-        // Reset view
-        setInputNicknameValue("");
-        setOnEditNickname(false);
+    function onClickCancelRequest() {
+        let sc = socket.getSocket()
+        if (!sc || !frsData || !frsData._id) return;
+        sc.transmit(common.packet.FRIEND, { evt: common.event.FRIEND.CANCELFRIENDREQUEST, data: { requestId: frsData._id } })
     }
 
     return (
@@ -93,126 +108,54 @@ const UserInfoContainer = ({ navigation, route, friend }: IUserInfoContainer) =>
                     </View>
                     <Text style={style.userinfo.content.email}>{email}</Text>
                     <Text style={style.userinfo.content.name}>{`${lastName} ${firstName}${nickname ? `(${nickname})` : ""}`}</Text>
-                    <View
-                        style={StyleSheet.flatten([
-                            style.component.inputGroup.wrap,
-                            style.userinfo.content.nicknameInput,
-                            StyleSheet.create({
-                                custom: {
-                                    display: onEditNickname ? "flex" : "none"
-                                }
-                            }).custom
-                        ])}
-                    >
-                        <TextInput
-                            placeholder="Nickname"
-                            value={inputNicknameValue || ""}
-                            style={style.component.inputGroup.text}
-                            placeholderTextColor={baseStyle.color.textLight.color}
-                            onChangeText={onChangeNickname}
-                            onBlur={onBlurInput}
-                        />
-                        <Icon
-                            name="pencil"
-                            size={20}
-                            style={style.component.inputGroup.icon}
-                        />
-                    </View>
                 </View>
-                <View style={StyleSheet.flatten([
-                    cstyle.controlLayout,
-                    StyleSheet.create({
-                        custom: {
-                            display: view === "info" ? "flex" : "none"
-                        }
-                    }).custom
-                ])
+                <View style={StyleSheet.flatten([cstyle.controlLayout])
                 }>
-                    <TouchableWithoutFeedback
-                        style={StyleSheet.flatten([
-                            cstyle.buttonWrap,
-                            StyleSheet.create({
-                                custom: {
-                                    display: isFriend ? "flex" : "none"
-                                }
-                            }).custom
-                        ])}
+                    <LineButton
+                        icon={{ fontawesome: "tag" }}
+                        title={{ text: "Set nickname" }}
+                        style={{ display: isFriend ? "flex" : "none" }}
                         onPress={onClickSetNickname}
-                    >
-                        <Icon
-                            name="tag"
-                            style={cstyle.buttonIcon}
-                        />
-                        <View style={cstyle.buttonTextWrap}>
-                            <Text style={cstyle.buttonText}>Set nickname</Text>
-                        </View>
-                    </TouchableWithoutFeedback>
-                    <TouchableWithoutFeedback
-                        style={cstyle.buttonWrap}
+                    />
+                    <LineButton
+                        icon={{ fontawesome: "comment" }}
+                        title={{ text: "Send message" }}
                         onPress={onClickSendMessage}
-                    >
-                        <Icon
-                            name="comment"
-                            style={cstyle.buttonIcon}
-                        />
-                        <View style={cstyle.buttonTextWrap}>
-                            <Text style={cstyle.buttonText}>Send message</Text>
-                        </View>
-                    </TouchableWithoutFeedback>
-                    <TouchableWithoutFeedback
-                        style={StyleSheet.flatten([
-                            cstyle.buttonWrap,
-                            StyleSheet.create({
-                                custom: {
-                                    display: !isFriend ? "flex" : "none"
-                                }
-                            }).custom
-                        ])}
+                    />
+                    <LineButton
+                        icon={{ fontawesome: "times-circle", style: baseStyle.color.textDanger }}
+                        title={{ text: "Cancel friend request", style: baseStyle.color.textDanger }}
+                        style={{ display: !isFriend && frsData ? "flex" : "none" }}
+                        onPress={onClickCancelRequest}
+                    />
+                    <LineButton
+                        icon={{ fontawesome: "user-plus", style: baseStyle.color.textPrimary }}
+                        title={{ text: "Accept friend request", style: baseStyle.color.textPrimary }}
+                        style={{ display: !isFriend && frrData ? "flex" : "none" }}
+                        onPress={onClickAccept}
+                    />
+                    <LineButton
+                        icon={{ fontawesome: "user-times", style: baseStyle.color.textDanger }}
+                        title={{ text: "Refuse friend request", style: baseStyle.color.textDanger }}
+                        style={{ display: !isFriend && frrData ? "flex" : "none" }}
+                        onPress={onClickRefuse}
+                    />
+                    <LineButton
+                        icon={{ fontawesome: "user-plus", style: baseStyle.color.textPrimary }}
+                        title={{ text: "Add friend", style: baseStyle.color.textPrimary }}
+                        style={{ display: !isFriend && !frrData && !frsData ? "flex" : "none" }}
                         onPress={onClickAddFriend}
-                    >
-                        <Icon
-                            name="user-plus"
-                            style={StyleSheet.flatten([
-                                cstyle.buttonIcon,
-                                baseStyle.color.textPrimary
-                            ])}
-                        />
-                        <View style={cstyle.buttonTextWrap}>
-                            <Text style={StyleSheet.flatten([
-                                cstyle.buttonText,
-                                baseStyle.color.textPrimary
-                            ])}>Add friend</Text>
-                        </View>
-                    </TouchableWithoutFeedback>
-                    <TouchableWithoutFeedback
-                        style={StyleSheet.flatten([
-                            cstyle.buttonWrap,
-                            StyleSheet.create({
-                                custom: {
-                                    display: isFriend ? "flex" : "none"
-                                }
-                            }).custom
-                        ])}
+                    />
+                    <LineButton
+                        icon={{ fontawesome: "trash", style: baseStyle.color.textDanger }}
+                        title={{ text: "Remove friend", style: baseStyle.color.textDanger }}
+                        style={{ display: isFriend ? "flex" : "none" }}
                         onPress={onClickRemoveFriend}
-                    >
-                        <Icon
-                            name="trash"
-                            style={StyleSheet.flatten([
-                                cstyle.buttonIcon,
-                                baseStyle.color.textDanger
-                            ])}
-                        />
-                        <View style={cstyle.buttonTextWrap}>
-                            <Text style={StyleSheet.flatten([
-                                cstyle.buttonText,
-                                baseStyle.color.textDanger
-                            ])}>Remove friend</Text>
-                        </View>
-                    </TouchableWithoutFeedback>
+                    />
                 </View>
             </View>
         </View>
     )
 }
 
-export default connect(({ friend }: IStoreState) => ({ friend }))(UserInfoContainer);
+export default connect(({ friend, friendRequest }: IStoreState) => ({ friend, friendRequest }))(UserInfoContainer);

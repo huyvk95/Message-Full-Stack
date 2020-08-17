@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, TouchableHighlight, NativeSyntheticEvent, TextInputChangeEventData, TextInputFocusEventData, GestureResponderEvent } from "react-native";
+import { View, Text, TextInput, TouchableOpacity, TouchableHighlight, NativeSyntheticEvent, TextInputChangeEventData, TextInputFocusEventData, GestureResponderEvent, Alert } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 import style from "../style";
 import baseStyle from "../style/base";
@@ -15,11 +15,11 @@ const LoginContainer = ({ login, register }: ILoginContainer) => {
     let [lastName, setLastName] = useState("Văn Khắc");
     let [password, setPassword] = useState("12345678");
     let [confirmPassword, setConfirmPassword] = useState("12345678");
-    let [isEmailFail, setIsEmailFail] = useState("");
-    let [isPasswordFail, setIsPasswordFail] = useState("");
-    let [isConfirmPasswordFail, setIsConfirmPasswordFail] = useState("");
-    let [isFirstNameFail, setIsFirstNameFail] = useState("");
-    let [isLastNameFail, setIsLastNameFail] = useState("");
+    // let [isEmailFail, setIsEmailFail] = useState("");
+    // let [isPasswordFail, setIsPasswordFail] = useState("");
+    // let [isConfirmPasswordFail, setIsConfirmPasswordFail] = useState("");
+    // let [isFirstNameFail, setIsFirstNameFail] = useState("");
+    // let [isLastNameFail, setIsLastNameFail] = useState("");
 
     function onChangeEmail(text: string) {
         setEmail(text)
@@ -41,33 +41,48 @@ const LoginContainer = ({ login, register }: ILoginContainer) => {
         setConfirmPassword(text)
     }
 
+    function showError(err: string) {
+        Alert.alert(
+            "Error",
+            err,
+            [
+                { text: "OK", onPress: () => console.log("OK Pressed") }
+            ],
+        )
+    }
+
     function onBlurEmail(event: NativeSyntheticEvent<TextInputFocusEventData>) {
         let check = util.common.validateEmail(event.nativeEvent.text)
-        setIsEmailFail(check ? "" : "Invalid email format")
+        // setIsEmailFail(check ? "" : "Invalid email format")
+        if (!check) showError("Invalid email format")
     }
 
     function onBlurPassword(event: NativeSyntheticEvent<TextInputFocusEventData>) {
         let value = event.nativeEvent.text;
         let check = value.length >= 8 || value.length <= 32
-        setIsPasswordFail(check ? "" : "Password length must be 8 character or more")
+        // setIsPasswordFail(check ? "" : "Password length must be 8 character or more")
+        if (!check) showError("Password length must be 8 character or more")
     }
 
     function onBlurConfirmPassword(event: NativeSyntheticEvent<TextInputFocusEventData>) {
         let value = event.nativeEvent.text;
         let check = value.length >= 8 || value.length <= 32
-        setIsConfirmPasswordFail(check ? "" : "Confirm password length must be 8 character or more")
+        // setIsConfirmPasswordFail(check ? "" : "Confirm password length must be 8 character or more")
+        if (!check) showError("Confirm password length must be 8 character or more")
     }
 
     function onBlurFirstName(event: NativeSyntheticEvent<TextInputFocusEventData>) {
         let value = event.nativeEvent.text;
         let check = value.length ? true : false
-        setIsFirstNameFail(check ? "" : "First name required")
+        // setIsFirstNameFail(check ? "" : "First name required")
+        if (!check) showError("First name required")
     }
 
     function onBlurLastName(event: NativeSyntheticEvent<TextInputFocusEventData>) {
         let value = event.nativeEvent.text;
         let check = value.length ? true : false
-        setIsLastNameFail(check ? "" : "Last name required")
+        // setIsLastNameFail(check ? "" : "Last name required")
+        if (!check) showError("Last name required")
     }
 
     function onClickSetViewType(type: string) {
@@ -76,21 +91,23 @@ const LoginContainer = ({ login, register }: ILoginContainer) => {
         setLastName("");
         setPassword("");
         setConfirmPassword("");
-        setIsEmailFail("");
-        setIsPasswordFail("");
-        setIsConfirmPasswordFail("");
-        setIsFirstNameFail("");
-        setIsLastNameFail("");
+        // setIsEmailFail("");
+        // setIsPasswordFail("");
+        // setIsConfirmPasswordFail("");
+        // setIsFirstNameFail("");
+        // setIsLastNameFail("");
         setView(type);
     }
 
     function onLoginSubmit(event: GestureResponderEvent) {
         // Check password
         if (password.length < 8 || password.length > 32) {
-            setIsPasswordFail("Password length must be 8 character or more")
+            // setIsPasswordFail("Password length must be 8 character or more")
+            showError("Password length must be 8 character or more")
             return
         } else if (view === "signup" && password !== confirmPassword) {
-            setIsConfirmPasswordFail("Password confirmation doesn't match password")
+            // setIsConfirmPasswordFail("Password confirmation doesn't match password")
+            showError("Password confirmation doesn't match password")
             return
         }
 
@@ -131,6 +148,8 @@ const LoginContainer = ({ login, register }: ILoginContainer) => {
                     style={style.login.inputMid}
                     placeholder="Email address"
                     keyboardType="email-address"
+                    autoCapitalize="none"
+                    autoCorrect={false}
                     placeholderTextColor={baseStyle.color.textLight.color}
                     value={email}
                     onChangeText={onChangeEmail}
@@ -143,6 +162,7 @@ const LoginContainer = ({ login, register }: ILoginContainer) => {
                                 style={style.login.inputFirstName}
                                 placeholder="First name"
                                 placeholderTextColor={baseStyle.color.textLight.color}
+                                autoCorrect={false}
                                 value={firstName}
                                 onChangeText={onChangeFirstName}
                                 onBlur={onBlurFirstName}
@@ -151,6 +171,7 @@ const LoginContainer = ({ login, register }: ILoginContainer) => {
                                 style={style.login.inputLastName}
                                 placeholder="Last name"
                                 placeholderTextColor={baseStyle.color.textLight.color}
+                                autoCorrect={false}
                                 value={lastName}
                                 onChangeText={onChangeLastName}
                                 onBlur={onBlurLastName}
