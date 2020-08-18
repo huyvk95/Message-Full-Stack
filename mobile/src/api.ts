@@ -122,7 +122,14 @@ export async function getUser() {
 
 export async function uploadAvatar(payload: FormData) {
     // Request
-    let response = await axios.post(`${HOST}/upload/avatar`, payload, { headers });
+    let response = await axios.post(`${HOST}/upload/avatar`, payload,
+        {
+            headers: Object.assign({}, headers, {
+                Accept: 'application/json',
+                'Content-Type': 'multipart/form-data;',
+            })
+        }
+    );
     // Format data
     let data = responseFormat(response);
     // Return

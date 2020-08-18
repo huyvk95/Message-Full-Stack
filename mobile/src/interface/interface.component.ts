@@ -59,6 +59,7 @@ export interface IUserProfileContainer extends IComponentProps {
     logout: Function
     toggleNotification: Function
     toggleSound: Function
+    updateUserData: Function
 }
 
 export interface IMessageHeader extends IComponentProps {

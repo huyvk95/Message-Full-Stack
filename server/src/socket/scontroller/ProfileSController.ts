@@ -24,9 +24,11 @@ async function put(request: any) {
     let user = await User.findById(request.socket.authToken._id)
     if (!user) return request.error('error.find_user');
     // Check oldpassword
-    if (!oldPassword || typeof oldPassword != 'string') return request.error('missing_input')
-    let compareResult = await bcrypt.compare(oldPassword, user.get("password"))
-    if (!compareResult) return request.error('error.bad');
+    if (typeof password == 'string' || typeof firstName === 'string' || typeof lastName == 'string') {
+        if (!oldPassword || typeof oldPassword != 'string') return request.error('missing_input')
+        let compareResult = await bcrypt.compare(oldPassword, user.get("password"))
+        if (!compareResult) return request.error('error.bad');
+    }
     // Encrypt password
     if (typeof password === 'string' && password.length >= 8 && password.length <= 32) password = await bcrypt.hash(password, 12)
     // Update data
