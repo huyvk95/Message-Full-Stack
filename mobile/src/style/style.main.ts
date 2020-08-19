@@ -55,6 +55,8 @@ const conversation = StyleSheet.create({
     name: { marginBottom: 4, fontWeight: "normal", fontSize: 16 },
     lastMessage: { flexDirection: "row" },
     lastMessageText: { fontWeight: "300", fontSize: 13 },
+    swipeIcon: { fontSize: 32, color: "white" },
+    swipeButton: { flex: 1, justifyContent: "center", alignItems: "center" },
 })
 
 const people = StyleSheet.create({

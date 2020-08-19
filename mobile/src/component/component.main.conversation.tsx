@@ -1,14 +1,16 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, Alert } from "react-native";
 import { TextInput, FlatList, TouchableWithoutFeedback } from "react-native-gesture-handler";
-import style from "../style";
-import Icon from "react-native-vector-icons/FontAwesome";
-import AvatarComponent from "./component.avatar";
-import baseStyle from "../style/base";
 import { connect } from "react-redux";
 import { IMainConversation, IItemConversation } from "../interface/interface.component";
 import { IStoreState, IChatroomReducerData } from "../interface/interface.data";
 import { EConversationType } from "../common/common.type";
+import style from "../style";
+import Icon from "react-native-vector-icons/FontAwesome";
+import Ionicons from "react-native-vector-icons/Ionicons";
+import AvatarComponent from "./component.avatar";
+import baseStyle from "../style/base";
+import Swipeout from "react-native-swipeout";
 import util from "../util";
 import socket from "../socket";
 import common from "../common";
@@ -101,79 +103,171 @@ const ItemConversationRaw = ({ data, friend, user, typing, navigation }: IItemCo
             })
         }
         // Set navigation
-        Navigation.navigate('message', {chatroomId});
+        Navigation.navigate('message', { chatroomId });
+    }
+
+    const onClickRead = () => {
+        // Send read
+        let sc = socket.getSocket();
+        if (!sc) return
+        sc.transmit(common.packet.CHATROOM, {
+            evt: myChatroom.read ? common.event.CHATROOM.MASK_AS_UNREAD : common.event.CHATROOM.MASK_AS_READ,
+            data: { userChatroomId: myChatroom._id }
+        })
+    }
+
+    const onClickRemove = () => {
+        Alert.alert(
+            "Delete",
+            "Are you sure you want to delete this conversation?",
+            [{ text: "Cancel" }, {
+                text: "Sure", style: "destructive", onPress: () => {
+                    let sc = socket.getSocket()
+                    if (!sc) return;
+                    sc.transmit(common.packet.CHATROOM, { evt: common.event.CHATROOM.UNFOLLOW, data: { chatroomId: chatroom._id } })
+                }
+            }]
+        )
+    }
+
+    const onClickArchive = () => {
+        let sc = socket.getSocket();
+        if (!sc) return
+        sc.transmit(common.packet.CHATROOM, {
+            evt: common.event.CHATROOM.SET_ARCHIVE,
+            data: { userChatroomId: myChatroom._id, archive: !myChatroom.archive }
+        })
+    }
+
+    const onClickBlock = () => {
+        let sc = socket.getSocket();
+        if (!sc) return
+        sc.transmit(common.packet.CHATROOM, {
+            evt: common.event.CHATROOM.SET_BLOCK,
+            data: { userChatroomId: myChatroom._id, block: !myChatroom.block }
+        })
     }
 
     return (
-        <View>
-            <TouchableWithoutFeedback
-                style={StyleSheet.flatten([
-                    style.main.conversation.item,
-                    StyleSheet.create({
-                        custom: {
-                            display: show ? "flex" : "none"
-                        }
-                    }).custom
-                ])}
-                onPress={onClickItem}
-            >
-                <AvatarComponent
-                    online={
-                        chatroom.type !== "conversation" || friendsChatroom.length !== 1 || !friendsChatroom[0] ? undefined : {
-                            status: friendsChatroom[0]?.user?.online,
-                            lastOnlineTime: friendsChatroom[0]?.user?.lastOnlineTime,
-                        }
-                    }
-                    url={type === "conversation" && friendsChatroom.length === 1 ? friendsChatroom[0].user.avatar : undefined}
-                    size="normal"
-                />
-                <View style={style.main.conversation.info}>
-                    <Text style={StyleSheet.flatten([
-                        style.main.conversation.name,
+        <Swipeout
+            autoClose={true}
+            buttonWidth={70}
+            right={[
+                {
+                    component: (
+                        <View style={style.main.conversation.swipeButton}>
+                            <Ionicons name={myChatroom.read ? "eye-off" : "eye"} style={style.main.conversation.swipeIcon} />
+                        </View>
+                    ),
+                    backgroundColor: baseStyle.color.backgroundPrimary.backgroundColor,
+                    onPress: onClickRead
+                },
+                {
+                    component: (
+                        <View style={style.main.conversation.swipeButton}>
+                            <Ionicons name="trash" style={style.main.conversation.swipeIcon} />
+                        </View>
+                    ),
+                    backgroundColor: baseStyle.color.backgroundDanger.backgroundColor,
+                    onPress: onClickRemove
+                },
+            ]}
+            left={[
+                {
+                    component: (
+                        <View style={style.main.conversation.swipeButton}>
+                            <Ionicons name={myChatroom.block ? "ios-add-circle" : "remove-circle"} style={style.main.conversation.swipeIcon} />
+                        </View>
+                    ),
+                    backgroundColor: baseStyle.color.backgroundDanger.backgroundColor,
+                    onPress: onClickBlock
+                },
+                {
+                    component: (
+                        <View style={style.main.conversation.swipeButton}>
+                            <Ionicons name={"archive"} style={style.main.conversation.swipeIcon} />
+                        </View>
+                    ),
+                    backgroundColor: baseStyle.color.backgroundSuccess.backgroundColor,
+                    onPress: onClickArchive
+                },
+            ]}
+            style={StyleSheet.create({
+                custom: {
+                    backgroundColor: "transparent"
+                }
+            }).custom}
+        >
+            <View>
+                <TouchableWithoutFeedback
+                    style={StyleSheet.flatten([
+                        style.main.conversation.item,
                         StyleSheet.create({
                             custom: {
-                                fontWeight: read ? "normal" : "600"
+                                display: show ? "flex" : "none"
                             }
                         }).custom
-                    ])}>{chatroomName}</Text>
-                    <View style={style.main.conversation.lastMessage}>
-                        <Text style={style.main.conversation.lastMessageText}>{`${msgPrefix}${lastMessage?.message}`}</Text>
-                        <Text style={style.main.conversation.lastMessageText}>·</Text>
-                        <Text style={style.main.conversation.lastMessageText}>{tdisplay}</Text>
+                    ])}
+                    onPress={onClickItem}
+                >
+                    <AvatarComponent
+                        online={
+                            chatroom.type !== "conversation" || friendsChatroom.length !== 1 || !friendsChatroom[0] ? undefined : {
+                                status: friendsChatroom[0]?.user?.online,
+                                lastOnlineTime: friendsChatroom[0]?.user?.lastOnlineTime,
+                            }
+                        }
+                        url={type === "conversation" && friendsChatroom.length === 1 ? friendsChatroom[0].user.avatar : undefined}
+                        size="normal"
+                    />
+                    <View style={style.main.conversation.info}>
+                        <Text style={StyleSheet.flatten([
+                            style.main.conversation.name,
+                            StyleSheet.create({
+                                custom: {
+                                    fontWeight: read ? "normal" : "600"
+                                }
+                            }).custom
+                        ])}>{chatroomName}</Text>
+                        <View style={style.main.conversation.lastMessage}>
+                            <Text style={style.main.conversation.lastMessageText}>{`${msgPrefix}${lastMessage?.message}`}</Text>
+                            <Text style={style.main.conversation.lastMessageText}>·</Text>
+                            <Text style={style.main.conversation.lastMessageText}>{tdisplay}</Text>
+                        </View>
                     </View>
-                </View>
-                <View style={{ justifyContent: "center" }}>
-                    {
-                        !read ?
-                            <DotComponent
-                                radius={13}
-                                color="#63bf38"
-                                style={StyleSheet.flatten([
-                                    baseStyle.color.backgroundPrimary,
-                                    StyleSheet.create({
-                                        custom: {
-                                            position: "relative"
-                                        }
-                                    }).custom
-                                ])}
-                            />
-                            :
-                            lastMessage && (lastMessage.user as string) === user._id ?
-                                <AvatarComponent
-                                    url={type === "conversation" && friendsChatroom.length === 1 && friendsChatroom[0].read ? friendsChatroom[0].user.avatar : undefined}
-                                    size="tiny"
-                                    styleCustom={StyleSheet.create({
-                                        custom: {
-                                            display: friendsChatroom.some(o => o.read) ? "flex" : "none"
-                                        }
-                                    }).custom}
+                    <View style={{ justifyContent: "center" }}>
+                        {
+                            !read ?
+                                <DotComponent
+                                    radius={13}
+                                    color="#63bf38"
+                                    style={StyleSheet.flatten([
+                                        baseStyle.color.backgroundPrimary,
+                                        StyleSheet.create({
+                                            custom: {
+                                                position: "relative"
+                                            }
+                                        }).custom
+                                    ])}
                                 />
                                 :
-                                <></>
-                    }
-                </View>
-            </TouchableWithoutFeedback>
-        </View>
+                                lastMessage && (lastMessage.user as string) === user._id ?
+                                    <AvatarComponent
+                                        url={type === "conversation" && friendsChatroom.length === 1 && friendsChatroom[0].read ? friendsChatroom[0].user.avatar : undefined}
+                                        size="tiny"
+                                        styleCustom={StyleSheet.create({
+                                            custom: {
+                                                display: friendsChatroom.some(o => o.read) ? "flex" : "none"
+                                            }
+                                        }).custom}
+                                    />
+                                    :
+                                    <></>
+                        }
+                    </View>
+                </TouchableWithoutFeedback>
+            </View>
+        </Swipeout>
     )
 }
 const ItemConversation = connect(({ friend, typing, user, navigation }: IStoreState) => ({ friend, typing, user, navigation }))(ItemConversationRaw)

@@ -5,7 +5,7 @@ import { IMessageControl } from "../interface/interface.component";
 import { connect } from "react-redux";
 import { IStoreState } from "../interface/interface.data";
 import { COMPONENT_HEIGHT } from "../style/base/style.base.component";
-import Icon from "react-native-vector-icons/FontAwesome";
+import Icon from "react-native-vector-icons/Ionicons";
 import style from "../style";
 import baseStyle from "../style/base";
 import socket from "../socket";
@@ -126,7 +126,7 @@ const MessageControl = ({ chatroomId, chatroom }: IMessageControl) => {
                     onPress={onSubmit}
                 >
                     <Icon
-                        name="paper-plane"
+                        name="send"
                         size={20}
                         style={style.message.control.btnSend}
                     />

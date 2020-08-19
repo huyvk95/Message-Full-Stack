@@ -60,6 +60,7 @@ export interface IUserProfileContainer extends IComponentProps {
     toggleNotification: Function
     toggleSound: Function
     updateUserData: Function
+    setConversationViewType: Function
 }
 
 export interface IMessageHeader extends IComponentProps {

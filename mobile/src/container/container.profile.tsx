@@ -5,6 +5,8 @@ import { IStoreState } from "../interface/interface.data";
 import { connect } from "react-redux";
 import { logout, updateUserData } from "../action/action.user";
 import { toggleNotification, toggleSound } from "../action/action.app";
+import { setConversationViewType } from "../action/action.navigation";
+import { EConversationType } from "../common/common.type";
 import style from "../style";
 import SubviewHeader from "../component/component.subview.header";
 import AvatarComponent from "../component/component.avatar";
@@ -15,8 +17,9 @@ import common from "../common";
 import LineButton from "../component/component.linebutton";
 import ImagePicker from "react-native-image-picker";
 import * as api from "../api";
+import * as Navigation from "../navigation";
 
-const UserProfileContainer = ({ navigation, user, app, logout, toggleSound, toggleNotification, updateUserData }: IUserProfileContainer) => {
+const UserProfileContainer = ({ navigation, user, app, logout, toggleSound, toggleNotification, updateUserData, setConversationViewType }: IUserProfileContainer) => {
     let [onChangePassword, setOnChangePassword] = useState(false);
     let [onEditProfile, setOnEditProfile] = useState(false);
     let { _id, email, avatar, firstName, lastName } = user;
@@ -75,6 +78,21 @@ const UserProfileContainer = ({ navigation, user, app, logout, toggleSound, togg
         });
     }
 
+    function onChatMessage() {
+        setConversationViewType(EConversationType.NORMAL)
+        Navigation.navigate("main")
+    }
+
+    function onArchiveMessage() {
+        setConversationViewType(EConversationType.ARCHIVE)
+        Navigation.navigate("main")
+    }
+
+    function onBlockMessage() {
+        setConversationViewType(EConversationType.BLOCK)
+        Navigation.navigate("main")
+    }
+
     function onClickEditProfile() {
         setOnEditProfile(true)
     }
@@ -115,6 +133,24 @@ const UserProfileContainer = ({ navigation, user, app, logout, toggleSound, togg
                         icon={{ fontawesome: "music" }}
                         title={{ text: "Sound" }}
                         switchElem={{ onChange: (check: boolean) => { toggleSound(check) }, value: app.sound }}
+                    />
+
+                    <LineButton
+                        icon={{ ioni: "chatbubble" }}
+                        title={{ text: "Chat message" }}
+                        onPress={onChatMessage}
+                    />
+
+                    <LineButton
+                        icon={{ ioni: "archive" }}
+                        title={{ text: "Archive message" }}
+                        onPress={onArchiveMessage}
+                    />
+
+                    <LineButton
+                        icon={{ ioni: "remove-circle" }}
+                        title={{ text: "Block message" }}
+                        onPress={onBlockMessage}
                     />
 
                     <LineButton
@@ -287,5 +323,6 @@ export default connect(({ user, app }: IStoreState) => ({
     logout,
     toggleNotification,
     toggleSound,
-    updateUserData
+    updateUserData,
+    setConversationViewType
 })(UserProfileContainer);
