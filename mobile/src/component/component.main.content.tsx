@@ -10,10 +10,14 @@ import { chooseContentTab } from "../action/action.navigation";
 import { EContentTap } from "../common/common.type";
 import { connect } from "react-redux";
 import { IMainContent } from "../interface/interface.component";
+import DotComponent from "./component.dot";
+import { IStoreState } from "../interface/interface.data";
 
 const Tab = createBottomTabNavigator();
 
-const MainContent = ({ chooseContentTab }: IMainContent) => {
+const MainContent = ({ chooseContentTab, chatroom }: IMainContent) => {
+    let countUnread = chatroom.filter(o => !o.myChatroom.read && !o.myChatroom.block && !o.myChatroom.archive).length
+
     return (
         <View style={style.main.content.wrap}>
             <Tab.Navigator
@@ -33,6 +37,20 @@ const MainContent = ({ chooseContentTab }: IMainContent) => {
                                     name="chatbubble"
                                     color={color}
                                     style={style.main.footer.itemIcon}
+                                />
+                                <DotComponent
+                                    radius={18}
+                                    color={baseStyle.color.backgroundDanger.backgroundColor}
+                                    style={StyleSheet.create({
+                                        custom: {
+                                            top: 0,
+                                            right: -5,
+                                            justifyContent: "center",
+                                            alignItems: "center",
+                                            display: countUnread ? "flex" : "none"
+                                        }
+                                    }).custom}
+                                    childrent={(<Text style={{ color: "white", fontWeight: "bold" }}>{countUnread}</Text>)}
                                 />
                             </View>
                         )),
@@ -84,4 +102,4 @@ const MainContent = ({ chooseContentTab }: IMainContent) => {
     )
 }
 
-export default connect(null, { chooseContentTab })(MainContent);
+export default connect(({ chatroom }: IStoreState) => ({ chatroom }), { chooseContentTab })(MainContent);

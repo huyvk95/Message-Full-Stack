@@ -30,7 +30,7 @@ const MainPeople = ({ navigation, choosePeopleTab, friend, friendRequest }: IMai
                         <Text
                             style={navigation.peopleTab === common.type.EPeopleTap.PEOPLE ? style.main.people.tabTitleActive : style.main.people.tabTitle}
                         >
-                            Friends
+                            {`Friends${!friendData.length ? "" : ` (${friendData.length})`}`}
                         </Text>
                     </TouchableWithoutFeedback>
                 </View>
@@ -42,7 +42,7 @@ const MainPeople = ({ navigation, choosePeopleTab, friend, friendRequest }: IMai
                         <Text
                             style={navigation.peopleTab === common.type.EPeopleTap.REQUEST ? style.main.people.tabTitleActive : style.main.people.tabTitle}
                         >
-                            Request
+                            {`Request${!requestData.length ? "" : ` (${requestData.length})`}`}
                         </Text>
                     </TouchableWithoutFeedback>
                 </View>
@@ -59,7 +59,7 @@ const MainPeople = ({ navigation, choosePeopleTab, friend, friendRequest }: IMai
             <FlatList
                 data={requestData}
                 renderItem={({ item }: { item: any }) => (<ItemRequest data={item} />)}
-                keyExtractor={item => item._id}
+                keyExtractor={item => item._id + item.from._id}
                 style={StyleSheet.flatten([
                     style.main.people.list,
                     { display: navigation.peopleTab === common.type.EPeopleTap.REQUEST ? "flex" : "none" }

@@ -37,7 +37,7 @@ const content = StyleSheet.create({
     controlLayout: {
         flex: 1,
         justifyContent: "flex-end",
-        marginBottom: 30,
+        // marginBottom: 30,
     },
 
     buttonWrap: {

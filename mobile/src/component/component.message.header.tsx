@@ -37,7 +37,7 @@ const MessageHeader = ({ navigation, chatroomId, chatroom, friend }: IMessageHea
     return (
         <View style={style.message.header.wrap}>
             <TouchableWithoutFeedback
-                style={{ alignItems: "center" }}
+                style={style.message.header.left}
                 onPress={() => {
                     if (navigation.canGoBack()) {
                         navigation.goBack()
@@ -46,20 +46,32 @@ const MessageHeader = ({ navigation, chatroomId, chatroom, friend }: IMessageHea
                     }
                 }}
             >
+                <View
+                    style={{ alignItems: "center" }}
+                >
+                    <Icon
+                        name="angle-left"
+                        style={style.message.header.arrow}
+                    />
+                </View>
+                <AvatarComponent
+                    url={avtUrl}
+                    size="small"
+                />
+                <View style={style.message.header.info}>
+                    <Text style={style.message.header.infoTitle}>{chatroomName}</Text>
+                    <Text style={style.message.header.infoTime}>{activeTime}</Text>
+                </View>
+            </TouchableWithoutFeedback>
+            <TouchableWithoutFeedback
+                style={style.message.header.btnInfo}
+                onPress={clickHandle}
+            >
                 <Icon
-                    name="angle-left"
-                    style={style.message.header.arrow}
+                    name="info-circle"
+                    style={style.message.header.iconInfo}
                 />
             </TouchableWithoutFeedback>
-            <AvatarComponent
-                url={avtUrl}
-                size="small"
-                onClick={clickHandle}
-            />
-            <View style={style.message.header.info}>
-                <Text style={style.message.header.infoTitle}>{chatroomName}</Text>
-                <Text style={style.message.header.infoTime}>{activeTime}</Text>
-            </View>
         </View>
     )
 }

@@ -5,8 +5,8 @@ import { IStoreState } from "../interface/interface.data";
 import { connect } from "react-redux";
 import { logout, updateUserData } from "../action/action.user";
 import { toggleNotification, toggleSound } from "../action/action.app";
-import { setConversationViewType } from "../action/action.navigation";
-import { EConversationType } from "../common/common.type";
+import { setConversationViewType, chooseContentTab } from "../action/action.navigation";
+import { EConversationType, EContentTap } from "../common/common.type";
 import style from "../style";
 import SubviewHeader from "../component/component.subview.header";
 import AvatarComponent from "../component/component.avatar";
@@ -18,6 +18,7 @@ import LineButton from "../component/component.linebutton";
 import ImagePicker from "react-native-image-picker";
 import * as api from "../api";
 import * as Navigation from "../navigation";
+import { ScrollView } from "react-native-gesture-handler";
 
 const UserProfileContainer = ({ navigation, user, app, logout, toggleSound, toggleNotification, updateUserData, setConversationViewType }: IUserProfileContainer) => {
     let [onChangePassword, setOnChangePassword] = useState(false);
@@ -81,16 +82,19 @@ const UserProfileContainer = ({ navigation, user, app, logout, toggleSound, togg
     function onChatMessage() {
         setConversationViewType(EConversationType.NORMAL)
         Navigation.navigate("main")
+        Navigation.navigate("chats")
     }
 
     function onArchiveMessage() {
         setConversationViewType(EConversationType.ARCHIVE)
         Navigation.navigate("main")
+        Navigation.navigate("chats")
     }
 
     function onBlockMessage() {
         setConversationViewType(EConversationType.BLOCK)
         Navigation.navigate("main")
+        Navigation.navigate("chats")
     }
 
     function onClickEditProfile() {
@@ -123,59 +127,61 @@ const UserProfileContainer = ({ navigation, user, app, logout, toggleSound, togg
                 <View style={StyleSheet.flatten([
                     cstyle.controlLayout,
                 ])}>
-                    <LineButton
-                        icon={{ ioni: "notifications" }}
-                        title={{ text: "Notification" }}
-                        switchElem={{ onChange: (check: boolean) => { toggleNotification(check) }, value: app.notification }}
-                    />
+                    <ScrollView>
+                        <LineButton
+                            icon={{ ioni: "notifications" }}
+                            title={{ text: "Notification" }}
+                            switchElem={{ onChange: (check: boolean) => { toggleNotification(check) }, value: app.notification }}
+                        />
 
-                    <LineButton
-                        icon={{ fontawesome: "music" }}
-                        title={{ text: "Sound" }}
-                        switchElem={{ onChange: (check: boolean) => { toggleSound(check) }, value: app.sound }}
-                    />
+                        <LineButton
+                            icon={{ fontawesome: "music" }}
+                            title={{ text: "Sound" }}
+                            switchElem={{ onChange: (check: boolean) => { toggleSound(check) }, value: app.sound }}
+                        />
 
-                    <LineButton
-                        icon={{ ioni: "chatbubble" }}
-                        title={{ text: "Chat message" }}
-                        onPress={onChatMessage}
-                    />
+                        <LineButton
+                            icon={{ ioni: "chatbubble" }}
+                            title={{ text: "Chat message" }}
+                            onPress={onChatMessage}
+                        />
 
-                    <LineButton
-                        icon={{ ioni: "archive" }}
-                        title={{ text: "Archive message" }}
-                        onPress={onArchiveMessage}
-                    />
+                        <LineButton
+                            icon={{ ioni: "archive" }}
+                            title={{ text: "Archive message" }}
+                            onPress={onArchiveMessage}
+                        />
 
-                    <LineButton
-                        icon={{ ioni: "remove-circle" }}
-                        title={{ text: "Block message" }}
-                        onPress={onBlockMessage}
-                    />
+                        <LineButton
+                            icon={{ ioni: "remove-circle" }}
+                            title={{ text: "Block message" }}
+                            onPress={onBlockMessage}
+                        />
 
-                    <LineButton
-                        icon={{ fontawesome: "user-circle-o" }}
-                        title={{ text: "Change avatar" }}
-                        onPress={onClickChangerAvatar}
-                    />
+                        <LineButton
+                            icon={{ fontawesome: "user-circle-o" }}
+                            title={{ text: "Change avatar" }}
+                            onPress={onClickChangerAvatar}
+                        />
 
-                    <LineButton
-                        icon={{ fontawesome: "edit" }}
-                        title={{ text: "Edit profile" }}
-                        onPress={onClickEditProfile}
-                    />
+                        <LineButton
+                            icon={{ fontawesome: "edit" }}
+                            title={{ text: "Edit profile" }}
+                            onPress={onClickEditProfile}
+                        />
 
-                    <LineButton
-                        icon={{ fontawesome: "unlock" }}
-                        title={{ text: "Change password" }}
-                        onPress={onClickChangePassword}
-                    />
+                        <LineButton
+                            icon={{ fontawesome: "unlock" }}
+                            title={{ text: "Change password" }}
+                            onPress={onClickChangePassword}
+                        />
 
-                    <LineButton
-                        icon={{ fontawesome: "sign-out", style: baseStyle.color.textDanger }}
-                        title={{ text: "Logout", style: baseStyle.color.textDanger }}
-                        onPress={onClickLogout}
-                    />
+                        <LineButton
+                            icon={{ fontawesome: "sign-out", style: baseStyle.color.textDanger }}
+                            title={{ text: "Logout", style: baseStyle.color.textDanger }}
+                            onPress={onClickLogout}
+                        />
+                    </ScrollView>
                 </View>
             </View>
             <ChangePasswordDialog show={onChangePassword} setShow={setOnChangePassword} />
@@ -324,5 +330,5 @@ export default connect(({ user, app }: IStoreState) => ({
     toggleNotification,
     toggleSound,
     updateUserData,
-    setConversationViewType
+    setConversationViewType,
 })(UserProfileContainer);

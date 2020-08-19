@@ -55,6 +55,7 @@ const FindPeopleContainer = ({ navigation }: IComponentProps) => {
                         placeholder="Search"
                         style={style.component.inputGroup.text}
                         placeholderTextColor={baseStyle.color.textLight.color}
+                        autoFocus={true}
                         autoCorrect={false}
                         onChangeText={onChangeFilter}
                     />

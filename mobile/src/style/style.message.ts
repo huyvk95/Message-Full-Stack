@@ -11,15 +11,29 @@ const message = StyleSheet.create({
 const header = StyleSheet.create({
     wrap: {
         flexDirection: "row",
-        alignItems: "center",
+        justifyContent: "space-between",
+        alignItems: "center"
+    },
+    left: {
+        flexDirection: "row",
+        alignItems: "center"
     },
     arrow: {
         fontSize: 40,
         paddingHorizontal: 5,
         marginRight: 5,
     },
+    btnInfo: {
+        alignItems: "center",
+        justifyContent: "center",
+        marginRight: 10
+    },
+    iconInfo: {
+        fontSize: 25,
+        paddingHorizontal: 5,
+        color: baseStyle.color.textPrimary.color
+    },
     info: {
-        flex: 1,
         paddingHorizontal: 10,
     },
     infoTitle: {

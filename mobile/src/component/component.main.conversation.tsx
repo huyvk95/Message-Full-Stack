@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, Alert, NativeSyntheticEvent, NativeScrollEvent } from "react-native";
+import { View, Text, StyleSheet, Alert, NativeSyntheticEvent, NativeScrollEvent, GestureResponderEvent } from "react-native";
 import { TextInput, FlatList, TouchableWithoutFeedback } from "react-native-gesture-handler";
 import { connect } from "react-redux";
 import { IMainConversation, IItemConversation } from "../interface/interface.component";
@@ -107,7 +107,7 @@ const ItemConversationRaw = ({ data, friend, user, typing, navigation }: IItemCo
         (navigation.conversationView === EConversationType.ARCHIVE && myChatroom.show && myChatroom.archive && myChatroom.active) ||
         (navigation.conversationView === EConversationType.BLOCK && myChatroom.show && myChatroom.block && myChatroom.active)
 
-    const onClickItem = () => {
+    const onClickItem = (event: GestureResponderEvent) => {
         // Send read
         let sc = socket.getSocket();
         if (!myChatroom.read && sc) {
@@ -174,7 +174,7 @@ const ItemConversationRaw = ({ data, friend, user, typing, navigation }: IItemCo
                         </View>
                     ),
                     backgroundColor: baseStyle.color.backgroundPrimary.backgroundColor,
-                    onPress: onClickRead
+                    onPress: onClickRead,
                 },
                 {
                     component: (

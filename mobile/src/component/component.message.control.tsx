@@ -101,7 +101,7 @@ const MessageControl = ({ chatroomId, chatroom }: IMessageControl) => {
                 style.message.control.wrap,
                 StyleSheet.create({
                     custom: {
-                        paddingBottom: isForcus ? COMPONENT_HEIGHT : 0
+                        paddingBottom: isForcus ? COMPONENT_HEIGHT * 0.5 : 0
                     }
                 }).custom
             ])}>

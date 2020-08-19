@@ -5,9 +5,10 @@ interface IDotProps {
     radius: number,
     color: string,
     style?: any
+    childrent?: JSX.Element
 }
 
-const DotComponent = ({ radius, color, style }: IDotProps) => {
+const DotComponent = ({ radius, color, style, childrent }: IDotProps) => {
     return (
         <View style={StyleSheet.flatten([
             {
@@ -18,7 +19,9 @@ const DotComponent = ({ radius, color, style }: IDotProps) => {
                 borderRadius: radius * 0.5,
             },
             style || {}
-        ])} />
+        ])} >
+            {childrent}
+        </View>
     )
 }
 

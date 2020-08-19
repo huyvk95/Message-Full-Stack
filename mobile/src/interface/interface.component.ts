@@ -11,6 +11,7 @@ export interface IApp extends IComponentProps {
 }
 
 export interface IMainContent extends IComponentProps {
+    chatroom: IChatroomReducerData[]
     chooseContentTab: Function
 }
 
