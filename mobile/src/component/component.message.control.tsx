@@ -1,18 +1,20 @@
 import React, { useState } from "react";
-import { View, Text } from "react-native";
-import Icon from "react-native-vector-icons/FontAwesome";
-import style from "../style";
+import { View, KeyboardAvoidingView, Platform, StyleSheet } from "react-native";
 import { TextInput, TouchableOpacity } from "react-native-gesture-handler";
-import baseStyle from "../style/base";
 import { IMessageControl } from "../interface/interface.component";
 import { connect } from "react-redux";
 import { IStoreState } from "../interface/interface.data";
+import { COMPONENT_HEIGHT } from "../style/base/style.base.component";
+import Icon from "react-native-vector-icons/FontAwesome";
+import style from "../style";
+import baseStyle from "../style/base";
 import socket from "../socket";
 import common from "../common";
 
 const MessageControl = ({ chatroomId, chatroom }: IMessageControl) => {
     let [onTyping, setOnTyping] = useState(false);
     let [text, setText] = useState("");
+    let [isForcus, setIsForcus] = useState(false);
     // Get chatroom data
     let chatroomData = chatroom.find(o => o.chatroom._id === chatroomId);
     if (!chatroomData) return <></>
@@ -77,9 +79,12 @@ const MessageControl = ({ chatroomId, chatroom }: IMessageControl) => {
 
     const onForcusInput = () => {
         sendRead()
+        setIsForcus(true);
     }
 
     const onBlurInput = () => {
+        setIsForcus(false);
+
         if (onTyping) {
             // Set state
             setOnTyping(false);
@@ -89,32 +94,45 @@ const MessageControl = ({ chatroomId, chatroom }: IMessageControl) => {
     }
 
     return (
-        <View style={style.message.control.wrap}>
-            <View
-                style={style.message.control.input}
-            >
-                <TextInput
-                    placeholder="Aa"
-                    placeholderTextColor={baseStyle.color.textLight.color}
-                    style={style.component.inputGroup.text}
-                    autoCorrect={false}
-                    autoCompleteType="off"
-                    value={text}
-                    onChangeText={onChangeText}
-                    onFocus={onForcusInput}
-                    onBlur={onBlurInput}
-                />
+        <KeyboardAvoidingView
+            behavior="padding"
+        >
+            <View style={StyleSheet.flatten([
+                style.message.control.wrap,
+                StyleSheet.create({
+                    custom: {
+                        paddingBottom: isForcus ? COMPONENT_HEIGHT : 0
+                    }
+                }).custom
+            ])}>
+                <View
+                    style={style.message.control.input}
+                >
+
+                    <TextInput
+                        placeholder="Aa"
+                        placeholderTextColor={baseStyle.color.textLight.color}
+                        style={style.component.inputGroup.text}
+                        autoCorrect={false}
+                        autoCompleteType="off"
+                        value={text}
+                        onChangeText={onChangeText}
+                        onFocus={onForcusInput}
+                        autoFocus={true}
+                        onBlur={onBlurInput}
+                    />
+                </View>
+                <TouchableOpacity
+                    onPress={onSubmit}
+                >
+                    <Icon
+                        name="paper-plane"
+                        size={20}
+                        style={style.message.control.btnSend}
+                    />
+                </TouchableOpacity>
             </View>
-            <TouchableOpacity
-                onPress={onSubmit}
-            >
-                <Icon
-                    name="paper-plane"
-                    size={20}
-                    style={style.message.control.btnSend}
-                />
-            </TouchableOpacity>
-        </View>
+        </KeyboardAvoidingView>
     )
 }
 
