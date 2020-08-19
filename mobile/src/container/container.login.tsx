@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, TouchableHighlight, NativeSyntheticEvent, TextInputChangeEventData, TextInputFocusEventData, GestureResponderEvent, Alert } from "react-native";
+import { View, Text, TextInput, TouchableOpacity, TouchableHighlight, NativeSyntheticEvent, TextInputChangeEventData, TextInputFocusEventData, GestureResponderEvent, Alert, KeyboardAvoidingView } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 import style from "../style";
 import baseStyle from "../style/base";
@@ -120,7 +120,10 @@ const LoginContainer = ({ login, register }: ILoginContainer) => {
     }
 
     return (
-        <View style={style.login.wrap}>
+        <KeyboardAvoidingView
+            behavior="padding"
+            style={style.login.wrap}
+        >
             <Icon
                 name="paper-plane"
                 size={90}
@@ -208,7 +211,7 @@ const LoginContainer = ({ login, register }: ILoginContainer) => {
             >
                 <Text style={style.login.buttonText}>Sign In</Text>
             </TouchableOpacity>
-        </View>
+        </KeyboardAvoidingView>
     )
 }
 
