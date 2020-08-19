@@ -143,12 +143,7 @@ const TypingMessage = connect(({ typing, user }: IStoreState) => ({ typing, user
                 <View style={StyleSheet.flatten([
                     style.message.item.message,
                 ])}>
-                    {/* <Text style={StyleSheet.flatten([
-                    style.message.item.messageText,
-                    isMine ? style.message.item.messageTextMine : {}
-                ])}> */}
                     <TypingComponent size="normal" />
-                    {/* </Text> */}
                 </View>
             </View>
         )
