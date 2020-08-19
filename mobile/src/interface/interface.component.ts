@@ -1,4 +1,4 @@
-import { IAppData, IUserData, INavigatorData, IChatroomReducerData, IFriendData, IFriendRequestReducer } from "./interface.data";
+import { IAppData, IUserData, INavigatorData, IChatroomReducerData, IFriendData, IFriendRequestReducer, IMessageData } from "./interface.data";
 import { Icon } from "react-native-vector-icons/Icon";
 
 export interface IComponentProps {
@@ -66,6 +66,13 @@ export interface IMessageHeader extends IComponentProps {
     chatroomId: string,
     chatroom: IChatroomReducerData[]
     friend: IFriendData[]
+}
+
+export interface IMessageContent extends IComponentProps {
+    chatroomId: string,
+    chatroom: IChatroomReducerData[]
+    user: IUserData
+    message: { [key in string]: IMessageData[] }
 }
 
 export interface IMainNavigationProps extends IComponentProps {

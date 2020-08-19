@@ -1,7 +1,6 @@
 import { StyleSheet } from "react-native";
 import baseStyle from "./base";
 import component from "./style.component";
-import color from "./base/style.base.color";
 
 const message = StyleSheet.create({
     wrap: {
@@ -86,8 +85,12 @@ const item = StyleSheet.create({
         display: "none"
     },
 
+    avatarInvisible: {
+        opacity: 0
+    },
+
     message: {
-        flex: 1,
+        // flex: 1,
         maxWidth: 320,
         backgroundColor: baseStyle.color.backgroundSemiLight.backgroundColor,
         padding: 10,
