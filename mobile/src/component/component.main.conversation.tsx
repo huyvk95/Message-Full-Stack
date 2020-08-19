@@ -16,6 +16,7 @@ import socket from "../socket";
 import common from "../common";
 import DotComponent from "./component.dot";
 import * as Navigation from "../navigation";
+import TypingComponent from "./component.typing";
 
 const MainConversation = ({ chatroom }: IMainConversation) => {
     let [loading, setLoading]: [boolean, Function] = useState(false);
@@ -243,9 +244,16 @@ const ItemConversationRaw = ({ data, friend, user, typing, navigation }: IItemCo
                             }).custom
                         ])}>{chatroomName}</Text>
                         <View style={style.main.conversation.lastMessage}>
-                            <Text style={style.main.conversation.lastMessageText}>{`${msgPrefix}${lastMessage?.message}`}</Text>
-                            <Text style={style.main.conversation.lastMessageText}>·</Text>
-                            <Text style={style.main.conversation.lastMessageText}>{tdisplay}</Text>
+                            {
+                                showTyping ?
+                                    <TypingComponent size="small" style={StyleSheet.create({ custom: { paddingVertical: 5 } }).custom} />
+                                    :
+                                    <>
+                                        <Text style={style.main.conversation.lastMessageText}>{`${msgPrefix}${lastMessage?.message}`}</Text>
+                                        <Text style={style.main.conversation.lastMessageText}>·</Text>
+                                        <Text style={style.main.conversation.lastMessageText}>{tdisplay}</Text>
+                                    </>
+                            }
                         </View>
                     </View>
                     <View style={{ justifyContent: "center" }}>

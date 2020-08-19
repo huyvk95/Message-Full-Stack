@@ -7,6 +7,7 @@ import { FlatList } from "react-native-gesture-handler";
 import { BORDER_RADIUS } from "../style/base/style.base.component";
 import style from "../style";
 import AvatarComponent from "./component.avatar";
+import TypingComponent from "./component.typing";
 import socket from "../socket";
 import common from "../common";
 
@@ -52,6 +53,7 @@ const MessageContent = ({ chatroomId, chatroom, message, user }: IMessageContent
                 }
             }).custom
         ])}>
+            <TypingMessage chatroomId={chatroomId} />
             <FlatList
                 contentContainerStyle={{ minHeight: "100%" }}
                 inverted={true}
@@ -120,6 +122,37 @@ const ItemMessage = ({ data, preData, nextData, user }: { data: IMessageData, pr
         </View>
     )
 }
+
+const TypingMessage = connect(({ typing, user }: IStoreState) => ({ typing, user }))
+    (({ typing, chatroomId, user }: { chatroomId: string, typing: { [key in string]: IFriendData[] }, user: IUserData }) => {
+        let typingData = chatroomId ? typing[chatroomId] : undefined
+        let show = typingData && typingData.some(o => o._id !== user._id)
+        let avtUrl = typingData && typingData.find(o => o._id !== user._id)?.avatar;
+        return (
+            <View style={StyleSheet.flatten([
+                style.message.item.wrap,
+                StyleSheet.create({ custom: { display: show ? "flex" : "none" } }).custom
+            ])}>
+                <AvatarComponent
+                    url={avtUrl}
+                    size="smaller"
+                    styleCustom={StyleSheet.flatten([
+                        style.message.item.avatar,
+                    ])}
+                />
+                <View style={StyleSheet.flatten([
+                    style.message.item.message,
+                ])}>
+                    {/* <Text style={StyleSheet.flatten([
+                    style.message.item.messageText,
+                    isMine ? style.message.item.messageTextMine : {}
+                ])}> */}
+                    <TypingComponent size="normal" />
+                    {/* </Text> */}
+                </View>
+            </View>
+        )
+    })
 
 export default connect(({ chatroom, friend, message, user }: IStoreState) => ({
     chatroom, friend, message, user
