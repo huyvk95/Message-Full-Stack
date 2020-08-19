@@ -13,7 +13,7 @@ const MessageContainer = ({ navigation, route }: IComponentProps) => {
         <View style={style.message.message.wrap}>
             <MessageHeader navigation={navigation} chatroomId={chatroomId} />
             <MessageContent chatroomId={chatroomId} />
-            <MessageControl />
+            <MessageControl chatroomId={chatroomId} />
         </View>
     )
 }

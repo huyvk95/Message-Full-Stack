@@ -25,6 +25,18 @@ function ContentChatControlComponent({ chatroom, navigation }: IContentChatContr
         })
     }
 
+    const sendRead = () => {
+        if (chatroomData && !chatroomData?.myChatroom.read) {
+            let sc = socket.getSocket();
+            if (sc) {
+                sc.transmit(common.packet.CHATROOM, {
+                    evt: common.event.CHATROOM.MASK_AS_READ,
+                    data: { userChatroomId: chatroomData.myChatroom._id }
+                })
+            }
+        }
+    }
+
     // Submit handle
     const onSubmit = (event: React.FormEvent<HTMLElement>) => {
         event.preventDefault();
@@ -48,6 +60,7 @@ function ContentChatControlComponent({ chatroom, navigation }: IContentChatContr
     const onChangeText = (event: React.FormEvent<HTMLElement>) => {
         let value = (event.target as any).value;
         setText(value);
+        sendRead();
         if (!onTyping && value) {
             // Set state
             setOnTyping(true);
@@ -62,15 +75,7 @@ function ContentChatControlComponent({ chatroom, navigation }: IContentChatContr
     }
 
     const onForcusInput = () => {
-        if (chatroomData && !chatroomData?.myChatroom.read) {
-            let sc = socket.getSocket();
-            if (sc) {
-                sc.transmit(common.packet.CHATROOM, {
-                    evt: common.event.CHATROOM.MASK_AS_READ,
-                    data: { userChatroomId: chatroomData.myChatroom._id }
-                })
-            }
-        }
+        sendRead()
     }
 
     const onBlurInput = () => {

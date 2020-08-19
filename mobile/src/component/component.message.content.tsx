@@ -30,7 +30,7 @@ const MessageContent = ({ chatroomId, chatroom, message, user }: IMessageContent
     let chatroomData = chatroom.find(o => o.chatroom._id === chatroomId);
     if (!chatroomData) return (
         <div className="d-flex w-100 h-100 justify-content-center align-items-center text-20">
-            Let's start your first conversation
+            Let's start your first conversation 
         </div>
     )
 

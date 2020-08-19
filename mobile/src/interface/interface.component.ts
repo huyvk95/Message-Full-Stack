@@ -75,6 +75,11 @@ export interface IMessageContent extends IComponentProps {
     message: { [key in string]: IMessageData[] }
 }
 
+export interface IMessageControl extends IComponentProps {
+    chatroomId: string
+    chatroom: IChatroomReducerData[]
+}
+
 export interface IMainNavigationProps extends IComponentProps {
     app: IAppData,
     user: IUserData,
