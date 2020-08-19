@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, Alert } from "react-native";
+import { View, Text, StyleSheet, Alert, NativeSyntheticEvent, NativeScrollEvent } from "react-native";
 import { TextInput, FlatList, TouchableWithoutFeedback } from "react-native-gesture-handler";
 import { connect } from "react-redux";
 import { IMainConversation, IItemConversation } from "../interface/interface.component";
@@ -18,6 +18,7 @@ import DotComponent from "./component.dot";
 import * as Navigation from "../navigation";
 
 const MainConversation = ({ chatroom }: IMainConversation) => {
+    let [loading, setLoading]: [boolean, Function] = useState(false);
     let [filter, setFilter] = useState("")
     const renderItem = ({ item }: { item: IChatroomReducerData }) => (<ItemConversation data={item} />)
     let data = chatroom.filter(o => o.friendsChatroom.some(oo => {
@@ -29,6 +30,17 @@ const MainConversation = ({ chatroom }: IMainConversation) => {
 
     function onChangeFilter(text: string) {
         setFilter(text)
+    }
+
+    function onScroll(event: NativeSyntheticEvent<NativeScrollEvent>) {
+        let { contentSize, layoutMeasurement, contentOffset } = event.nativeEvent;
+        let topOffset = contentSize.height - layoutMeasurement.height - contentOffset.y
+        if (typeof topOffset === 'number' && topOffset === 0 && !loading) {
+            setLoading(true);
+            let sc = socket.getSocket()
+            if (sc) sc.transmit(common.packet.CHATROOM, { evt: common.event.CHATROOM.GETALLUSERCHATROOMS, data: { skip: chatroom.length } })
+            setTimeout(() => { setLoading(false); }, 1000)
+        }
     }
 
     return (
@@ -55,6 +67,7 @@ const MainConversation = ({ chatroom }: IMainConversation) => {
                 data={data}
                 renderItem={renderItem}
                 keyExtractor={item => item.chatroom._id}
+                onScroll={onScroll}
             />
         </View>
     )
