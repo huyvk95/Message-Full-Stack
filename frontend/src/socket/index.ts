@@ -22,6 +22,7 @@ class Socket {
         let socket = socketClusterClient.create({
             hostname: common.config.HOST,
             port: common.config.PORT,
+            secure: false,
             query: {
                 deviceId: deviceId
             }
