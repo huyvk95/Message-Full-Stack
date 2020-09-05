@@ -143,7 +143,7 @@ async function register(req: Request, res: Response, next: NextFunction) {
                 // Sign token
                 let token = jwt.sign(data, process.env.SECRET_KEY as string, { expiresIn: '1d' })
                 // Send verify mail
-                util.common.sendMail(email, req.t('common.title_resend_verification'), `${req.t('msg.resend_verification')}\nhttp://localhost:3001/verify/${uuid}`)
+                util.common.sendMail(email, req.t('common.title_resend_verification'), `${req.t('msg.resend_verification')}\nhttps://messengerplane.tk/verify/${uuid}`)
                 // Sign device token
                 user.set('device', { [deviceId as string]: token })
                 await user.save()
