@@ -155,7 +155,7 @@ function PopupProfileComponents({ user, updateUserData, pushToast, closePopup }:
                     <div className="wrap langer">
                         {
                             user.avatar || uploadImageData ?
-                                <img src={uploadImageData ? uploadImageData : `http://${common.config.HOST}:${common.config.PORT}/${user.avatar}`} alt="" height="100%" />
+                                <img src={uploadImageData ? uploadImageData : `${common.config.API}/${user.avatar}`} alt="" height="100%" />
                                 :
                                 <div></div>
                         }
