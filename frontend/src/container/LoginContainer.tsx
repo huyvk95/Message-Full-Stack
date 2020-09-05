@@ -18,11 +18,11 @@ class LoginContainer extends Component<ILoginContainerProps, ILoginContainerStat
 
         this.state = {
             viewType: ELoginViewType.SIGNIN,
-            email: "huy00000@gmail.com",
-            firstName: "Huy",
-            lastName: "Văn Khắc",
-            password: "12345678",
-            confirmPassword: "12345678",
+            email: "",
+            firstName: "",
+            lastName: "",
+            password: "",
+            confirmPassword: "",
             isEmailFail: "",
             isPasswordFail: "",
             isConfirmPasswordFail: "",
