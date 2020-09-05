@@ -15,7 +15,7 @@ export default function AvatarComponent({ url, online, size, className, onClick 
                 <div className="img-wrap">
                     {
                         url ?
-                            <img src={`${common.config.API}/${url}`} alt="" height="100%" />
+                            <img src={`https://${common.config.API}/${url}`} alt="" height="100%" />
                             :
                             <i className="fa fa-user" />
                     }

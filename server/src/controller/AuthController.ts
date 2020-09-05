@@ -202,7 +202,7 @@ async function resendVerifyMail(req: Request, res: Response, next: NextFunction)
         let verify = user.get('emailVerify');
         if (verify.verified) throw { code: 200, message: "User verified" }
         // Check uuid
-        await util.common.sendMail(user.get('email'), req.t('common.title_resend_verification'), `${req.t('msg.resend_verification')}\nhttp://localhost:3001/verify/${verify.uuid}`)
+        await util.common.sendMail(user.get('email'), req.t('common.title_resend_verification'), `${req.t('msg.resend_verification')}\nhttps://messengerplane.tk/verify/${verify.uuid}`)
         // Response
         res.statusCode = 200;
         res.message = "success.resend_verification"
