@@ -1,23 +1,23 @@
 {
-  "name": "message-app",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "server": "cd server && FRONTEND='http://localhost:3001' PORT=3000 SECRET_SESSION=5e30529170318c02a2630e52 SECRET_KEY=5e30529170318c02a2630e52 DATABASE='mongodb://127.0.0.1:27017/message' npm run start",
-    "frontend": "cd frontend && PORT=3001 npm start",
-    "mobile": "cd mobile && npm start",
-    "ios": "cd mobile && npm run ios"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/huyvk3110/Message-App-Fullstack.git"
-  },
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/huyvk3110/Message-App-Fullstack/issues"
-  },
-  "homepage": "https://github.com/huyvk3110/Message-App-Fullstack#readme",
-  "dependencies": {}
+    "name": "message-app",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "server": "cd server && FRONTEND='http://127.0.0.1:3001' PORT=3000 SECRET_SESSION=5e30529170318c02a2630e52 SECRET_KEY=5e30529170318c02a2630e52 DATABASE='mongodb://127.0.0.1:27017/message' npm run start",
+        "frontend": "cd frontend && PORT=3001 npm start",
+        "mobile": "cd mobile && npm start",
+        "ios": "cd mobile && npm run ios"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/huyvk3110/Message-App-Fullstack.git"
+    },
+    "author": "",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/huyvk3110/Message-App-Fullstack/issues"
+    },
+    "homepage": "https://github.com/huyvk3110/Message-App-Fullstack#readme",
+    "dependencies": {}
 }
