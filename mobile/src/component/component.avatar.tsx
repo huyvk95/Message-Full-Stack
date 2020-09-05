@@ -50,7 +50,7 @@ const AvatarComponent = ({ size, url, online, styleCustom, onClick }: IAvatarPro
                 >
                     {
                         url ?
-                            <Image source={{ uri: `http://${common.config.HOST}:${common.config.PORT}/${url}` }} style={style.component.avatar.img} />
+                            <Image source={{ uri: `https://${common.config.API}/${url}` }} style={style.component.avatar.img} />
                             :
                             <Icon
                                 name="user"

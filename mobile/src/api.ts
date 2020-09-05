@@ -3,7 +3,8 @@ import common from "./common";
 import { responseFormat } from "./util/util.common";
 import AsyncStorage from "@react-native-community/async-storage";
 
-const HOST = `http://${common.config.HOST}:${common.config.PORT}`
+// const HOST = `http://${common.config.HOST}:${common.config.PORT}`
+const HOST = `https://${common.config.API}`;
 
 let headers: { [key in string]: string } = {};
 
