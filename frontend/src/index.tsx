@@ -8,6 +8,9 @@ import "./css/style.css"
 import "./i18n";
 import { BrowserRouter as Router } from "react-router-dom";
 import { Provider } from "react-redux";
+import { futimesSync } from "fs";
+
+console.log = ()=>{}
 
 const Context = () => (
     <Suspense fallback="loading">
