@@ -20,12 +20,12 @@ class Socket {
         let { deviceId } = config;
 
         let socket = socketClusterClient.create({
-            // hostname: common.config.HOST,
-            // port: common.config.PORT,
+            hostname: common.config.HOST,
+            port: common.config.PORT,
 
-            hostname: common.config.API,
-            secure: true,
-            port: 443,
+            // hostname: common.config.API,
+            // secure: true,
+            // port: 443,
             query: {
                 deviceId: deviceId
             }

@@ -4,7 +4,8 @@ import { responseFormat } from "./util/util.common";
 import AsyncStorage from "@react-native-community/async-storage";
 
 // const HOST = `http://${common.config.HOST}:${common.config.PORT}`
-const HOST = `https://${common.config.API}`;
+const HOST = `http://${common.config.API}`;
+// const HOST = `https://${common.config.API}`;
 
 let headers: { [key in string]: string } = {};
 
@@ -25,6 +26,10 @@ export function config(option: { [key in string]: string }) {
 
 export function getHeaders() {
     return headers;
+}
+
+export function getHost() {
+    return HOST;
 }
 
 /* __API__ */

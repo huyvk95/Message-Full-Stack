@@ -7,6 +7,7 @@ import DotComponent from "./component.dot";
 import BadgeComponent from "./component.badge";
 import util from "../util";
 import { TouchableWithoutFeedback } from "react-native-gesture-handler";
+import * as api from "../api";
 
 interface IAvatarProps {
     size: "langer" | "normal" | "small" | "smaller" | "tiny",
@@ -50,7 +51,7 @@ const AvatarComponent = ({ size, url, online, styleCustom, onClick }: IAvatarPro
                 >
                     {
                         url ?
-                            <Image source={{ uri: `https://${common.config.API}/${url}` }} style={style.component.avatar.img} />
+                            <Image source={{ uri: `${api.getHost()}/${url}` }} style={style.component.avatar.img} />
                             :
                             <Icon
                                 name="user"

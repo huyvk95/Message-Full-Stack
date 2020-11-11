@@ -3,6 +3,7 @@ import { IAvatarComponentProps } from "../interface/ComponentInterface";
 import { Badge } from "react-bootstrap";
 import util from "../util";
 import common from "../common";
+import * as api from "../Api";
 
 export default function AvatarComponent({ url, online, size, className, onClick }: IAvatarComponentProps) {
     return (
@@ -15,7 +16,7 @@ export default function AvatarComponent({ url, online, size, className, onClick 
                 <div className="img-wrap">
                     {
                         url ?
-                            <img src={`https://${common.config.API}/${url}`} alt="" height="100%" />
+                            <img src={`${api.getHost()}/${url}`} alt="" height="100%" />
                             :
                             <i className="fa fa-user" />
                     }
