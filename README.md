@@ -1,9 +1,11 @@
 # Message-Full-Stack
 Message app with web app using React JS, mobile app using React Native, server using Express, Socket Cluster
 
-*Web
+***Web***
 ReactJS, Redux, Sass, Socket cluster client
-*Mobile
+
+***Mobile***
 React native, Redux, Socket cluster client
-*Server
+
+***Server***
 Express, Mongoose, Redis, Socket cluster server ...
